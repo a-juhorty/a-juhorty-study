@@ -87,6 +87,7 @@
   <section id="quizView" hidden>
   <p class="crumb"><a href="#">주하연 공부방</a> › 2-2 생명 퀴즈 대비</p>
   <p class="lead">답을 먼저 직접 써 보고, 핵심 키워드와 모범답안으로 스스로 채점하세요.</p>
+  <div class="bar" id="langbar"></div>
   <div class="bar" id="chapters"></div>
   <div class="stats" id="stats"></div>
 
@@ -116,7 +117,8 @@ const QUESTIONS = [
    "물",
    "탈수"
   ],
-  "model": "축합반응은 작은 분자가 빠져나가면서 단량체 사이에 공유결합이 형성되는 반응이며, 이때 빠져나가는 분자가 물이면 탈수 반응이라고 한다. 탄수화물과 단백질의 형성에서는 한쪽의 -OH와 다른 쪽의 -H가 제거되어 H₂O가 형성되고 새로운 공유결합이 만들어진다."
+  "model": "축합반응은 작은 분자가 빠져나가면서 단량체 사이에 공유결합이 형성되는 반응이며, 이때 빠져나가는 분자가 물이면 탈수 반응이라고 한다. 탄수화물과 단백질의 형성에서는 한쪽의 -OH와 다른 쪽의 -H가 제거되어 H₂O가 형성되고 새로운 공유결합이 만들어진다.",
+  "qe": "2. Explain the relationship between condensation reactions and dehydration reactions."
  },
  {
   "ch": "5단원",
@@ -129,7 +131,8 @@ const QUESTIONS = [
    "셀룰로오스",
    "키틴"
   ],
-  "model": "탄수화물은 에너지 저장과 구조 형성에 관여한다. 에너지 저장의 예로 녹말 또는 글리코젠이 있고, 구조 형성의 예로 셀룰로오스 또는 키틴이 있다."
+  "model": "탄수화물은 에너지 저장과 구조 형성에 관여한다. 에너지 저장의 예로 녹말 또는 글리코젠이 있고, 구조 형성의 예로 셀룰로오스 또는 키틴이 있다.",
+  "qe": "4. State two major functions of carbohydrates, and give one example of a polysaccharide for each."
  },
  {
   "ch": "5단원",
@@ -140,7 +143,8 @@ const QUESTIONS = [
    "가수분해",
    "단당류"
   ],
-  "model": "두 단당류가 탈수반응을 통해 글리코시드결합을 형성하여 이당류가 만들어지며, 에너지원으로 이용되기 위해서는 가수분해되어 단당류로 분해되어야 한다."
+  "model": "두 단당류가 탈수반응을 통해 글리코시드결합을 형성하여 이당류가 만들어지며, 에너지원으로 이용되기 위해서는 가수분해되어 단당류로 분해되어야 한다.",
+  "qe": "7. Describe how a disaccharide is formed, and what process is needed before it can be used as an energy source."
  },
  {
   "ch": "5단원",
@@ -153,7 +157,8 @@ const QUESTIONS = [
    "1-6",
    "소화 효소"
   ],
-  "model": "아밀로오스는 주로 포도당이 1-4 글리코시드 결합으로 연결된 가지가 없는 구조이고, 아밀로펙틴은 1-4 결합을 기본으로 하면서 1-6 결합에 의해 가지가 형성된 구조이다. 이러한 가지 구조의 차이로 소화 효소가 접근하고 작용할 수 있는 부위의 수가 달라져 소화 효율과 에너지 공급 속도가 달라진다."
+  "model": "아밀로오스는 주로 포도당이 1-4 글리코시드 결합으로 연결된 가지가 없는 구조이고, 아밀로펙틴은 1-4 결합을 기본으로 하면서 1-6 결합에 의해 가지가 형성된 구조이다. 이러한 가지 구조의 차이로 소화 효소가 접근하고 작용할 수 있는 부위의 수가 달라져 소화 효율과 에너지 공급 속도가 달라진다.",
+  "qe": "11. Describe the structural differences between amylose and amylopectin in starch, and explain why these differences affect digestive efficiency."
  },
  {
   "ch": "5단원",
@@ -165,7 +170,8 @@ const QUESTIONS = [
    "직선",
    "셀룰로오스"
   ],
-  "model": "α-포도당과 β-포도당은 1번 탄소의 –OH 위치가 다르며, 이 차이로 1→4 결합 시 배열 방식이 달라진다. β-포도당은 고리가 번갈아 배열되어 직선형의 강한 셀룰로오스 구조를 형성한다."
+  "model": "α-포도당과 β-포도당은 1번 탄소의 –OH 위치가 다르며, 이 차이로 1→4 결합 시 배열 방식이 달라진다. β-포도당은 고리가 번갈아 배열되어 직선형의 강한 셀룰로오스 구조를 형성한다.",
+  "qe": "14. Briefly explain why the structural difference between α-glucose and β-glucose leads to the structural difference between starch and cellulose."
  },
  {
   "ch": "5단원",
@@ -178,7 +184,8 @@ const QUESTIONS = [
    "수산기",
    "카르복실기"
   ],
-  "model": "지방은 1개의 글리세롤과 3개의 지방산으로 구성되며, 글리세롤의 수산기와 지방산의 카르복실기가 에스터 결합을 형성한다."
+  "model": "지방은 1개의 글리세롤과 3개의 지방산으로 구성되며, 글리세롤의 수산기와 지방산의 카르복실기가 에스터 결합을 형성한다.",
+  "qe": "21. Describe the basic components of a fat and how they are joined together."
  },
  {
   "ch": "5단원",
@@ -189,7 +196,8 @@ const QUESTIONS = [
    "빽빽",
    "고체"
   ],
-  "model": "포화 지방산은 탄소 사이에 이중 결합이 없어 사슬이 곧게 뻗어 있으며, 분자들이 서로 빽빽하게 배열될 수 있기 때문에 실온에서 고체로 존재한다."
+  "model": "포화 지방산은 탄소 사이에 이중 결합이 없어 사슬이 곧게 뻗어 있으며, 분자들이 서로 빽빽하게 배열될 수 있기 때문에 실온에서 고체로 존재한다.",
+  "qe": "23. Explain, in terms of structure, why saturated fatty acids are solid at room temperature."
  },
  {
   "ch": "5단원",
@@ -200,7 +208,8 @@ const QUESTIONS = [
    "양친매성",
    "이중층"
   ],
-  "model": "인지질은 친수성 머리와 소수성 지방산 꼬리를 함께 가지는 양친매성 분자이다. 이 때문에 물속에서 인지질 이중층을 형성하여 세포막의 기본 구조를 이룬다."
+  "model": "인지질은 친수성 머리와 소수성 지방산 꼬리를 함께 가지는 양친매성 분자이다. 이 때문에 물속에서 인지질 이중층을 형성하여 세포막의 기본 구조를 이룬다.",
+  "qe": "27. Describe the structural features of phospholipids and explain why they can form cell membranes."
  },
  {
   "ch": "5단원",
@@ -212,7 +221,8 @@ const QUESTIONS = [
    "이온",
    "제한"
   ],
-  "model": "친수성머리는 세포 안팎의 수용성 환경을 향하고 소수성 꼬리는 막 내부에서 서로 마주 보아 소수성 내부층을 형성한다. 이 내부층이 친수성 물질이나 이온의 자유로운 통과를 제한하여 세포막에 선택적 투과성을 부여한다."
+  "model": "친수성머리는 세포 안팎의 수용성 환경을 향하고 소수성 꼬리는 막 내부에서 서로 마주 보아 소수성 내부층을 형성한다. 이 내부층이 친수성 물질이나 이온의 자유로운 통과를 제한하여 세포막에 선택적 투과성을 부여한다.",
+  "qe": "28. Explain how the arrangement of the hydrophilic heads and hydrophobic tails of phospholipids contributes to the selective permeability of the cell membrane."
  },
  {
   "ch": "5단원",
@@ -225,7 +235,8 @@ const QUESTIONS = [
    "N-말단",
    "C-말단"
   ],
-  "model": "한 아미노산의 카르복실기와 다른 아미노산의 아미노기 사이에 탈수반응으로 펩타이드 결합이 형성되어 폴리펩타이드가 만들어진다. 폴리펩타이드는 N-말단에서 C-말단으로 이어지는 방향성을 가진다."
+  "model": "한 아미노산의 카르복실기와 다른 아미노산의 아미노기 사이에 탈수반응으로 펩타이드 결합이 형성되어 폴리펩타이드가 만들어진다. 폴리펩타이드는 N-말단에서 C-말단으로 이어지는 방향성을 가진다.",
+  "qe": "35. Describe how a polypeptide is formed and its directionality."
  },
  {
   "ch": "5단원",
@@ -236,7 +247,8 @@ const QUESTIONS = [
    "α-나선",
    "β-병풍"
   ],
-  "model": "단백질의 2차 구조는 폴리펩타이드 골격 사이의 수소결합에 의해 형성된다. 대표적으로 α-나선 구조와 β-병풍 구조가 있다."
+  "model": "단백질의 2차 구조는 폴리펩타이드 골격 사이의 수소결합에 의해 형성된다. 대표적으로 α-나선 구조와 β-병풍 구조가 있다.",
+  "qe": "39. Describe the principle by which the secondary structure of a protein forms, and its two representative forms."
  },
  {
   "ch": "5단원",
@@ -249,7 +261,8 @@ const QUESTIONS = [
    "수소 결합",
    "이황화 결합"
   ],
-  "model": "단백질의 3차 구조는 곁사슬 사이의 소수성 상호작용, 반데르발스 힘, 이온 결합, 수소 결합, 이황화 결합 등에 의해 형성되고 안정화된다."
+  "model": "단백질의 3차 구조는 곁사슬 사이의 소수성 상호작용, 반데르발스 힘, 이온 결합, 수소 결합, 이황화 결합 등에 의해 형성되고 안정화된다.",
+  "qe": "40. Describe the main interactions that form and stabilize the tertiary structure of a protein."
  },
  {
   "ch": "5단원",
@@ -261,7 +274,8 @@ const QUESTIONS = [
    "표면",
    "뭉"
   ],
-  "model": "친수성인 글루탐산이 소수성인 발린으로 바뀌면서 헤모글로빈 표면에 소수성 부위가 생기고, 이 부위가 다른 헤모글로빈의 소수성 부위와 상호작용하여 서로 뭉치기 쉬워지기 때문이다."
+  "model": "친수성인 글루탐산이 소수성인 발린으로 바뀌면서 헤모글로빈 표면에 소수성 부위가 생기고, 이 부위가 다른 헤모글로빈의 소수성 부위와 상호작용하여 서로 뭉치기 쉬워지기 때문이다.",
+  "qe": "42. In sickle-cell anemia, explain why replacing glutamic acid with valine makes hemoglobin molecules more likely to clump together."
  },
  {
   "ch": "5단원",
@@ -273,7 +287,8 @@ const QUESTIONS = [
    "이중 고리",
    "오각"
   ],
-  "model": "피리미딘은 하나의 육각 고리로 이루어지며 C, T, U가 속하고, 퓨린은 육각 고리와 오각 고리가 결합된 이중 고리로 이루어지며 A, G가 속한다."
+  "model": "피리미딘은 하나의 육각 고리로 이루어지며 C, T, U가 속하고, 퓨린은 육각 고리와 오각 고리가 결합된 이중 고리로 이루어지며 A, G가 속한다.",
+  "qe": "47. Describe the structural difference between pyrimidine and purine nitrogenous bases, and name the bases that belong to each."
  },
  {
   "ch": "5단원",
@@ -285,7 +300,8 @@ const QUESTIONS = [
    "불안정",
    "정보 저장"
   ],
-  "model": "DNA는 디옥시리보스, RNA는 리보오스를 가지며, RNA의 리보오스에는 2번 탄소에 –OH가 있어 DNA보다 상대적으로 불안정하다. 따라서 DNA는 장기적인 유전정보 저장에 더 적합하다."
+  "model": "DNA는 디옥시리보스, RNA는 리보오스를 가지며, RNA의 리보오스에는 2번 탄소에 –OH가 있어 DNA보다 상대적으로 불안정하다. 따라서 DNA는 장기적인 유전정보 저장에 더 적합하다.",
+  "qe": "48. Describe the difference in the sugars of DNA and RNA, and how this difference affects their stability."
  },
  {
   "ch": "6단원",
@@ -298,7 +314,8 @@ const QUESTIONS = [
    "방출",
    "필요"
   ],
-  "model": "이화 작용은 고분자 물질을 저분자로 분해하면서 에너지를 방출하는 과정이고, 동화 작용은 저분자물질을 고분자로 합성하기 위해 에너지를 필요로 하는 과정이다."
+  "model": "이화 작용은 고분자 물질을 저분자로 분해하면서 에너지를 방출하는 과정이고, 동화 작용은 저분자물질을 고분자로 합성하기 위해 에너지를 필요로 하는 과정이다.",
+  "qe": "3. Compare catabolism and anabolism in terms of changes in matter and the flow of energy."
  },
  {
   "ch": "6단원",
@@ -311,7 +328,8 @@ const QUESTIONS = [
    "외부",
    "공급"
   ],
-  "model": "에너지 변환 과정에서 일부 에너지가 열로 방출되고 전체적인 엔트로피가 증가하므로, 생명체가 질서를 유지하기 위해서는 외부로부터 지속적으로 에너지를 공급받아야 하기 때문이다."
+  "model": "에너지 변환 과정에서 일부 에너지가 열로 방출되고 전체적인 엔트로피가 증가하므로, 생명체가 질서를 유지하기 위해서는 외부로부터 지속적으로 에너지를 공급받아야 하기 때문이다.",
+  "qe": "6. From the viewpoint of the second law of thermodynamics, explain why living organisms must continuously receive energy."
  },
  {
   "ch": "6단원",
@@ -322,7 +340,8 @@ const QUESTIONS = [
    "가장 낮",
    "에너지 변화"
   ],
-  "model": "세포가 평형에 도달하면 자유에너지가 가장 낮은 상태가 되어 더 이상 일을 할 수 있는 에너지 변화가 일어나지 않기 때문이다."
+  "model": "세포가 평형에 도달하면 자유에너지가 가장 낮은 상태가 되어 더 이상 일을 할 수 있는 에너지 변화가 일어나지 않기 때문이다.",
+  "qe": "8. Explain, in terms of free energy, why it is difficult for a cell to sustain life activities once it reaches equilibrium."
  },
  {
   "ch": "6단원",
@@ -335,7 +354,8 @@ const QUESTIONS = [
    "짝물림",
    "비자발적"
   ],
-  "model": "ATP가 물과 반응하여 ADP와 무기 인산으로 가수분해될 때 자유에너지가 방출되며, 세포는 이 에너지를 다른 비자발적 반응과 짝물림하여 생명 활동에 이용한다."
+  "model": "ATP가 물과 반응하여 ADP와 무기 인산으로 가수분해될 때 자유에너지가 방출되며, 세포는 이 에너지를 다른 비자발적 반응과 짝물림하여 생명 활동에 이용한다.",
+  "qe": "10. Explain the principle by which ATP hydrolysis is used for energy coupling in cells."
  },
  {
   "ch": "6단원",
@@ -349,7 +369,8 @@ const QUESTIONS = [
    "인산기",
    "중간산물"
   ],
-  "model": "글루타민 합성 반응은 ΔG가 +3.4 kcal/mol로 비자발적이지만, ATP 가수분해의 ΔG –7.3 kcal/mol과 짝물림되면 전체 ΔG가 –3.9 kcal/mol이 된다. 또한 ATP의 인산기가 글루탐산에 전달되어 반응성이 높은 중간산물이 형성되므로 글루타민 합성이 진행될 수 있다."
+  "model": "글루타민 합성 반응은 ΔG가 +3.4 kcal/mol로 비자발적이지만, ATP 가수분해의 ΔG –7.3 kcal/mol과 짝물림되면 전체 ΔG가 –3.9 kcal/mol이 된다. 또한 ATP의 인산기가 글루탐산에 전달되어 반응성이 높은 중간산물이 형성되므로 글루타민 합성이 진행될 수 있다.",
+  "qe": "13. Explain how ATP makes chemical work possible, using the synthesis of glutamine as an example."
  },
  {
   "ch": "6단원",
@@ -359,7 +380,8 @@ const QUESTIONS = [
    "낮",
    "속도"
   ],
-  "model": "효소는 반응물이 생성물로 전환될 때 필요한 활성화 에너지를 낮추어 반응이 더 쉽게 일어나도록 하므로 화학 반응의 속도를 증가시킨다."
+  "model": "효소는 반응물이 생성물로 전환될 때 필요한 활성화 에너지를 낮추어 반응이 더 쉽게 일어나도록 하므로 화학 반응의 속도를 증가시킨다.",
+  "qe": "14. Explain how an enzyme speeds up a chemical reaction, in terms of activation energy."
  },
  {
   "ch": "6단원",
@@ -370,7 +392,8 @@ const QUESTIONS = [
    "자유에너지",
    "속도"
   ],
-  "model": "효소는 활성화 에너지를 낮추어 반응 속도를 증가시키지만, 반응물과 생성물 사이의 자유에너지 변화(ΔG)는 변화시키지 않는다."
+  "model": "효소는 활성화 에너지를 낮추어 반응 속도를 증가시키지만, 반응물과 생성물 사이의 자유에너지 변화(ΔG)는 변화시키지 않는다.",
+  "qe": "20. Explain the effect of an enzyme on activation energy and on the free energy change (ΔG), respectively."
  },
  {
   "ch": "6단원",
@@ -380,7 +403,8 @@ const QUESTIONS = [
    "활성 부위",
    "결합"
   ],
-  "model": "모든 효소의 활성 부위가 기질로 채워져 포화 상태가 되면 추가된 기질이 더 이상 효소와 결합할 수 없기 때문이다."
+  "model": "모든 효소의 활성 부위가 기질로 채워져 포화 상태가 되면 추가된 기질이 더 이상 효소와 결합할 수 없기 때문이다.",
+  "qe": "26. Explain why the rate of an enzyme reaction stops increasing beyond a certain level even when the substrate concentration keeps rising."
  },
  {
   "ch": "6단원",
@@ -392,7 +416,8 @@ const QUESTIONS = [
    "활성 부위",
    "구조"
   ],
-  "model": "높은 온도에 의해 효소의 구조를 유지하는 수소 결합이나 이온 결합 등이 파괴되어 단백질이 변성되고, 활성 부위의 구조가 변하여 효소가 정상적으로 작용하지 못하기 때문이다."
+  "model": "높은 온도에 의해 효소의 구조를 유지하는 수소 결합이나 이온 결합 등이 파괴되어 단백질이 변성되고, 활성 부위의 구조가 변하여 효소가 정상적으로 작용하지 못하기 때문이다.",
+  "qe": "28. Explain why the rate of an enzyme reaction decreases when the temperature becomes too high."
  },
  {
   "ch": "6단원",
@@ -402,7 +427,8 @@ const QUESTIONS = [
    "기질",
    "저해제"
   ],
-  "model": "기질 농도가 증가하면 기질이 저해제보다 활성 부위에 결합할 가능성이 커지기 때문이다."
+  "model": "기질 농도가 증가하면 기질이 저해제보다 활성 부위에 결합할 가능성이 커지기 때문이다.",
+  "qe": "33. Explain why raising the substrate concentration reduces the effect of a competitive inhibitor."
  },
  {
   "ch": "6단원",
@@ -413,7 +439,8 @@ const QUESTIONS = [
    "촉매 기능",
    "회복"
   ],
-  "model": "비경쟁적 저해제는 활성 부위가 아닌 다른 부위에 결합하여 효소의 구조와 촉매 기능을 변화시키므로, 기질 농도를 높여도 효소의 기능 저하가 회복되지 않기 때문이다."
+  "model": "비경쟁적 저해제는 활성 부위가 아닌 다른 부위에 결합하여 효소의 구조와 촉매 기능을 변화시키므로, 기질 농도를 높여도 효소의 기능 저하가 회복되지 않기 때문이다.",
+  "qe": "34. Explain why the effect of a noncompetitive inhibitor does not disappear even when the substrate concentration is raised."
  },
  {
   "ch": "6단원",
@@ -423,7 +450,8 @@ const QUESTIONS = [
    "저해제",
    "결합"
   ],
-  "model": "무경쟁적 저해제는 효소-기질 복합체에만 결합하므로, 기질 농도가 증가하여 효소-기질 복합체가 많아져도 저해제가 결합할 대상이 함께 증가하기 때문이다."
+  "model": "무경쟁적 저해제는 효소-기질 복합체에만 결합하므로, 기질 농도가 증가하여 효소-기질 복합체가 많아져도 저해제가 결합할 대상이 함께 증가하기 때문이다.",
+  "qe": "35. Explain why the effect of an uncompetitive inhibitor is hard to overcome even when the substrate concentration is increased."
  },
  {
   "ch": "6단원",
@@ -434,7 +462,8 @@ const QUESTIONS = [
    "친화도",
    "방출"
   ],
-  "model": "한 결합 부위에 산소가 결합하거나 해리되면 소단위의 구조 변화가 다른 소단위로 전달되어 다른 결합 부위의 산소 친화도가 함께 변한다. 그 결과 산소가 많은 곳에서는 산소를 잘 결합하고, 산소가 적은 조직에서는 산소를 쉽게 방출할 수 있다."
+  "model": "한 결합 부위에 산소가 결합하거나 해리되면 소단위의 구조 변화가 다른 소단위로 전달되어 다른 결합 부위의 산소 친화도가 함께 변한다. 그 결과 산소가 많은 곳에서는 산소를 잘 결합하고, 산소가 적은 조직에서는 산소를 쉽게 방출할 수 있다.",
+  "qe": "39. Explain the principle of cooperativity in oxygen binding by hemoglobin, and its advantage."
  },
  {
   "ch": "6단원",
@@ -446,7 +475,8 @@ const QUESTIONS = [
    "억제",
    "첫 단계"
   ],
-  "model": "최종 생성물인 아이소류신이 일정량 이상 축적되면 효소 1의 조절 부위에 결합하여 효소 1의 활성을 억제하고, 트레오닌이 중간산물 A로 전환되는 첫 단계를 차단하여 아이소류신의 추가 합성을 감소시키는 과정이다."
+  "model": "최종 생성물인 아이소류신이 일정량 이상 축적되면 효소 1의 조절 부위에 결합하여 효소 1의 활성을 억제하고, 트레오닌이 중간산물 A로 전환되는 첫 단계를 차단하여 아이소류신의 추가 합성을 감소시키는 과정이다.",
+  "qe": "41. Explain the principle of feedback inhibition in the synthesis of isoleucine."
  },
  {
   "ch": "6단원",
@@ -458,7 +488,8 @@ const QUESTIONS = [
    "기질",
    "연속"
   ],
-  "model": "세포 구획화는 서로 다른 대사 경로가 간섭하지 않도록 분리하며, 다효소복합체는 한 효소의 생성물이 곧바로 다음 효소의 기질로 사용되도록 하여 대사 반응을 빠르고 연속적으로 진행시키기 때문이다."
+  "model": "세포 구획화는 서로 다른 대사 경로가 간섭하지 않도록 분리하며, 다효소복합체는 한 효소의 생성물이 곧바로 다음 효소의 기질로 사용되도록 하여 대사 반응을 빠르고 연속적으로 진행시키기 때문이다.",
+  "qe": "42. Explain why cell compartmentalization and multienzyme complexes each make metabolism more efficient."
  }
 ];
 /* ================================================= */
@@ -493,6 +524,7 @@ function connectRemote(progressStr, saver){
 function disconnectRemote(){ remoteDoc = null; }
 
 let chapter = "전체", order = [], pos = 0, revealed = false, onlyWrong = false;
+let qlang = "ko"; try { qlang = localStorage.getItem("qlang") === "en" ? "en" : "ko"; } catch(e){}
 const key = i => QUESTIONS[i].q;
 const norm = s => s.replace(/[\s\-–−‐]+/g,"").toLowerCase();
 
@@ -503,13 +535,22 @@ function rebuild(keepShuffle){
   pos = 0; revealed = false; render();
 }
 
+function renderLang(){
+  const el = $("langbar"); el.innerHTML = '<span style="font-size:13px;color:var(--sub);align-self:center">문제 언어</span>';
+  [["ko","한국어"],["en","English"]].forEach(([v,t])=>{
+    const b = document.createElement("button");
+    b.className = "chip" + (qlang===v ? " on":""); b.textContent = t;
+    b.onclick = ()=>{ qlang=v; try{localStorage.setItem("qlang",v);}catch(e){} renderLang(); render(); };
+    el.appendChild(b);
+  });
+}
 function renderChapters(){
   const chs = ["전체", ...new Set(QUESTIONS.map(q=>q.ch))];
   $("chapters").innerHTML = "";
   chs.forEach(c=>{
     const b = document.createElement("button");
     b.className = "chip" + (c===chapter ? " on":""); b.textContent = c;
-    b.onclick = ()=>{ chapter=c; renderChapters(); rebuild(false); };
+    b.onclick = ()=>{ chapter=c; renderLang(); renderChapters(); rebuild(false); };
     $("chapters").appendChild(b);
   });
 }
@@ -548,7 +589,7 @@ function render(){
   const draft = (store.__draft && store.__draft[key(i)]) || "";
   $("card").innerHTML = `
     <div class="meta"><span class="tag">${esc(Q.ch)}</span><span>${pos+1} / ${order.length}</span></div>
-    <p class="q">${esc(Q.q)}</p>
+    <p class="q">${esc(qlang==="en" && Q.qe ? Q.qe : Q.q)}</p>
     <textarea id="ans" placeholder="여기에 서술형 답안을 써 보세요.">${esc(draft)}</textarea>
     <div class="row"><button class="btn" id="check">채점하기</button><button class="btn ghost" id="clear">지우기</button></div>
     <div id="out"></div>`;
