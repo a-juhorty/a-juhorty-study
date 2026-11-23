@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>주하연 공부방</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f6f7f9; --card:#fff; --ink:#1d2330; --sub:#667085; --line:#e4e7ec;
+    --accent:#3b5bdb; --accent-soft:#edf1ff;
+    --ok:#1f9d55; --ok-soft:#e6f6ec; --bad:#d6336c; --bad-soft:#fdeaf1; --mid:#e8890c; --mid-soft:#fff3e0;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{--bg:#12151c;--card:#1b2029;--ink:#e8ebf2;--sub:#98a2b3;--line:#2b3240;--accent:#7c9cff;--accent-soft:#222b4a;
+      --ok:#4cc38a;--ok-soft:#18332a;--bad:#ff7aa8;--bad-soft:#3a1d2a;--mid:#ffb454;--mid-soft:#3a2d17;}
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:'Noto Sans KR',system-ui,sans-serif;line-height:1.65}
+  .wrap{max-width:720px;margin:0 auto;padding:20px 16px 56px}
+  h1{font-size:22px;margin:8px 0 2px}
+  .lead{color:var(--sub);font-size:14px;margin:0 0 16px}
+  .bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+  .chip{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:6px 14px;font:inherit;font-size:13px;cursor:pointer}
+  .chip.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .stats{display:flex;gap:14px;font-size:13px;color:var(--sub);margin:4px 0 14px;flex-wrap:wrap}
+  .stats b{color:var(--ink)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px}
+  .meta{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--sub);margin-bottom:10px}
+  .tag{background:var(--accent-soft);color:var(--accent);border-radius:6px;padding:2px 8px;font-weight:500}
+  .q{font-size:17px;font-weight:700;margin:0 0 14px;white-space:pre-wrap}
+  textarea{width:100%;min-height:150px;resize:vertical;border:1px solid var(--line);border-radius:12px;padding:12px;font:inherit;font-size:15px;background:var(--bg);color:var(--ink)}
+  textarea:focus{outline:2px solid var(--accent);border-color:transparent}
+  .row{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+  button.btn{border:0;border-radius:10px;padding:10px 16px;font:inherit;font-size:14px;font-weight:500;cursor:pointer;background:var(--accent);color:#fff}
+  button.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+  button.btn:disabled{opacity:.4;cursor:default}
+  .result{margin-top:18px;border-top:1px dashed var(--line);padding-top:16px}
+  .result h3{font-size:13px;color:var(--sub);margin:0 0 8px;font-weight:500}
+  .kw{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px}
+  .kw span{border-radius:8px;padding:3px 10px;font-size:13px;font-weight:500}
+  .kw .hit{background:var(--ok-soft);color:var(--ok)}
+  .kw .miss{background:var(--bad-soft);color:var(--bad)}
+  .score{font-size:14px;margin:8px 0 14px}
+  .model{background:var(--accent-soft);border-radius:12px;padding:14px;font-size:15px;white-space:pre-wrap}
+  .grade button{flex:1}
+  .g-ok{background:var(--ok)!important}.g-mid{background:var(--mid)!important}.g-bad{background:var(--bad)!important}
+  .nav{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px}
+  .nav button{min-width:40px;height:36px;padding:0 8px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);font:inherit;font-size:13px;cursor:pointer}
+  .nav button.ok{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
+  .nav button.mid{background:var(--mid-soft);border-color:var(--mid);color:var(--mid)}
+  .nav button.bad{background:var(--bad-soft);border-color:var(--bad);color:var(--bad)}
+  .nav button.cur{outline:2px solid var(--accent);outline-offset:1px;font-weight:700}
+  .authbar{display:flex;align-items:center;gap:10px;justify-content:space-between;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin-bottom:14px;font-size:13px;color:var(--sub)}
+  h1 a{color:inherit;text-decoration:none}
+  .crumb{font-size:13px;color:var(--sub);margin:0 0 4px}.crumb a{color:var(--accent);text-decoration:none}
+  .part{display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px;text-decoration:none;color:var(--ink)}
+  .part+.part{margin-top:10px}
+  .part:hover{border-color:var(--accent)}
+  .part-tag{background:var(--accent-soft);color:var(--accent);font-weight:700;border-radius:10px;padding:6px 10px;font-size:14px}
+  .part-main{flex:1;display:flex;flex-direction:column}.part-main small{color:var(--sub);font-size:13px}
+  .part-go{color:var(--sub);font-size:18px}
+  .hint{font-size:12px;color:var(--sub);margin-top:18px;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1><a href="#" id="homeLink">주하연 공부방</a></h1>
+
+  <div class="authbar" id="authbar" hidden></div>
+
+  <section id="homeView">
+    <p class="lead">공부 자료를 모아 둔 곳이에요. 보고 싶은 파트를 골라 주세요.</p>
+    <a class="part" href="https://claude.ai/artifact/BqRJ5RTiQejXohfDhveVft" target="_blank" rel="noopener">
+      <span class="part-tag">2-2</span>
+      <span class="part-main"><b>중간고사 대비</b><small>생명과학 방과후 문제 모음 · 새 탭에서 열려요</small></span>
+      <span class="part-go">↗</span>
+    </a>
+    <a class="part" href="#bio22">
+      <span class="part-tag">2-2</span>
+      <span class="part-main"><b>생명 퀴즈 대비</b><small>서술형 30문항 · 5단원, 6단원</small></span>
+      <span class="part-go">→</span>
+    </a>
+  </section>
+
+  <section id="quizView" hidden>
+  <p class="crumb"><a href="#">주하연 공부방</a> › 2-2 생명 퀴즈 대비</p>
+  <p class="lead">답을 먼저 직접 써 보고, 핵심 키워드와 모범답안으로 스스로 채점하세요.</p>
+  <div class="bar" id="chapters"></div>
+  <div class="stats" id="stats"></div>
+
+  <div class="nav" id="nav"></div>
+  <div class="card" id="card"></div>
+
+  <div class="row" style="justify-content:space-between">
+    <button class="btn ghost" id="prev">← 이전</button>
+    <button class="btn ghost" id="shuffle">섞기</button>
+    <button class="btn ghost" id="wrongOnly">모름·헷갈림만</button>
+    <button class="btn ghost" id="next">다음 →</button>
+  </div>
+  <div class="hint">Google로 로그인하면 풀이 기록이 계정에 저장돼 다른 기기에서도 이어져요.</div>
+  </section>
+</div>
+
+<script>
+/* ===== 문제 목록: 아래 배열만 고치면 됩니다 =====
+   ch: 단원, q: 문제, keywords: 채점용 핵심 키워드(답안에 들어가야 할 말), model: 모범답안 */
+const QUESTIONS = [
+ {
+  "ch": "5단원",
+  "q": "2. 축합반응과 탈수 반응의 관계를 설명하시오.",
+  "keywords": [
+   "축합",
+   "공유결합",
+   "물",
+   "탈수"
+  ],
+  "model": "축합반응은 작은 분자가 빠져나가면서 단량체 사이에 공유결합이 형성되는 반응이며, 이때 빠져나가는 분자가 물이면 탈수 반응이라고 한다. 탄수화물과 단백질의 형성에서는 한쪽의 -OH와 다른 쪽의 -H가 제거되어 H₂O가 형성되고 새로운 공유결합이 만들어진다."
+ },
+ {
+  "ch": "5단원",
+  "q": "4. 탄수화물의 두 가지 주요 기능을 쓰고, 각각에 해당하는 다당류의 예를 하나씩 제시하시오.",
+  "keywords": [
+   "에너지 저장",
+   "구조",
+   "녹말",
+   "글리코젠",
+   "셀룰로오스",
+   "키틴"
+  ],
+  "model": "탄수화물은 에너지 저장과 구조 형성에 관여한다. 에너지 저장의 예로 녹말 또는 글리코젠이 있고, 구조 형성의 예로 셀룰로오스 또는 키틴이 있다."
+ },
+ {
+  "ch": "5단원",
+  "q": "7. 이당류가 형성되는 과정과 에너지원으로 이용되기 위해 필요한 과정을 설명하시오.",
+  "keywords": [
+   "탈수",
+   "글리코시드",
+   "가수분해",
+   "단당류"
+  ],
+  "model": "두 단당류가 탈수반응을 통해 글리코시드결합을 형성하여 이당류가 만들어지며, 에너지원으로 이용되기 위해서는 가수분해되어 단당류로 분해되어야 한다."
+ },
+ {
+  "ch": "5단원",
+  "q": "11. 녹말을 구성하는 아밀로오스와 아밀로펙틴의 구조적 차이와, 이러한 차이가 소화 효율에 영향을 미치는 이유를 서술하시오.",
+  "keywords": [
+   "아밀로오스",
+   "아밀로펙틴",
+   "가지",
+   "1-4",
+   "1-6",
+   "소화 효소"
+  ],
+  "model": "아밀로오스는 주로 포도당이 1-4 글리코시드 결합으로 연결된 가지가 없는 구조이고, 아밀로펙틴은 1-4 결합을 기본으로 하면서 1-6 결합에 의해 가지가 형성된 구조이다. 이러한 가지 구조의 차이로 소화 효소가 접근하고 작용할 수 있는 부위의 수가 달라져 소화 효율과 에너지 공급 속도가 달라진다."
+ },
+ {
+  "ch": "5단원",
+  "q": "14. α-포도당과 β-포도당의 구조적 차이가 녹말과 셀룰로오스의 구조 차이를 만드는 이유를 간단히 서술하시오.",
+  "keywords": [
+   "1번 탄소",
+   "배열",
+   "번갈아",
+   "직선",
+   "셀룰로오스"
+  ],
+  "model": "α-포도당과 β-포도당은 1번 탄소의 –OH 위치가 다르며, 이 차이로 1→4 결합 시 배열 방식이 달라진다. β-포도당은 고리가 번갈아 배열되어 직선형의 강한 셀룰로오스 구조를 형성한다."
+ },
+ {
+  "ch": "5단원",
+  "q": "21. 지방의 기본 구성 성분과 이들이 결합하는 방식을 서술하시오.",
+  "keywords": [
+   "글리세롤",
+   "3개",
+   "지방산",
+   "에스터",
+   "수산기",
+   "카르복실기"
+  ],
+  "model": "지방은 1개의 글리세롤과 3개의 지방산으로 구성되며, 글리세롤의 수산기와 지방산의 카르복실기가 에스터 결합을 형성한다."
+ },
+ {
+  "ch": "5단원",
+  "q": "23. 포화 지방산이 실온에서 고체로 존재하는 이유를 구조적 특징과 관련지어 서술하시오.",
+  "keywords": [
+   "이중 결합",
+   "곧",
+   "빽빽",
+   "고체"
+  ],
+  "model": "포화 지방산은 탄소 사이에 이중 결합이 없어 사슬이 곧게 뻗어 있으며, 분자들이 서로 빽빽하게 배열될 수 있기 때문에 실온에서 고체로 존재한다."
+ },
+ {
+  "ch": "5단원",
+  "q": "27. 인지질의 구조적 특징과 세포막을 형성할 수 있는 이유를 서술하시오.",
+  "keywords": [
+   "친수성",
+   "소수성",
+   "양친매성",
+   "이중층"
+  ],
+  "model": "인지질은 친수성 머리와 소수성 지방산 꼬리를 함께 가지는 양친매성 분자이다. 이 때문에 물속에서 인지질 이중층을 형성하여 세포막의 기본 구조를 이룬다."
+ },
+ {
+  "ch": "5단원",
+  "q": "28. 인지질의 친수성머리와 소수성 꼬리의 배열이 세포막의 선택적 투과성에 기여하는 이유를 설명하시오.",
+  "keywords": [
+   "친수성",
+   "소수성",
+   "내부층",
+   "이온",
+   "제한"
+  ],
+  "model": "친수성머리는 세포 안팎의 수용성 환경을 향하고 소수성 꼬리는 막 내부에서 서로 마주 보아 소수성 내부층을 형성한다. 이 내부층이 친수성 물질이나 이온의 자유로운 통과를 제한하여 세포막에 선택적 투과성을 부여한다."
+ },
+ {
+  "ch": "5단원",
+  "q": "35. 폴리펩타이드가 형성되는 과정과 방향성을 서술하시오.",
+  "keywords": [
+   "카르복실기",
+   "아미노기",
+   "탈수",
+   "펩타이드 결합",
+   "N-말단",
+   "C-말단"
+  ],
+  "model": "한 아미노산의 카르복실기와 다른 아미노산의 아미노기 사이에 탈수반응으로 펩타이드 결합이 형성되어 폴리펩타이드가 만들어진다. 폴리펩타이드는 N-말단에서 C-말단으로 이어지는 방향성을 가진다."
+ },
+ {
+  "ch": "5단원",
+  "q": "39. 단백질의 2차 구조가 형성되는 원리와 대표적인 두 가지 형태를 서술하시오.",
+  "keywords": [
+   "수소결합",
+   "골격",
+   "α-나선",
+   "β-병풍"
+  ],
+  "model": "단백질의 2차 구조는 폴리펩타이드 골격 사이의 수소결합에 의해 형성된다. 대표적으로 α-나선 구조와 β-병풍 구조가 있다."
+ },
+ {
+  "ch": "5단원",
+  "q": "40. 단백질의 3차 구조를 형성하고 안정화하는 주요 상호작용을 서술하시오.",
+  "keywords": [
+   "곁사슬",
+   "소수성 상호작용",
+   "반데르발스",
+   "이온 결합",
+   "수소 결합",
+   "이황화 결합"
+  ],
+  "model": "단백질의 3차 구조는 곁사슬 사이의 소수성 상호작용, 반데르발스 힘, 이온 결합, 수소 결합, 이황화 결합 등에 의해 형성되고 안정화된다."
+ },
+ {
+  "ch": "5단원",
+  "q": "42. 낫모양적혈구 빈혈증에서 글루탐산이 발린으로 치환되면 헤모글로빈이 서로 뭉치기 쉬워지는 이유를 설명하시오.",
+  "keywords": [
+   "글루탐산",
+   "발린",
+   "소수성",
+   "표면",
+   "뭉"
+  ],
+  "model": "친수성인 글루탐산이 소수성인 발린으로 바뀌면서 헤모글로빈 표면에 소수성 부위가 생기고, 이 부위가 다른 헤모글로빈의 소수성 부위와 상호작용하여 서로 뭉치기 쉬워지기 때문이다."
+ },
+ {
+  "ch": "5단원",
+  "q": "47. 피리미딘과 퓨린 계열 질소성 염기의 구조적 차이와 각각에 속하는 염기를 서술하시오.",
+  "keywords": [
+   "피리미딘",
+   "퓨린",
+   "육각",
+   "이중 고리",
+   "오각"
+  ],
+  "model": "피리미딘은 하나의 육각 고리로 이루어지며 C, T, U가 속하고, 퓨린은 육각 고리와 오각 고리가 결합된 이중 고리로 이루어지며 A, G가 속한다."
+ },
+ {
+  "ch": "5단원",
+  "q": "48. DNA와 RNA의 당 구조 차이와 이 차이가 안정성에 미치는 영향을 서술하시오.",
+  "keywords": [
+   "디옥시리보스",
+   "리보오스",
+   "2번 탄소",
+   "불안정",
+   "정보 저장"
+  ],
+  "model": "DNA는 디옥시리보스, RNA는 리보오스를 가지며, RNA의 리보오스에는 2번 탄소에 –OH가 있어 DNA보다 상대적으로 불안정하다. 따라서 DNA는 장기적인 유전정보 저장에 더 적합하다."
+ },
+ {
+  "ch": "6단원",
+  "q": "3. 이화 작용과 동화 작용을 물질 변화와 에너지 흐름의 측면에서 비교하여 설명하시오.",
+  "keywords": [
+   "고분자",
+   "저분자",
+   "분해",
+   "합성",
+   "방출",
+   "필요"
+  ],
+  "model": "이화 작용은 고분자 물질을 저분자로 분해하면서 에너지를 방출하는 과정이고, 동화 작용은 저분자물질을 고분자로 합성하기 위해 에너지를 필요로 하는 과정이다."
+ },
+ {
+  "ch": "6단원",
+  "q": "6. 열역학 제2법칙의 관점에서 생명체가 지속적으로 에너지를 공급받아야 하는 이유를 설명하시오.",
+  "keywords": [
+   "열",
+   "엔트로피",
+   "증가",
+   "질서",
+   "외부",
+   "공급"
+  ],
+  "model": "에너지 변환 과정에서 일부 에너지가 열로 방출되고 전체적인 엔트로피가 증가하므로, 생명체가 질서를 유지하기 위해서는 외부로부터 지속적으로 에너지를 공급받아야 하기 때문이다."
+ },
+ {
+  "ch": "6단원",
+  "q": "8. 세포가 평형 상태에 도달하면 생명 활동을 지속하기 어려운 이유를 자유에너지와 관련하여 설명하시오.",
+  "keywords": [
+   "평형",
+   "자유에너지",
+   "가장 낮",
+   "에너지 변화"
+  ],
+  "model": "세포가 평형에 도달하면 자유에너지가 가장 낮은 상태가 되어 더 이상 일을 할 수 있는 에너지 변화가 일어나지 않기 때문이다."
+ },
+ {
+  "ch": "6단원",
+  "q": "10. ATP 가수분해가 세포의 에너지 짝물림에 이용되는 원리를 설명하시오.",
+  "keywords": [
+   "가수분해",
+   "ADP",
+   "무기 인산",
+   "자유에너지",
+   "짝물림",
+   "비자발적"
+  ],
+  "model": "ATP가 물과 반응하여 ADP와 무기 인산으로 가수분해될 때 자유에너지가 방출되며, 세포는 이 에너지를 다른 비자발적 반응과 짝물림하여 생명 활동에 이용한다."
+ },
+ {
+  "ch": "6단원",
+  "q": "13. 글루타민 합성 과정을 통해 ATP가 화학적 일을 가능하게 하는 원리를 설명하시오.",
+  "keywords": [
+   "비자발적",
+   "3.4",
+   "7.3",
+   "3.9",
+   "짝물림",
+   "인산기",
+   "중간산물"
+  ],
+  "model": "글루타민 합성 반응은 ΔG가 +3.4 kcal/mol로 비자발적이지만, ATP 가수분해의 ΔG –7.3 kcal/mol과 짝물림되면 전체 ΔG가 –3.9 kcal/mol이 된다. 또한 ATP의 인산기가 글루탐산에 전달되어 반응성이 높은 중간산물이 형성되므로 글루타민 합성이 진행될 수 있다."
+ },
+ {
+  "ch": "6단원",
+  "q": "14. 효소가 화학 반응의 속도를 빠르게 하는 원리를 활성화 에너지와 관련하여 설명하시오.",
+  "keywords": [
+   "활성화 에너지",
+   "낮",
+   "속도"
+  ],
+  "model": "효소는 반응물이 생성물로 전환될 때 필요한 활성화 에너지를 낮추어 반응이 더 쉽게 일어나도록 하므로 화학 반응의 속도를 증가시킨다."
+ },
+ {
+  "ch": "6단원",
+  "q": "20. 효소가 활성화 에너지와 자유에너지 변화(ΔG)에 미치는 영향을 각각 설명하시오.",
+  "keywords": [
+   "활성화 에너지",
+   "낮",
+   "자유에너지",
+   "속도"
+  ],
+  "model": "효소는 활성화 에너지를 낮추어 반응 속도를 증가시키지만, 반응물과 생성물 사이의 자유에너지 변화(ΔG)는 변화시키지 않는다."
+ },
+ {
+  "ch": "6단원",
+  "q": "26. 기질 농도를 계속 높여도 효소 반응 속도가 일정 수준 이상 증가하지 않는 이유를 설명하시오.",
+  "keywords": [
+   "포화",
+   "활성 부위",
+   "결합"
+  ],
+  "model": "모든 효소의 활성 부위가 기질로 채워져 포화 상태가 되면 추가된 기질이 더 이상 효소와 결합할 수 없기 때문이다."
+ },
+ {
+  "ch": "6단원",
+  "q": "28. 온도가 지나치게 높아지면 효소 반응 속도가 감소하는 이유를 설명하시오.",
+  "keywords": [
+   "변성",
+   "수소 결합",
+   "이온 결합",
+   "활성 부위",
+   "구조"
+  ],
+  "model": "높은 온도에 의해 효소의 구조를 유지하는 수소 결합이나 이온 결합 등이 파괴되어 단백질이 변성되고, 활성 부위의 구조가 변하여 효소가 정상적으로 작용하지 못하기 때문이다."
+ },
+ {
+  "ch": "6단원",
+  "q": "33. 경쟁적 저해에서 기질 농도를 높이면 저해 효과가 감소하는 이유를 설명하시오.",
+  "keywords": [
+   "활성 부위",
+   "기질",
+   "저해제"
+  ],
+  "model": "기질 농도가 증가하면 기질이 저해제보다 활성 부위에 결합할 가능성이 커지기 때문이다."
+ },
+ {
+  "ch": "6단원",
+  "q": "34. 비경쟁적 저해에서 기질 농도를 높여도 저해 효과가 사라지지 않는 이유를 설명하시오.",
+  "keywords": [
+   "다른 부위",
+   "구조",
+   "촉매 기능",
+   "회복"
+  ],
+  "model": "비경쟁적 저해제는 활성 부위가 아닌 다른 부위에 결합하여 효소의 구조와 촉매 기능을 변화시키므로, 기질 농도를 높여도 효소의 기능 저하가 회복되지 않기 때문이다."
+ },
+ {
+  "ch": "6단원",
+  "q": "35. 무경쟁적 저해에서 기질 농도를 증가시켜도 저해 효과를 극복하기 어려운 이유를 설명하시오.",
+  "keywords": [
+   "효소-기질 복합체",
+   "저해제",
+   "결합"
+  ],
+  "model": "무경쟁적 저해제는 효소-기질 복합체에만 결합하므로, 기질 농도가 증가하여 효소-기질 복합체가 많아져도 저해제가 결합할 대상이 함께 증가하기 때문이다."
+ },
+ {
+  "ch": "6단원",
+  "q": "39. 헤모글로빈의 산소 결합에서 협동성이 나타나는 원리와 그 이점을 설명하시오.",
+  "keywords": [
+   "소단위",
+   "구조 변화",
+   "친화도",
+   "방출"
+  ],
+  "model": "한 결합 부위에 산소가 결합하거나 해리되면 소단위의 구조 변화가 다른 소단위로 전달되어 다른 결합 부위의 산소 친화도가 함께 변한다. 그 결과 산소가 많은 곳에서는 산소를 잘 결합하고, 산소가 적은 조직에서는 산소를 쉽게 방출할 수 있다."
+ },
+ {
+  "ch": "6단원",
+  "q": "41. 아이소류신 합성 과정에서 되먹임 억제가 일어나는 원리를 설명하시오.",
+  "keywords": [
+   "최종 생성물",
+   "조절 부위",
+   "효소 1",
+   "억제",
+   "첫 단계"
+  ],
+  "model": "최종 생성물인 아이소류신이 일정량 이상 축적되면 효소 1의 조절 부위에 결합하여 효소 1의 활성을 억제하고, 트레오닌이 중간산물 A로 전환되는 첫 단계를 차단하여 아이소류신의 추가 합성을 감소시키는 과정이다."
+ },
+ {
+  "ch": "6단원",
+  "q": "42. 세포 구획화와 다효소복합체가 물질대사를 효율적으로 만드는 이유를 각각 설명하시오.",
+  "keywords": [
+   "구획화",
+   "분리",
+   "다효소복합체",
+   "기질",
+   "연속"
+  ],
+  "model": "세포 구획화는 서로 다른 대사 경로가 간섭하지 않도록 분리하며, 다효소복합체는 한 효소의 생성물이 곧바로 다음 효소의 기질로 사용되도록 하여 대사 반응을 빠르고 연속적으로 진행시키기 때문이다."
+ }
+];
+/* ================================================= */
+
+const $ = id => document.getElementById(id);
+let store = {};
+try { store = JSON.parse(localStorage.getItem("essay-progress") || "{}"); } catch(e){}
+let remoteDoc = null, saveTimer = null, saving = false, dirty = false;
+const save = () => {
+  try { localStorage.setItem("essay-progress", JSON.stringify(store)); } catch(e){}
+  if(!remoteDoc) return;
+  dirty = true; clearTimeout(saveTimer); saveTimer = setTimeout(flush, 800);
+};
+async function flush(){
+  if(saving || !dirty || !remoteDoc) return;
+  saving = true; dirty = false;
+  try { await remoteDoc.set({progress: JSON.stringify(store)}); } catch(e){}
+  saving = false; if(dirty) flush();
+}
+function connectRemote(progressStr, saver){
+  if(progressStr){
+    try {
+      const r = JSON.parse(progressStr);
+      store = Object.assign({}, store, r, {__draft: Object.assign({}, store.__draft || {}, r.__draft || {})});
+      try { localStorage.setItem("essay-progress", JSON.stringify(store)); } catch(e){}
+    } catch(e){}
+  }
+  remoteDoc = { set: saver };
+  render();
+  dirty = true; flush();
+}
+function disconnectRemote(){ remoteDoc = null; }
+
+let chapter = "전체", order = [], pos = 0, revealed = false, onlyWrong = false;
+const key = i => QUESTIONS[i].q;
+const norm = s => s.replace(/[\s\-–−‐]+/g,"").toLowerCase();
+
+function rebuild(keepShuffle){
+  let idx = QUESTIONS.map((_,i)=>i).filter(i => chapter==="전체" || QUESTIONS[i].ch===chapter);
+  if(onlyWrong) idx = idx.filter(i => ["bad","mid"].includes(store[key(i)]));
+  if(!keepShuffle) order = idx; else order = idx.sort(()=>Math.random()-.5);
+  pos = 0; revealed = false; render();
+}
+
+function renderChapters(){
+  const chs = ["전체", ...new Set(QUESTIONS.map(q=>q.ch))];
+  $("chapters").innerHTML = "";
+  chs.forEach(c=>{
+    const b = document.createElement("button");
+    b.className = "chip" + (c===chapter ? " on":""); b.textContent = c;
+    b.onclick = ()=>{ chapter=c; renderChapters(); rebuild(false); };
+    $("chapters").appendChild(b);
+  });
+}
+
+function renderStats(){
+  const v = QUESTIONS.map(q=>store[q.q]);
+  const n = s => v.filter(x=>x===s).length;
+  $("stats").innerHTML = `<span>전체 <b>${QUESTIONS.length}</b></span><span>맞음 <b style="color:var(--ok)">${n("ok")}</b></span><span>헷갈림 <b style="color:var(--mid)">${n("mid")}</b></span><span>모름 <b style="color:var(--bad)">${n("bad")}</b></span>`;
+}
+
+function esc(s){ return s.replace(/[&<>]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c])); }
+
+function renderNav(){
+  const nav = $("nav"); nav.innerHTML = "";
+  order.forEach((qi,p)=>{
+    const Q = QUESTIONS[qi], num = Q.q.split(".")[0];
+    const b = document.createElement("button");
+    b.textContent = chapter==="전체" ? Q.ch.replace("단원","")+"-"+num : num;
+    b.className = (store[key(qi)]||"") + (p===pos ? " cur":"");
+    b.title = Q.ch + " " + num + "번";
+    b.onclick = () => { pos=p; revealed=false; render(); };
+    nav.appendChild(b);
+  });
+}
+
+function render(){
+  renderStats(); renderNav();
+  $("wrongOnly").classList.toggle("on", onlyWrong);
+  $("wrongOnly").style.borderColor = onlyWrong ? "var(--accent)" : "";
+  if(!order.length){
+    $("card").innerHTML = `<p class="q">해당하는 문제가 없어요.</p>`;
+    $("prev").disabled = $("next").disabled = true; return;
+  }
+  $("prev").disabled = pos===0; $("next").disabled = pos===order.length-1;
+  const i = order[pos], Q = QUESTIONS[i];
+  const draft = (store.__draft && store.__draft[key(i)]) || "";
+  $("card").innerHTML = `
+    <div class="meta"><span class="tag">${esc(Q.ch)}</span><span>${pos+1} / ${order.length}</span></div>
+    <p class="q">${esc(Q.q)}</p>
+    <textarea id="ans" placeholder="여기에 서술형 답안을 써 보세요.">${esc(draft)}</textarea>
+    <div class="row"><button class="btn" id="check">채점하기</button><button class="btn ghost" id="clear">지우기</button></div>
+    <div id="out"></div>`;
+  $("ans").oninput = e => { store.__draft = store.__draft || {}; store.__draft[key(i)] = e.target.value; save(); };
+  $("clear").onclick = () => { $("ans").value=""; $("ans").oninput({target:$("ans")}); $("out").innerHTML=""; revealed=false; };
+  $("check").onclick = () => showResult(i);
+  if(revealed) showResult(i);
+}
+
+function showResult(i){
+  revealed = true;
+  const Q = QUESTIONS[i], text = norm($("ans").value);
+  const hits = Q.keywords.map(k => ({k, ok: text.includes(norm(k))}));
+  const got = hits.filter(h=>h.ok).length;
+  const cur = store[key(i)];
+  $("out").innerHTML = `
+    <div class="result">
+      <h3>핵심 키워드 (내 답안 기준)</h3>
+      <div class="kw">${hits.map(h=>`<span class="${h.ok?"hit":"miss"}">${h.ok?"✓":"✗"} ${esc(h.k)}</span>`).join("")}</div>
+      <div class="score">키워드 <b>${got} / ${Q.keywords.length}</b> 포함</div>
+      <h3>모범답안</h3>
+      <div class="model">${esc(Q.model)}</div>
+      <h3 style="margin-top:16px">스스로 채점</h3>
+      <div class="row grade">
+        <button class="btn ${cur==="ok"?"g-ok":"ghost"}" data-g="ok">맞음</button>
+        <button class="btn ${cur==="mid"?"g-mid":"ghost"}" data-g="mid">헷갈림</button>
+        <button class="btn ${cur==="bad"?"g-bad":"ghost"}" data-g="bad">모름</button>
+      </div>
+    </div>`;
+  $("out").querySelectorAll("[data-g]").forEach(b => b.onclick = () => {
+    store[key(i)] = b.dataset.g; save(); renderStats(); renderNav(); showResult(i);
+  });
+}
+
+$("prev").onclick = () => { if(pos>0){pos--; revealed=false; render();} };
+$("next").onclick = () => { if(pos<order.length-1){pos++; revealed=false; render();} };
+$("shuffle").onclick = () => rebuild(true);
+$("wrongOnly").onclick = () => { onlyWrong = !onlyWrong; rebuild(false); };
+
+renderChapters(); rebuild(false);
+function route(){
+  const quiz = location.hash === "#bio22";
+  $("homeView").hidden = quiz; $("quizView").hidden = !quiz;
+  document.title = quiz ? "2-2 생명 퀴즈 대비 · 주하연 공부방" : "주하연 공부방";
+}
+window.addEventListener("hashchange", route); route();
+</script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+/* ▼▼ Firebase 콘솔에서 복사한 설정값으로 바꾸세요 ▼▼ */
+const firebaseConfig = {
+  apiKey: "AIzaSyBgB8vf5w7mtkCRl2VuRPoABnXAfxdPPkg",
+  authDomain: "saengmyeong-quiz.firebaseapp.com",
+  projectId: "saengmyeong-quiz",
+  storageBucket: "saengmyeong-quiz.firebasestorage.app",
+  messagingSenderId: "598031348152",
+  appId: "1:598031348152:web:41d485e6ad9a3eda3d9f4d"
+};
+/* ▲▲ ----------------------------------------- ▲▲ */
+
+if (firebaseConfig.apiKey !== "YOUR_API_KEY") {
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app), db = getFirestore(app);
+  const bar = document.getElementById("authbar");
+  bar.hidden = false;
+  const loggedOut = () => {
+    bar.innerHTML = '<span>로그인하면 기록이 계정에 저장돼요</span><button class="btn" id="login">Google로 로그인</button>';
+    document.getElementById("login").onclick = () => signInWithPopup(auth, new GoogleAuthProvider()).catch(()=>{});
+  };
+  loggedOut();
+  onAuthStateChanged(auth, async user => {
+    if (!user) { disconnectRemote(); loggedOut(); return; }
+    const ref = doc(db, "users", user.uid);
+    bar.innerHTML = '<span>' + (user.displayName || "로그인됨").replace(/[<>&]/g,"") + ' · 기록 자동 저장 중</span><button class="btn ghost" id="logout">로그아웃</button>';
+    document.getElementById("logout").onclick = () => signOut(auth);
+    let progress = null;
+    try { const snap = await getDoc(ref); if (snap.exists()) progress = snap.data().progress; } catch(e) {}
+    connectRemote(progress, obj => setDoc(ref, obj, { merge: true }));
+  });
+}
+</script>
+</body>
+</html>
