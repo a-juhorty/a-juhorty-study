@@ -6,30 +6,30 @@
 <title>생명과학 방과후 문제 모음</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600&family=Noto+Serif+KR:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
 
 :root{
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
   padding-bottom:env(safe-area-inset-bottom,0px);
-  --bg:#E9EFF3; --paper:#F8FBFC; --ink:#14283A; --muted:#506779; --line:#C2D1DB;
-  --label:#DCE6EC; --stain:#5B3F8C; --on-stain:#FFFFFF;
-  --ok:#157A68; --mid:#B7791F; --bad:#C23B66; --tint:#EEF3F7;
-  --serif:"Noto Serif KR","Nanum Myeongjo","Batang",serif;
-  --sans:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --bg:#F6F5F1; --paper:#FFFFFF; --ink:#14213A; --muted:#6A7080; --line:#D9D7CF;
+  --label:#EEF2F8; --stain:#A5271D; --on-stain:#FFFFFF; --blue:#3B6AA3;
+  --ok:#3B6AA3; --mid:#B8921E; --bad:#A5271D; --tint:#EEF2F8;
+  --serif:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --sans:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --bg:#0F1B25; --paper:#162533; --ink:#E4EDF3; --muted:#93A9B9; --line:#2B4153;
-    --label:#1F3446; --stain:#A58BDB; --on-stain:#1A1030;
-    --ok:#4FC3A9; --mid:#E0AE4F; --bad:#EE7C9F; --tint:#1B2D3C;
+    --bg:#0E1626; --paper:#16213A; --ink:#E8ECF4; --muted:#9AA5BB; --line:#2A3858;
+    --label:#1D2B49; --stain:#E0604F; --on-stain:#fff; --blue:#7FA6D8;
+    --ok:#7FA6D8; --mid:#E3C15A; --bad:#E0604F; --tint:#1D2B49;
   }
 }
 :root[data-theme="dark"]{
-  --bg:#0F1B25; --paper:#162533; --ink:#E4EDF3; --muted:#93A9B9; --line:#2B4153;
-  --label:#1F3446; --stain:#A58BDB; --on-stain:#1A1030;
-  --ok:#4FC3A9; --mid:#E0AE4F; --bad:#EE7C9F; --tint:#1B2D3C;
+  --bg:#0E1626; --paper:#16213A; --ink:#E8ECF4; --muted:#9AA5BB; --line:#2A3858;
+  --label:#1D2B49; --stain:#E0604F; --on-stain:#fff; --blue:#7FA6D8;
+  --ok:#7FA6D8; --mid:#E3C15A; --bad:#E0604F; --tint:#1D2B49;
 }
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *,*::before,*::after{box-sizing:inherit}
@@ -187,6 +187,25 @@ svg .col{stroke:var(--muted);stroke-width:9;fill:none;stroke-linecap:round}
 svg .gap{stroke:var(--tint);stroke-width:7;fill:none}
 svg .cw{stroke:var(--ink);stroke-width:4;fill:var(--paper)}
 
+/* ===== 디자인: 깔끔한 스타일 ===== */
+body{border-top:10px solid var(--blue)}
+.wrap{padding-top:26px}
+header.top{padding-bottom:18px;border-bottom:1px solid var(--line);margin-bottom:26px}
+h1{font-size:clamp(34px,7vw,60px);line-height:1.08;letter-spacing:-.06em;font-weight:900;margin:0 0 8px}
+.ghost{border:1.5px solid var(--ink);background:transparent;color:var(--ink);border-radius:999px;font-weight:700}
+.seg{border:1.5px solid var(--line);border-radius:999px;background:transparent}
+.seg button{color:var(--ink)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg);font-weight:700}
+.map button{border-radius:4px}
+.map button.cur{outline:2px solid var(--ink)}
+.slide{border-radius:0;border:1px solid var(--line);border-top:3px solid var(--ink);box-shadow:none}
+.slide-label .ch{font-weight:900;color:var(--stain)}
+h2.q{font-weight:900;letter-spacing:-.02em;font-size:clamp(18px,3.2vw,22px)}
+.ctx{border-left-color:var(--blue)}
+textarea{border-radius:4px}
+.btn{border-radius:999px;border:1.5px solid var(--ink);font-weight:700;padding:9px 20px}
+.btn.primary{border-color:var(--stain)}
+.box{border-radius:4px}
 </style>
 </head>
 <body>
