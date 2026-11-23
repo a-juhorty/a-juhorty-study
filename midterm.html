@@ -1,0 +1,1600 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>생명과학 방과후 문제 모음</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600&family=Noto+Serif+KR:wght@500;700&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#E9EFF3; --paper:#F8FBFC; --ink:#14283A; --muted:#506779; --line:#C2D1DB;
+  --label:#DCE6EC; --stain:#5B3F8C; --on-stain:#FFFFFF;
+  --ok:#157A68; --mid:#B7791F; --bad:#C23B66; --tint:#EEF3F7;
+  --serif:"Noto Serif KR","Nanum Myeongjo","Batang",serif;
+  --sans:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F1B25; --paper:#162533; --ink:#E4EDF3; --muted:#93A9B9; --line:#2B4153;
+    --label:#1F3446; --stain:#A58BDB; --on-stain:#1A1030;
+    --ok:#4FC3A9; --mid:#E0AE4F; --bad:#EE7C9F; --tint:#1B2D3C;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F1B25; --paper:#162533; --ink:#E4EDF3; --muted:#93A9B9; --line:#2B4153;
+  --label:#1F3446; --stain:#A58BDB; --on-stain:#1A1030;
+  --ok:#4FC3A9; --mid:#E0AE4F; --bad:#EE7C9F; --tint:#1B2D3C;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.65}
+.wrap{max-width:860px;margin:0 auto;padding:20px 16px 56px}
+button,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--stain);outline-offset:2px}
+
+header.top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:18px}
+h1{font-family:var(--serif);font-size:1.55rem;line-height:1.35;margin:0 0 4px;font-weight:700}
+.sub-title{margin:0;color:var(--muted);font-size:.92rem}
+.ghost{border:1px solid var(--line);background:var(--paper);border-radius:8px;padding:6px 12px;cursor:pointer;font-size:.88rem;color:var(--muted);white-space:nowrap}
+.ghost:hover{color:var(--ink)}
+
+.controls{display:flex;flex-wrap:wrap;gap:10px 18px;margin-bottom:14px}
+.ctl{display:flex;align-items:center;gap:8px}
+.ctl > span{font-size:.85rem;color:var(--muted)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--paper)}
+.seg button{border:0;background:transparent;color:var(--muted);padding:6px 11px;cursor:pointer;font-size:.9rem}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--stain);color:var(--on-stain)}
+
+.stats{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:.88rem;color:var(--muted);margin:0 0 10px}
+.stats b{color:var(--ink);font-weight:600}
+.dot{display:inline-block;width:.6rem;height:.6rem;border-radius:50%;margin-right:5px;vertical-align:baseline}
+.dot.ok{background:var(--ok)}.dot.mid{background:var(--mid)}.dot.bad{background:var(--bad)}.dot.new{border:1.5px solid var(--muted)}
+
+.map{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:18px}
+.maplabel{font-size:.8rem;color:var(--muted);margin:0 2px 0 8px}
+.maplabel:first-child{margin-left:0}
+.map button{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--muted);background:transparent;padding:0;cursor:pointer}
+.map button.ok{background:var(--ok);border-color:var(--ok)}
+.map button.mid{background:var(--mid);border-color:var(--mid)}
+.map button.bad{background:var(--bad);border-color:var(--bad)}
+.map button.cur{outline:2px solid var(--stain);outline-offset:2px}
+
+.slide{display:grid;grid-template-columns:5.6rem 1fr;background:var(--paper);border:1px solid var(--line);border-radius:10px;overflow:hidden;box-shadow:0 1px 0 var(--line)}
+.slide-label{background:var(--label);border-right:1px solid var(--line);padding:18px 8px;display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center}
+.slide-label .ch{font-family:var(--serif);font-weight:700;font-size:1.3rem;line-height:1.2}
+.slide-label .no{font-size:.9rem;color:var(--muted)}
+.slide-label .sub{font-size:.9rem;color:var(--muted)}
+.slide-body{padding:22px 24px 24px;min-width:0}
+.ctx{white-space:pre-line;font-size:.9rem;color:var(--muted);background:var(--tint);border-left:3px solid var(--stain);border-radius:0 6px 6px 0;padding:10px 14px;margin:0 0 16px}
+h2.q{font-family:var(--serif);font-weight:500;font-size:1.22rem;line-height:1.75;margin:0 0 16px;white-space:pre-line}
+textarea{display:block;width:100%;min-height:8.5rem;resize:vertical;border:1px solid var(--line);border-radius:8px;background:var(--bg);padding:12px 14px;line-height:1.65}
+textarea::placeholder{color:var(--muted)}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.btn{border:1px solid var(--line);background:transparent;border-radius:8px;padding:9px 16px;cursor:pointer;font-weight:500}
+.btn:hover{border-color:var(--muted)}
+.btn.primary{background:var(--stain);color:var(--on-stain);border-color:var(--stain);font-weight:600}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn[disabled]{opacity:.45;cursor:default}
+.hint{font-size:.82rem;color:var(--muted);margin:10px 0 0}
+
+.reveal{display:grid;gap:12px}
+.box{border:1px solid var(--line);border-radius:8px;padding:12px 16px;background:var(--bg)}
+.box h3{margin:0 0 4px;font-size:.88rem;font-weight:600;color:var(--muted)}
+.box p{margin:0;white-space:pre-line}
+.box p.empty{color:var(--muted)}
+.box.model{border-color:var(--stain);background:var(--tint)}
+.box.model h3{color:var(--stain)}
+.chips-title{font-size:.85rem;color:var(--muted);margin:2px 0 6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);border-radius:999px;padding:2px 11px;font-size:.86rem;color:var(--muted)}
+.chip.hit{border-color:var(--ok);color:var(--ok);font-weight:500}
+.chip.miss{border-color:var(--bad);color:var(--bad)}
+.grade-title{font-weight:600;margin:6px 0 0}
+.grade{display:flex;flex-wrap:wrap;gap:10px}
+.grade .btn{flex:1 1 7rem;font-weight:600}
+.grade .btn[aria-pressed="true"]{outline:2px solid var(--stain);outline-offset:2px}
+.grade .g-ok{border-color:var(--ok);color:var(--ok)}
+.grade .g-mid{border-color:var(--mid);color:var(--mid)}
+.grade .g-bad{border-color:var(--bad);color:var(--bad)}
+.grade .g-ok:hover{background:var(--ok);color:var(--on-stain)}
+.grade .g-mid:hover{background:var(--mid);color:var(--on-stain)}
+.grade .g-bad:hover{background:var(--bad);color:var(--on-stain)}
+
+.done{padding:34px 28px}
+.done h2{font-family:var(--serif);font-size:1.3rem;margin:0 0 8px}
+.done p{margin:0 0 6px;color:var(--muted)}
+.foot{margin-top:26px;font-size:.84rem;color:var(--muted);display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center}
+
+.fig{margin:0 0 16px;border:1px solid var(--line);border-radius:8px;background:var(--tint);padding:10px 10px 6px}
+.fig .fw{overflow-x:auto}
+.mat{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:12px 0;border-top:1px solid var(--line)}
+.mat:first-child{border-top:0}
+.mat .nm{flex:1 1 14rem;min-width:0;word-break:break-all}
+.mat .nm small{display:block;color:var(--muted);font-size:.8rem}
+.mat a.btn{text-decoration:none;color:inherit;display:inline-block}
+.tag{display:inline-block;margin-top:6px;border:1px solid var(--line);border-radius:999px;padding:0 8px;font-size:.72rem;line-height:1.6;color:var(--muted);background:var(--paper);white-space:nowrap}
+.tag.ai{border-color:var(--stain);color:var(--stain)}
+.fig svg{display:block;width:100%;max-width:620px;min-width:400px;height:auto;margin:0 auto}
+.fig figcaption{font-size:.78rem;color:var(--muted);text-align:center;margin-top:4px}
+
+@media (max-width:560px){
+  .slide{grid-template-columns:1fr}
+  .slide-label{flex-direction:row;justify-content:flex-start;align-items:baseline;gap:8px;padding:10px 16px;border-right:0;border-bottom:1px solid var(--line)}
+  .slide-body{padding:18px 16px 20px}
+  h2.q{font-size:1.1rem}
+  h1{font-size:1.3rem}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+
+
+[hidden]{display:none!important}
+.tools{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:24px;max-width:520px}
+#admin.panel{max-width:760px}
+.panel h2{font-family:var(--serif);font-size:1.25rem;margin:0 0 6px}
+.panel h3{font-size:1rem;margin:22px 0 8px}
+.panel p.lead{color:var(--muted);margin:0 0 14px}
+.panel label{display:block;font-size:.88rem;color:var(--muted);margin-bottom:6px}
+.row{display:flex;gap:10px}
+input[type=text]{flex:1;min-width:0;border:1px solid var(--line);border-radius:8px;background:var(--bg);padding:10px 12px;font:inherit;color:inherit}
+input[type=text]:disabled{opacity:.6}
+.msg{margin:12px 0 0;font-size:.92rem;color:var(--muted);min-height:1.4em}
+.msg.warn{color:var(--bad)}.msg.ok{color:var(--ok)}
+.save{font-size:.82rem;color:var(--muted);margin:0 0 8px;min-height:1.2em}
+.save.warn{color:var(--bad)}
+mark.kw{background:var(--label);background:color-mix(in srgb,var(--stain) 20%,transparent);color:inherit;font-weight:700;border-radius:3px;padding:0 2px}
+.box p.rich{white-space:normal}
+.box p.hint{margin-top:10px}
+table.ov{width:100%;border-collapse:collapse;font-size:.9rem}
+table.ov th,table.ov td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left}
+table.ov th{color:var(--muted);font-weight:600}
+.ov{overflow-x:auto}
+.fw{overflow-x:auto}
+
+svg .t{fill:var(--ink);font-size:13px;font-family:var(--sans)}
+svg .ts{fill:var(--muted);font-size:11px;font-family:var(--sans)}
+svg .tb{font-weight:600}
+svg .ln{stroke:var(--ink);stroke-width:1.5;fill:none}
+svg .lnm{stroke:var(--muted);stroke-width:1;fill:none}
+svg .dsh{stroke-dasharray:4 3}
+svg .pa{fill:var(--paper)}
+svg .tl{fill:var(--label)}
+svg .tn{fill:var(--tint)}
+svg .wt0{fill:var(--label);stroke:none}
+svg .wt{fill:var(--label);stroke:var(--ink);stroke-width:1.5}
+svg .acc{stroke:var(--stain);stroke-width:2;fill:none}
+svg .cv{stroke:var(--stain);stroke-width:2.6;fill:none;stroke-linecap:round;stroke-linejoin:round}
+svg .dt{fill:var(--stain)}
+svg .bl{fill:var(--paper);stroke:var(--stain);stroke-width:1.6}
+svg .nu{fill:var(--stain);fill-opacity:.35;stroke:var(--stain);stroke-width:1.2}
+svg .prot{fill:var(--ink);stroke:none}
+svg .dotk{fill:var(--ink);stroke:none}
+svg .mk{fill:var(--ink)}
+svg .dk{fill:var(--ink);fill-opacity:.72;stroke:none}
+svg .mu{fill:var(--muted);fill-opacity:.45;stroke:none}
+svg .hr{stroke:var(--ink);stroke-width:2.4;fill:none;stroke-linecap:round}
+svg .sac{stroke:var(--ink);stroke-width:11;fill:none;stroke-linecap:round}
+svg .sac2{stroke:var(--tint);stroke-width:7;fill:none;stroke-linecap:round}
+svg .gol{stroke:var(--ink);stroke-width:3.5;fill:none;stroke-linecap:round}
+svg .col{stroke:var(--muted);stroke-width:9;fill:none;stroke-linecap:round}
+svg .gap{stroke:var(--tint);stroke-width:7;fill:none}
+svg .cw{stroke:var(--ink);stroke-width:4;fill:var(--paper)}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>생명과학 방과후 문제 모음</h1>
+      <p class="sub-title"><a href="./" style="color:inherit">← 주하연 공부방</a> · 2-2 중간고사 대비</p>
+      <p class="sub-title" id="who">2~5장(단백질까지) · 7~8장</p>
+    </div>
+    <div class="tools">
+      <button class="ghost" id="logoutBtn" type="button" hidden>로그아웃</button>
+      <button class="ghost" id="theme" type="button">어둡게</button>
+    </div>
+  </header>
+
+  <section class="panel" id="login">
+    <h2>로그인하고 시작하기</h2>
+    <p class="lead">Google 계정으로 로그인하면 푼 기록이 계정에 저장돼서 어느 기기에서나 이어서 풀 수 있어요.</p>
+    <div class="row"><button class="btn primary" id="gBtn" type="button">Google로 로그인</button></div>
+    <p class="msg" id="loginMsg" role="status"></p>
+  </section>
+
+  <div id="quiz" hidden>
+    <div class="ctl" style="margin-bottom:14px;display:none"><div class="seg" id="seg-tab">
+      <button type="button" data-v="quiz" aria-pressed="true">문제</button>
+      <button type="button" data-v="mat" aria-pressed="false">자료</button>
+    </div></div>
+    <div id="quizMain">
+    <div class="controls">
+      <div class="ctl"><span>단원</span><div class="seg" id="seg-ch">
+        <button type="button" data-v="all" aria-pressed="true">전체</button>
+        <button type="button" data-v="2" aria-pressed="false">2장</button>
+        <button type="button" data-v="3" aria-pressed="false">3장</button>
+        <button type="button" data-v="4" aria-pressed="false">4장</button>
+        <button type="button" data-v="5" aria-pressed="false">5장</button>
+        <button type="button" data-v="7" aria-pressed="false">7장</button>
+        <button type="button" data-v="8" aria-pressed="false">8장</button>
+      </div></div>
+      <div class="ctl"><span>순서</span><div class="seg" id="seg-order">
+        <button type="button" data-v="seq" aria-pressed="true">차례대로</button>
+        <button type="button" data-v="shuffle" aria-pressed="false">섞기</button>
+      </div></div>
+      <div class="ctl"><span>범위</span><div class="seg" id="seg-scope">
+        <button type="button" data-v="all" aria-pressed="true">전체</button>
+        <button type="button" data-v="new" aria-pressed="false">안 푼 것</button>
+        <button type="button" data-v="wrong" aria-pressed="false">틀림·헷갈림</button>
+      </div></div>
+      <div class="ctl"><span>문제 언어</span><div class="seg" id="seg-lang">
+        <button type="button" data-v="ko" aria-pressed="true">한국어</button>
+        <button type="button" data-v="en" aria-pressed="false">English</button>
+      </div></div>
+    </div>
+    <p class="stats" id="stats"></p>
+    <p class="save" id="saveState" role="status"></p>
+    <div class="map" id="map" role="group" aria-label="문항 목록"></div>
+    <section id="card" aria-live="polite"></section>
+    <div class="foot">
+      <span>직접 제작한 답안이니 수정할 부분은 2412 주하연에게 제보해주세요.</span>
+      <span>기록은 로그인한 Google 계정에 저장돼요.</span>
+      <button class="ghost" id="backupBtn" type="button">기록 코드 저장·불러오기</button>
+      <button class="ghost" id="reset" type="button">내 기록 지우기</button>
+    </div>
+    <section class="panel" id="backup" hidden style="margin-top:14px;max-width:none">
+      <h2>기록 코드</h2>
+      <p class="lead">내 기록을 글자(코드)로 바꿔 보관했다가, 다른 기기나 브라우저에서 붙여넣어 이어서 풀 수 있어요. 불러오면 지금 기록과 합쳐지고, 같은 문제는 불러온 기록이 우선돼요.</p>
+      <label for="codeOut">① 내 기록 코드 (복사해서 메모장·카톡 나에게 보내기 등에 보관)</label>
+      <textarea id="codeOut" readonly rows="3" style="min-height:4.5rem"></textarea>
+      <div class="actions"><button class="btn" id="codeCopy" type="button">코드 복사</button></div>
+      <label for="codeIn" style="margin-top:16px">② 저장해 둔 코드 붙여넣기</label>
+      <textarea id="codeIn" rows="3" style="min-height:4.5rem" placeholder="여기에 코드를 붙여넣고 ‘불러오기’를 누르세요"></textarea>
+      <div class="actions"><button class="btn primary" id="codeLoad" type="button">불러오기</button></div>
+      <p class="msg" id="codeMsg" role="status"></p>
+    </section>
+  </div>
+    <section id="materials" hidden>
+      <div class="panel" style="max-width:none">
+        <h2>자료 (수업 프린트)</h2>
+        <p class="lead">단원별 프린트 PDF예요. 파일이 커서 화질을 조금 줄였어요. “다운로드”를 누르면 저장 확인창이 떠요.</p>
+        <div id="matList"></div>
+        <p class="msg" id="matMsg" role="status"></p>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script>
+/* ---------- 문제 데이터 ----------
+   a: 모범 답안. **키워드** 또는 **키워드|다른 표기|English** 로 표시하면 굵게 강조되고,
+      내 답에 들어갔는지 확인하는 데에도 쓰여요. (강조에는 첫 번째 표기만 보여요) */
+const Q = (ch, no, sub, ck, ce, qk, qe, a) => ({ id: ch + "-" + no + "-" + sub, ch, no, sub, ctx: ck, ctxE: ce, q: qk, qE: qe, a });
+
+const C71 = ["현미경으로 관찰한 상 A~E\nA: 특징 없이 균일한 회색 (일반 광학현미경 상)\nB: 어둡게 염색된 둥근 세포들\nC: 세포 윤곽과 핵이 뚜렷한 상\nD: C보다 입체감 있게 보이는 세포 상\nE: 털 같은 돌기가 빽빽하고 입체적으로 보이는 흑백 상",
+  "Images A–E observed with microscopes\nA: Uniform gray with no features (ordinary light microscope)\nB: Dark-stained round cells\nC: Cell outlines and nuclei clearly visible\nD: Cells that look more three-dimensional than C\nE: Black-and-white image of densely packed hair-like projections that look 3D"];
+const C72 = ["전자현미경 사진. (가)(나)는 세포 표면이 섬모로 덮여 있는 모습, (다)는 컴퓨터 프로그램 작업을 거쳐 만들어진 박테리아의 젖당분해효소 상.",
+  "Electron micrographs. (a) and (b) show cell surfaces covered with cilia; (c) shows a bacterial lactase (lactose-digesting enzyme) image made with computer processing."];
+const C73 = ["세포 분획법 실험\n(가) 소나무 잎을 갈고 세포벽을 제거한 뒤 저속 원심분리 → 침전물 A\n(나) (가)의 상층액을 고속 원심분리 → 침전물 B\n(다) (나)의 상층액을 고속 원심분리 → 침전물 C\n(라) (다)의 상층액을 초고속 원심분리 → 침전물 D\n\n침전물 A / B / C / D\nDNA 함량(%) 95 / 5 / 4 / 0\nRNA 함량(%) 15 / 2 / 3 / 82\nCO₂ 소비량(%) 7 / 93 / 5 / 0\nO₂ 소비량(%) 7 / 10 / 80 / 3",
+  "Cell fractionation experiment\n(a) Grind pine needles, remove cell walls, centrifuge at low speed → pellet A\n(b) Centrifuge the supernatant of (a) at high speed → pellet B\n(c) Centrifuge the supernatant of (b) at high speed → pellet C\n(d) Centrifuge the supernatant of (c) at ultra-high speed → pellet D\n\nPellet A / B / C / D\nDNA content (%) 95 / 5 / 4 / 0\nRNA content (%) 15 / 2 / 3 / 82\nCO₂ consumption (%) 7 / 93 / 5 / 0\nO₂ consumption (%) 7 / 10 / 80 / 3"];
+const C75 = ["핵과 소포체 그림\nB: 관 모양의 매끈한 소포체 / C: 표면에 리보솜이 붙은 소포체 / D: 핵막의 구멍과 관련된 구조 / E: 핵 안의 뚜렷한 구조",
+  "Diagram of the nucleus and ER\nB: tubular smooth-looking ER / C: ER with ribosomes on its surface / D: structure related to openings in the nuclear envelope / E: distinct structure inside the nucleus"];
+const C76 = ["동물세포 그림\nA: 핵 / C: 미토콘드리아 / D: 세포질에 흩어진 작은 점들(리보솜)",
+  "Animal cell diagram\nA: nucleus / C: mitochondrion / D: small dots scattered in the cytoplasm (ribosomes)"];
+const C77 = ["쥐의 이자 세포에 ¹⁴C로 표지된 아미노산을 5분 동안 주입한 뒤 세포소기관의 방사능 변화를 측정한 그래프 (㉠~㉢은 RER, 분비소낭, 골지체 중 하나)\n㉠: 처음에 가장 높다가 빠르게 감소\n㉡: 조금 늦게 올라갔다가 감소\n㉢: 가장 늦게 올라가 오래 유지",
+  "Graph of radioactivity in organelles of mouse pancreatic cells given ¹⁴C-labeled amino acids for 5 min (㉠–㉢ are RER, secretory vesicle, Golgi in some order)\n㉠: highest at first, then drops quickly\n㉡: rises a little later, then falls\n㉢: rises last and stays high longest"];
+const C774 = ["액포에 대한 설명이다.\n● 민물 단세포 원생생물들은 세포 밖으로 여분의 물을 펌프질하여 염분과 다른 분자들의 농도를 적절하게 유지하는 ①를 가지고 있다.\n● 성숙한 식물세포들은 ②를 가지고 있고, 여기에 있는 용액을 세포 수액이라고 하며 칼슘과 염소 이온을 포함한 무기이온 중심 저장소 역할을 한다.\n● 아메바를 비롯한 단세포 원생생물들은 작은 개체들이나 음식 조각들을 감싸서 먹는데, 이때 ③를 형성한다.",
+  "Vacuoles perform various maintenance functions.\n● Freshwater unicellular protists such as Paramecium have a ① that pumps excess water out of the cell to keep salt and other molecule concentrations appropriate.\n● Mature plant cells have a ②; its solution is called cell sap and is the main storage site for inorganic ions including calcium and chloride.\n● Amoebas and other unicellular protists move by ameboid movement and engulf small organisms or food particles, forming a ③."];
+const C757 = ["식물세포의 중심액포 그림", "Central vacuole of a plant cell"];
+const C78 = ["(가): 안쪽 막이 주름진 세포 내 에너지 전환 장소\n(나): 틸라코이드가 쌓인 그라나가 있는 장소",
+  "(a): an energy-converting site whose inner membrane is folded\n(b): a site containing grana, which are stacks of thylakoids"];
+const C79 = ["형광현미경 사진: 녹색 = 미세소관, 붉은색 = 미세섬유, 파란색 = 핵 DNA (중간섬유는 명확하지 않음)",
+  "Fluorescence micrograph: green = microtubules, red = microfilaments, blue = nuclear DNA (intermediate filaments are not clear)"];
+const C793 = ["섬모와 편모는 길이, 세포당 수, 움직이는 패턴이 달라도 공통된 미세구조를 갖는다.\nA부위: 섬모·편모의 바깥쪽 축\nB부위: 세포 안쪽의 기저체",
+  "Cilia and flagella differ in length, number per cell and movement pattern, yet share a common microstructure.\nRegion A: the outer shaft of the cilium/flagellum\nRegion B: the basal body inside the cell"];
+const C794 = ["간균의 편모(왼쪽)와 정자의 편모(오른쪽)", "Flagella of a rod-shaped bacterium (left) and of a sperm cell (right)"];
+const C710 = ["사람의 소장 상피세포 그림\n(가): 세포 위쪽을 띠처럼 둘러 밀봉 / (나): 단추처럼 고정 / (다): 작은 통로로 연결",
+  "Human small-intestine epithelial cells\n(a): seals the top of the cells like a belt / (b): fastens cells like a button / (c): connects cells through small channels"];
+const C711 = ["동물세포의 세포외기질 그림\n(가): 가장 굵은 섬유 / (나): 인테그린과 연결되는 접착 단백질 / (다): 탄수화물이 많이 붙은 큰 분자",
+  "Extracellular matrix of an animal cell\n(a): the thickest fibers / (b): an adhesive protein linked to integrin / (c): a large molecule with many carbohydrates attached"];
+const C81 = ["세포막 단백질을 형광물질로 표지한 세포. (가) 부분을 탈색처리하여 형광이 나오지 않게 한 뒤 저온(4℃)에서 10분간 보관하다가 37℃로 옮겼다. (나)는 탈색하지 않은 반대쪽 부분.",
+  "A cell whose membrane proteins are labeled with a fluorescent dye. Region (a) was bleached so it no longer fluoresces, kept at low temperature (4℃) for 10 min, then moved to 37℃. Region (b) is the unbleached opposite side."];
+const C812 = ["위 세포를 백혈구라고 하자. 배양 접시에 세균을 넣어 준 후 현미경으로 관찰하였더니 세포 내부에서 형광물질이 관찰되었다.",
+  "Suppose the cell above is a white blood cell. Bacteria were added to the culture dish, and fluorescent material was seen inside the cell under the microscope."];
+const C82 = ["세포막은 지질과 단백질로 구성된 유동 모자이크이다. 다양한 생체막을 전자현미경으로 관찰하면 막이 두 줄(이중층)로 보인다.",
+  "The cell membrane is a fluid mosaic of lipids and proteins. Under the electron microscope, biological membranes look like two lines (a bilayer)."];
+const C83 = ["물질 X와 Y의 세포막 투과성 그래프 (가로축: 농도 차, 세로축: 투과 속도)\nX: 농도 차가 커질수록 빠르게 증가하다가 일정한 값에서 포화\nY: 농도 차에 거의 비례해 완만하게 계속 증가",
+  "Membrane permeability graph for substances X and Y (x-axis: concentration difference, y-axis: rate of transport)\nX: rises quickly with concentration difference, then levels off (saturates)\nY: rises gently, almost in proportion to concentration difference"];
+const C84 = ["삼투현상 실험\n(가) 농도가 같은 설탕 용액과 젖당 용액을 준비한다.\n(나) U자관에 단당류와 이당류가 통과하지 못하는 반투과성 막을 설치해 A와 B로 분리한다.\n(다) 한쪽에는 젖당 용액, 다른 쪽에는 설탕 용액을 같은 양으로 넣어 높이를 같게 한다.\n(라) 두 용액에 같은 양의 젖당 분해 효소를 첨가한다.\n(마) 일정 시간 후 A와 B의 높이 변화를 관찰한다.\n결과: A쪽 수면이 올라가고 B쪽 수면이 내려갔다.",
+  "Osmosis experiment\n(a) Prepare sucrose and lactose solutions of the same concentration.\n(b) Divide a U-tube into A and B with a semipermeable membrane that monosaccharides and disaccharides cannot cross.\n(c) Put lactose solution on one side and sucrose solution on the other in equal amounts so the levels are equal.\n(d) Add the same amount of lactase to both solutions.\n(e) Observe the level change in A and B after some time.\nResult: the level rose on side A and fell on side B."];
+const C851 = ["수조가 반투과성막으로 두 구획으로 나뉘고, 양쪽에 동일한 양의 생리식염수가 들어 있다. 막에는 포도당 운반체 단백질-X만 존재한다. 동일한 양의 포도당(가, 나) 또는 포도당-6-인산(다, 라)을 한 구획에만 녹였다.\n결과: 포도당(가, 나)은 물 높이 변화 없음 / 포도당-6-인산(다, 라)은 넣은 쪽으로 물이 이동해 수면이 올라감",
+  "A tank is divided into two compartments by a semipermeable membrane, each holding the same amount of saline. The membrane contains only glucose transporter protein-X. The same amount of glucose (a, b) or glucose-6-phosphate (c, d) was dissolved in one compartment.\nResult: with glucose (a, b) the water level did not change / with glucose-6-phosphate (c, d) water moved toward the side where it was added and that level rose"];
+const C852 = ["포도당 운반체 단백질-X와 포도당 인산화 효소의 발현을 조절할 수 있는 세포에서 포도당 순 흡수율(총 흡수율 − 총 방출율)을 측정했다. t₁에서 X의 발현을, t₃에서 포도당 인산화 효소의 발현을 증가시켰다.\n그래프: t₁~t₂ 상승 / t₂~t₃ 감소 / t₃~t₄ 다시 크게 상승한 뒤 안정",
+  "Net glucose uptake (total uptake − total efflux) was measured in cells in which expression of glucose transporter protein-X and glucose kinase can be controlled. Expression of X was increased at t₁ and glucose kinase at t₃.\nGraph: rises from t₁ to t₂ / falls from t₂ to t₃ / rises again from t₃ to t₄ and then levels off"];
+const C86 = ["그림 (가): 소장 상피세포의 포도당 흡수 모식도. A, B, C는 각각 SGLT, GluT, Na⁺-K⁺ 펌프. 장내강에서 상피세포로 포도당을 들이는 것은 A(SGLT)이고 Na⁺과 함께 들어온다.\n\n(나) 포도당 운반체 연구 결과\n① 포도당 운반체 단백질을 가진 세포막 외부의 포도당 농도를 증가하면 농도에 비례하여 포도당 수송이 증가한다.\n② 운반체 단백질의 양이 증가하면 포도당 수송량도 증가한다.\n③ 세포 내 미토콘드리아 기능이 저하되면 세포막에서 포도당 수송이 감소한다.\n④ 인슐린 분비를 유도하였더니 포도당 흡수가 촉진된다.",
+  "Figure (a): glucose absorption in an intestinal epithelial cell. A, B, C are SGLT, GluT and the Na⁺-K⁺ pump. Glucose enters the cell from the lumen through A (SGLT) together with Na⁺.\n\n(b) Research results on glucose transporters\n① Raising glucose concentration outside a membrane that has the transporter increases glucose transport in proportion to concentration.\n② Increasing the amount of the transporter increases glucose transport.\n③ When mitochondrial function in the cell is reduced, glucose transport across the membrane decreases.\n④ Inducing insulin secretion promotes glucose uptake."];
+const C87 = ["세포벽이 없는 세포(적혈구)를 서로 다른 농도의 용액에 넣은 그림\nA 용액: 세포가 터짐(Lysed) / B 용액: 정상 모양(Normal) / C 용액: 쪼그라듦(Shriveled)",
+  "Cells without a cell wall (red blood cells) placed in solutions of different concentrations\nSolution A: cell burst (Lysed) / Solution B: normal shape (Normal) / Solution C: shrunken (Shriveled)"];
+const C891 = ["<보기>\n① 이자에서 인슐린을 만드는 세포가 인슐린을 세포외액으로 분비한다.\n② 신경세포가 다른 뉴런이나 근육세포에 신호를 보내는 신경전달물질을 방출한다.\n③ 식물세포가 세포벽을 만들 때, 필요한 단백질과 탄수화물이 골지체 소낭에서 세포 밖으로 분비된다.",
+  "<Examples>\n① Insulin-making cells in the pancreas secrete insulin into the extracellular fluid.\n② Nerve cells release neurotransmitters that signal other neurons or muscle cells.\n③ When plant cells make cell walls, some of the needed proteins and carbohydrates are secreted from Golgi vesicles to the outside of the cell."];
+
+const QS = [
+/* ===== 2장 ===== */
+Q(2,"1","","","","산소 분자(O₂)가 화합물이 아닌 이유를 서술하시오.","Explain why oxygen gas (O₂) is not a compound.",
+ "산소 분자는 **한 종류의 원소**인 산소로만 이루어져 있기 때문에 **화합물**이 아니다."),
+Q(2,"2","","","","미량 원소가 적은 양으로 존재하지만 중요한 이유를 설명하시오.","Explain why trace elements are important even though they are present in small amounts.",
+ "**효소** 작용이나 **세포 기능 조절**에 관여하여 **생명 유지**에 중요한 역할을 하기 때문이다."),
+Q(2,"3","","","","¹²C와 ¹⁴C가 같은 원소이면서 질량수가 다른 이유를 설명하시오.","Explain why ¹²C and ¹⁴C are the same element but have different mass numbers.",
+ "두 원자는 **양성자 수**가 6개로 같지만 **중성자 수**가 다르기 때문에 같은 원소이면서 **질량수**가 다르다."),
+Q(2,"4","","","","분자의 성질과 기능이 달라지는 이유를 설명하시오.","Explain why molecules differ in their properties and functions.",
+ "분자를 구성하는 **원자의 종류**와 원자들이 **결합하는 방식**이 다르기 때문이다."),
+Q(2,"5","","","","물 분자가 극성을 띠는 이유를 설명하시오.","Explain why a water molecule is polar.",
+ "**산소**가 수소보다 공유 전자를 더 강하게 끌어당겨 전자가 한쪽으로 치우치기 때문이다."),
+Q(2,"6","","","","NaCl이 하나의 분자가 아니라는 이유를 설명하시오.","Explain why NaCl is not a single molecule.",
+ "NaCl은 Na⁺와 Cl⁻가 **1:1** 비율로 규칙적인 **결정 구조**를 이루는 **이온 화합물**이기 때문이다."),
+Q(2,"7","","","","약한 결합이 생명 활동에서 중요한 이유를 설명하시오.","Explain why weak bonds are important in life processes.",
+ "약한 결합은 쉽게 형성되고 분리되는 **가역성**을 가져 세포 내 반응을 빠르고 **유연하게 조절**할 수 있기 때문이다."),
+Q(2,"8·9","","","","8. 수소 결합이 형성되는 과정을 설명하시오.\n9. 물과 암모니아 사이에 수소 결합이 형성되는 이유를 설명하시오.","8. Describe how a hydrogen bond forms.\n9. Explain why hydrogen bonds form between water and ammonia.",
+ "8. 부분적인 양전하를 띠는 **수소**와 주변의 **전기음성도가 높은** 원자 사이에 약한 **인력**이 작용하여 형성된다.\n9. 물의 **부분 양전하**를 띠는 수소와 암모니아의 부분 음전하를 띠는 질소 사이에 인력이 작용하기 때문이다."),
+Q(2,"10","","","","비극성 분자 사이에서도 반데르발스힘이 형성되는 이유를 설명하시오.","Explain why van der Waals forces form even between nonpolar molecules.",
+ "**전자**가 순간적으로 **불균등하게 분포**하여 부분적인 양전하와 음전하가 형성되고, 이들 사이에 **인력**이 작용하기 때문이다."),
+Q(2,"11","","","","모르핀과 엔도르핀이 비슷한 진통 효과를 나타내는 이유를 설명하시오.","Explain why morphine and endorphins have similar pain-relieving effects.",
+ "두 물질의 **구조가 비슷**하여 같은 뇌 **수용체**에 결합할 수 있기 때문이다."),
+/* ===== 3장 ===== */
+Q(3,"1·5","","","","1. 물 분자가 극성을 띠는 이유를 설명하시오.\n5. 물 분자에서 산소와 수소 사이의 결합이 극성 공유 결합인 이유를 설명하시오.","1. Explain why a water molecule is polar.\n5. Explain why the bond between oxygen and hydrogen in water is a polar covalent bond.",
+ "1. **산소**가 수소보다 공유 전자를 더 강하게 끌어당겨 전하가 **불균등**하게 분포하기 때문이다.\n5. 산소가 수소보다 **전기음성도**가 커서 공유 전자를 산소 쪽으로 더 강하게 끌어당기기 때문이다."),
+Q(3,"2·8","","","","2. 물 분자 사이에 수소 결합이 형성되는 이유를 설명하시오.\n8. 물이 응집력을 나타내는 이유를 설명하시오.","2. Explain why hydrogen bonds form between water molecules.\n8. Explain why water shows cohesion.",
+ "2. 한 물 분자의 부분 양전하를 띠는 수소와 다른 물 분자의 부분 음전하를 띠는 산소 사이에 인력이 작용하기 때문이다.\n8. 극성을 가진 물 분자 사이에 **수소 결합**이 형성되어 서로 끌어당기기 때문이다."),
+Q(3,"3·19","","","","3. 얼음이 물 위에 뜨는 이유를 설명하시오.\n19. 얼음이 액체 상태의 물보다 밀도가 낮은 이유를 수소 결합과 관련하여 설명하시오.","3. Explain why ice floats on water.\n19. Explain, in terms of hydrogen bonds, why ice is less dense than liquid water.",
+ "3. 얼음에서는 **수소 결합**이 안정적으로 유지되어 물 분자 사이의 거리가 멀어지고 **밀도**가 액체 물보다 낮아지기 때문이다.\n19. 물이 얼면 수소 결합이 안정적으로 형성되어 물 분자들이 서로 떨어진 **결정 구조**를 이루므로 부피가 커지고 밀도가 낮아지기 때문이다."),
+Q(3,"4","","","","물 위에 뜨는 얼음이 생물에게 중요한 이유 두 가지를 설명하시오.","Give two reasons why floating ice is important for living things.",
+ "얼음이 아래쪽 물을 **단열**하여 수중 생물이 겨울에도 살아갈 수 있게 하고, 일부 동물에게 **서식지**를 제공하기 때문이다."),
+Q(3,"6","","","","액체 상태의 물에서 수소 결합이 계속 형성되고 끊어지는 이유를 설명하시오.","Explain why hydrogen bonds in liquid water keep forming and breaking.",
+ "수소 결합은 **공유 결합보다 약해** 쉽게 끊어지고, 끊어진 뒤 다른 물 분자와 **새로운 수소 결합**을 형성하기 때문이다."),
+Q(3,"7","","","","물이 생명체의 생존에 적합한 환경을 만드는 네 가지 특성을 쓰시오.","Name the four properties of water that make it a suitable environment for life.",
+ "**응집성|응집력|cohesion**, **온도 조절** 능력, 얼면서 **팽창**하는 성질, **용매**로서의 성질입니다."),
+Q(3,"9","","","","물의 표면 장력이 생기는 이유를 수소 결합과 관련하여 설명하시오.","Explain, in terms of hydrogen bonds, why water has surface tension.",
+ "표면의 물 분자는 위쪽에 결합할 물 분자가 적어 **수소 결합**에 의한 인력이 **옆과 아래쪽**으로 작용하므로 표면이 안쪽으로 당겨져 **표면 장력**이 나타난다."),
+Q(3,"10·11","","","","10. 물의 응집력과 부착력이 식물의 물 이동에 어떻게 기여하는지 설명하시오.\n11. 식물에서 물이 뿌리에서 잎까지 이동할 때 응집력과 부착력이 하는 역할을 설명하시오.","10. Explain how the cohesion and adhesion of water contribute to water movement in plants.\n11. Explain the roles of cohesion and adhesion when water moves from roots to leaves in plants.",
+ "10. **응집력**은 물 분자들을 연결하여 **물기둥**을 유지하고, **부착력**은 물과 **세포벽** 사이에 작용하여 물이 위쪽으로 이동하는 데 도움을 준다.\n11. 응집력은 물기둥을 끊어지지 않게 유지하고, 부착력은 물이 세포벽에 붙어 **중력**에 저항하며 위로 이동하도록 돕는다."),
+Q(3,"12·13·14","","","","12. 물이 같은 양의 열을 받아도 온도 변화가 작은 이유를 설명하시오.\n13. 물의 비열이 높은 이유를 수소 결합과 관련하여 설명하시오.\n14. 물이 열을 흡수해도 온도가 쉽게 올라가지 않는 이유를 설명하시오.","12. Explain why water shows only a small temperature change when it absorbs the same amount of heat.\n13. Explain, in terms of hydrogen bonds, why water has a high specific heat.\n14. Explain why the temperature of water does not rise easily when it absorbs heat.",
+ "12. 물은 **비열**이 높아 온도를 변화시키는 데 **많은 열**이 필요하기 때문이다.\n13. 물이 열을 흡수할 때 **수소 결합을 끊는** 데 많은 에너지가 사용되므로 온도 변화가 작기 때문이다.\n14. 흡수한 열에너지의 일부가 물 분자 사이의 수소 결합을 끊는 데 사용되기 때문이다."),
+Q(3,"15","","","","물이 낮은 온도에서도 증발할 수 있는 이유를 설명하시오.","Explain why water can evaporate even at low temperatures.",
+ "물 분자 중 **운동 에너지가 큰** 일부 분자는 낮은 온도에서도 액체를 벗어나 **기체** 상태로 변할 수 있기 때문이다."),
+Q(3,"16","","","","물의 기화열이 큰 이유를 설명하시오.","Explain why water has a high heat of vaporization.",
+ "물이 증발할 때 물 분자 사이의 **수소 결합을 끊는** 데 **많은 에너지**가 필요하기 때문이다."),
+Q(3,"18","","","","땀이 증발하면 체온이 낮아지는 이유를 설명하시오.","Explain why body temperature falls when sweat evaporates.",
+ "**운동 에너지가 큰** 물 분자들이 땀에서 먼저 증발하여 남은 분자들의 **평균 운동 에너지**가 낮아지고, 이에 따라 피부 표면의 **온도가 낮아지기** 때문이다."),
+Q(3,"20","","","","겨울철 호수 바닥에 4℃의 물이 유지되는 이유를 설명하시오.","Explain why water at 4 ℃ stays at the bottom of a lake in winter.",
+ "**4℃**의 물은 물 분자들이 가장 가깝게 위치하여 **밀도가 가장 높기** 때문에 아래쪽으로 가라앉아 호수 바닥에 유지된다."),
+Q(3,"21·22","","","","21. 이온이 아닌 물질도 물에 녹을 수 있는 이유를 설명하시오.\n22. 라이소자임과 같은 단백질이 물에 용해될 수 있는 이유를 설명하시오.","21. Explain why substances that are not ions can still dissolve in water.\n22. Explain why a protein such as lysozyme can dissolve in water.",
+ "21. **극성**을 가진 물질은 물 분자와 **수소 결합**을 형성하여 물과 상호작용할 수 있기 때문이다.\n22. 단백질 표면의 극성 또는 이온성 부위가 물 분자와 수소 결합을 형성하여 단백질 주변에 **수화 껍질**이 형성되기 때문이다."),
+Q(3,"23","","","","셀룰로오스가 물에 녹지 않으면서도 친수성 물질인 이유를 설명하시오.","Explain why cellulose is hydrophilic even though it does not dissolve in water.",
+ "셀룰로오스에는 **극성 결합**이 많아 물 분자와 잘 상호작용하고 물을 **흡수**할 수 있기 때문이다."),
+Q(3,"24","","","","비극성 물질이 물에 잘 섞이지 않는 이유를 설명하시오.","Explain why nonpolar substances do not mix well with water.",
+ "비극성 물질은 **전하의 불균형**이 없어 극성인 물 분자와 **수소 결합**을 형성하지 못하기 때문이다."),
+Q(3,"25·26","","","","25. 암모니아가 염기로 작용하는 이유를 설명하시오.\n26. 염기가 용액의 H⁺ 농도를 낮추는 두 가지 방법을 설명하시오.","25. Explain why ammonia acts as a base.\n26. Describe two ways in which a base lowers the H⁺ concentration of a solution.",
+ "25. 암모니아의 질소 원자가 **비공유전자쌍**을 이용해 H⁺를 받아들여 **NH₄⁺**를 형성함으로써 용액의 H⁺ 농도를 낮추기 때문이다.\n26. 염기는 H⁺를 **직접 받아들이거나**, **OH⁻**를 방출하여 H⁺와 결합해 **물**을 형성함으로써 H⁺ 농도를 낮춘다."),
+Q(3,"27","","","","완충 용액에 소량의 산이나 염기가 첨가되어도 pH 변화가 작은 이유를 설명하시오.","Explain why the pH of a buffer solution changes little when a small amount of acid or base is added.",
+ "H⁺가 증가하면 완충제가 **H⁺와 결합**하고, OH⁻가 증가하면 **H⁺를 방출**하여 OH⁻와 반응함으로써 H⁺ 농도의 변화를 최소화하기 때문이다."),
+Q(3,"28","","","","혈액의 pH가 낮아졌을 때 탄산–중탄산이온 완충계가 pH 변화를 줄이는 과정을 설명하시오.","Describe how the carbonic acid–bicarbonate buffer system reduces the change in pH when blood pH falls.",
+ "**HCO₃⁻**가 증가한 H⁺와 결합하여 **H₂CO₃**를 형성함으로써 H⁺ 농도를 낮추고 pH 변화를 줄인다."),
+/* ===== 4장 ===== */
+Q(4,"1·3","","","","1. 탄소가 다양한 생명 분자를 형성할 수 있는 이유를 설명하시오.\n3. 탄소가 다양한 유기 분자를 형성할 수 있는 이유를 전자 배치와 관련지어 설명하시오.","1. Explain why carbon can form a wide variety of biological molecules.\n3. Relate the electron configuration of carbon to why it can form a variety of organic molecules.",
+ "1. 탄소는 네 개의 공유 결합을 형성할 수 있어 다양한 **탄소 골격**을 만들고 여러 원소와 결합할 수 있기 때문이다.\n3. 탄소는 **최외각전자**가 **4개**이므로 네 개의 공유 결합을 형성할 수 있어 다양한 방식으로 결합할 수 있기 때문이다."),
+Q(4,"2·13","","","","2. 탄소가 포함된 분자의 성질을 결정하는 두 가지 요소를 쓰시오.\n13. 유기 분자의 특성과 기능을 결정하는 두 가지 요소를 쓰시오.","2. Name the two factors that determine the properties of carbon-containing molecules.\n13. Name the two factors that determine the characteristics and functions of organic molecules.",
+ "2. **탄소 골격**의 배열과 탄소 골격에 결합된 **화학적 작용기**이다.\n13. 탄소 골격과 탄소 골격에 결합된 특정 화학 그룹이다."),
+Q(4,"4","","","","탄소 골격이 다양한 분자 구조를 형성할 수 있는 요인을 세 가지 쓰시오.","Name three factors that allow carbon skeletons to form diverse molecular structures.",
+ "탄소 사슬의 **길이**, **모양**, **이중 결합**의 수와 위치이다."),
+Q(4,"5·6","","","","5. 구조 이성질체가 서로 다른 성질을 나타내는 이유를 설명하시오.\n6. 펜탄과 2-메틸부탄이 구조 이성질체인 이유를 설명하시오.","5. Explain why structural isomers have different properties.\n6. Explain why pentane and 2-methylbutane are structural isomers.",
+ "5. 같은 종류와 수의 원자로 이루어져 있어도 원자 사이의 공유결합 배열이 달라 분자의 구조가 달라지기 때문이다.\n6. 두 물질은 **분자식**이 C₅H₁₂로 같지만 탄소 원자의 결합 방식과 골격 구조가 서로 다르기 때문이다."),
+Q(4,"7·8","","","","7. 탄소 이중결합에서 시스-트랜스 이성질체가 형성될 수 있는 이유를 설명하시오.\n8. 시스 이성질체와 트랜스 이성질체가 서로 다른 성질을 나타낼 수 있는 이유를 설명하시오.","7. Explain why cis–trans isomers can form at a carbon–carbon double bond.\n8. Explain why cis and trans isomers can have different properties.",
+ "7. 이중결합에는 σ결합과 함께 **π결합**이 존재하여 **자유로운 회전이 제한**되므로, 치환기의 **공간적 배열**이 서로 다른 시스와 트랜스 형태가 형성될 수 있기 때문이다.\n8. 이중결합의 회전이 제한되어 원소나 화학기의 공간적 배열이 서로 다르게 유지되기 때문이다."),
+Q(4,"10","","","","거울상 이성질체가 형성되기 위한 조건을 설명하시오.","Explain the condition required for enantiomers to form.",
+ "분자 안에 서로 다른 **네 가지** 원자 또는 원자단과 결합한 **비대칭 탄소**"),
+Q(4,"11·12","","","","11. 거울상 이성질체 중 하나만 생물학적 활성을 나타내는 경우가 많은 이유를 설명하시오.\n12. 거울상 이성질체를 약물 개발에서 구분해야 하는 이유를 설명하시오.","11. Explain why often only one of a pair of enantiomers is biologically active.\n12. Explain why enantiomers must be distinguished in drug development.",
+ "11. 효소나 수용체와 같은 생체분자들이 특정한 **입체 구조**만을 **선택적으로 인식**하기 때문이다.\n12. 같은 분자식과 유사한 구조를 가져도 공간적 배열 차이로 인해 **생체 내 작용과 약리 효과**가 달라질 수 있기 때문이다."),
+Q(4,"14·15","","","","14. 에스트라디올과 테스토스테론이 공통된 탄소 골격을 가지면서도 서로 다른 기능을 나타내는 이유를 설명하시오.\n15. 작용기가 분자의 성질과 기능에 영향을 주는 이유를 설명하시오.","14. Explain why estradiol and testosterone share a carbon skeleton yet have different functions.\n15. Explain why functional groups affect the properties and functions of a molecule.",
+ "14. 공통된 탄소 골격을 가지더라도 결합된 화학 그룹의 종류가 달라 분자의 특성과 생물학적 기능이 달라지기 때문이다.\n15. 작용기는 특정한 **모양과 전하 특성**을 가지며 **화학 반응에 직접 관여**하므로, 그 종류와 배열에 따라 분자의 화학적 성질과 생물학적 기능이 달라지기 때문이다."),
+Q(4,"16","","","","수산기, 카르보닐기, 카르복실기, 아미노기의 공통적인 특징을 설명하시오.","Describe the features shared by the hydroxyl, carbonyl, carboxyl and amino groups.",
+ "**화학 반응**에 직접 참여하며 **친수성**을 나타내어 유기 화합물이 물과 잘 상호작용하도록 하는 작용기이다."),
+Q(4,"17","","","","카르보닐기의 위치에 따라 화합물의 종류가 어떻게 달라지는지 설명하시오.","Explain how the type of compound changes depending on the position of the carbonyl group.",
+ "카르보닐기가 탄소 골격의 **중간**에 있으면 **케톤**, 탄소 골격의 **끝**에 있으면 **알데히드**가 된다."),
+Q(4,"19","","","","설프히드릴기가 단백질 구조 안정화에 기여하는 원리를 설명하시오.","Explain how sulfhydryl groups help stabilize protein structure.",
+ "두 **설프히드릴기**가 서로 반응하여 이황화결합(-S-S-)을 형성하고, 이 결합이 단백질의 구조를 안정화하기 때문이다."),
+Q(4,"20","","","","ATP가 세포에서 에너지 공급 분자로 이용되는 이유를 설명하시오.","Explain why ATP is used as an energy-supplying molecule in cells.",
+ "ATP의 말단 **인산기**가 **가수분해**될 때 **에너지**가 방출되며, 이 에너지가 다양한 세포 활동에 이용되기 때문이다."),
+/* ===== 5장 (5단원 형성평가 1~43번, 단백질까지) ===== */
+Q(5,"1","","","","1. 단량체와 중합체의 관계를 설명하고, 대표적인 중합체의 예를 2가지 쓰시오.","1. Explain the relationship between monomers and polymers, and give two examples of polymers.",
+ "여러 **단량체**가 **공유결합**으로 연결되어 **중합체**를 형성하며, 대표적인 예로 **탄수화물**, **단백질**, **핵산**이 있다."),
+Q(5,"2","","","","2. 축합반응과 탈수 반응의 관계를 설명하시오.","2. Explain the relationship between condensation and dehydration reactions.",
+ "**축합반응**은 작은 분자가 빠져나가면서 단량체 사이에 **공유결합**이 형성되는 반응이며, 이때 빠져나가는 분자가 **물**이면 **탈수 반응**이라고 한다. 탄수화물과 단백질의 형성에서는 한쪽의 **-OH**와 다른 쪽의 **-H**가 제거되어 **H₂O**가 형성되고 새로운 **공유결합**이 만들어진다."),
+Q(5,"3","","","","3. 생명체에서 거대분자의 다양성이 나타나는 주된 원인을 설명하시오.","3. Explain the main reason macromolecules are so diverse in living things.",
+ "거대분자의 다양성은 주로 중합체를 구성하는 **단량체의 배열 순서**, 즉 **서열**의 차이에서 비롯되며, 이는 **유전 정보**와 **단백질 기능**의 다양성으로 이어진다."),
+Q(5,"4·8","","","","4. 탄수화물의 두 가지 주요 기능을 쓰고, 각각에 해당하는 다당류의 예를 하나씩 제시하시오.\n8. 다당류가 세포에서 하는 두 가지 주요 역할을 예와 함께 서술하시오.","4. State two major functions of carbohydrates and give one polysaccharide example for each.\n8. Describe two major roles of polysaccharides in cells, with examples.",
+ "4. 탄수화물은 **에너지 저장**과 **구조 형성**에 관여한다. 에너지 저장의 예로 **녹말** 또는 **글리코젠**이 있고, 구조 형성의 예로 **셀룰로오스** 또는 **키틴**이 있다.\n8. 다당류는 **에너지 저장**과 **구조 형성**에 이용된다. 에너지 저장 다당류에는 동물의 글리코겐과 식물의 **녹말**이 있고, 구조 다당류에는 식물 세포벽의 **셀룰로오스**와 곤충·갑각류 외골격의 **키틴**이 있다."),
+Q(5,"9","","","","9. 다당류의 구조와 기능을 결정하는 두 가지 요인을 서술하시오.","9. Describe two factors that determine the structure and function of a polysaccharide.",
+ "다당류를 구성하는 **단당류의 종류**와 단당류 사이의 글리코시드 결합 위치 및 결합 방식에 따라 다당류의 구조와 기능이 달라진다."),
+Q(5,"5·6","","","","5. 알도오스와 케토오스는 어떤 기준으로 구분되며, 각각의 예를 하나씩 쓰시오.\n6. 단당류가 다양한 구조를 가지는 이유 두 가지를 설명하시오.","5. By what criterion are aldoses and ketoses distinguished? Give one example of each.\n6. Explain two reasons why monosaccharides have diverse structures.",
+ "5. **카르보닐기**의 위치에 따라 구분한다. **알도오스**는 카르보닐기가 탄소골격의 **끝**에 위치하며 **포도당**이 대표적이고, **케토오스**는 **내부**에 위치하며 **과당**이 대표적이다.\n6. 단당류는 **탄소 개수**의 차이와 **비대칭 탄소** 주위의 **원자 배열** 차이 때문에 다양한 구조를 가진다. 이러한 차이는 분자의 형태와 결합 성질에 영향을 주어 서로 다른 기능을 나타내게 한다."),
+Q(5,"7","","","","7. 이당류가 형성되는 과정과 에너지원으로 이용되기 위해 필요한 과정을 설명하시오.","7. Describe how a disaccharide forms and what must happen before it can be used as an energy source.",
+ "두 **단당류**가 **탈수반응**을 통해 글리코시드결합을 형성하여 이당류가 만들어지며, 에너지원으로 이용되기 위해서는 **가수분해**되어 단당류로 분해되어야 한다."),
+Q(5,"10","","","","10. 식물의 대표적인 저장성 다당류인 녹말은 어디에 어떤 형태로 저장되며, 필요할 때 어떻게 이용되는지 서술하시오.","10. Where and in what form is starch, the main storage polysaccharide of plants, stored, and how is it used when needed?",
+ "녹말은 식물의 **엽록체**나 **색소체** 속에 **과립** 형태로 저장되며, 필요할 때 **가수분해**되어 **포도당**으로 분해된 후 에너지원으로 이용된다."),
+Q(5,"11","","","","11. 녹말을 구성하는 아밀로오스와 아밀로펙틴의 구조적 차이와, 이러한 차이가 소화 효율에 영향을 미치는 이유를 서술하시오.","11. Describe the structural difference between amylose and amylopectin in starch, and why it affects digestion efficiency.",
+ "**아밀로오스**는 주로 포도당이 1-4 글리코시드 결합으로 연결된 **가지**가 없는 구조이고, **아밀로펙틴**은 **1-4 결합**을 기본으로 하면서 **1-6 결합**에 의해 가지가 형성된 구조이다. 이러한 가지 구조의 차이로 **소화 효소**가 접근하고 작용할 수 있는 부위의 수가 달라져 소화 효율과 에너지 공급 속도가 달라진다."),
+Q(5,"12","","","","12. 글리코겐의 저장 위치와 구조적 특징을 쓰고, 이러한 구조가 빠른 에너지 공급에 유리한 이유를 서술하시오.","12. State where glycogen is stored and its structural features, and explain why this structure favors rapid energy supply.",
+ "글리코겐은 주로 **간**과 **근육** 세포에 저장되며, **가지**가 많은 분지 구조를 가진다. 가지가 많아 **자유말단**의 수가 많기 때문에 여러 지점에서 동시에 포도당을 떼어내는 반응이 일어날 수 있어, 에너지가 필요할 때 포도당을 **빠르게** 공급할 수 있다."),
+Q(5,"13·15·16·17","","","","13. 셀룰로오스가 식물 세포벽을 견고하게 유지할 수 있는 이유를 구조적 특징과 관련지어 서술하시오.\n15. 셀룰로오스가 녹말보다 단단하고 견고한 구조를 형성하는 이유를 서술하시오.\n16. 셀룰로오스가 식물 세포벽에 강한 기계적 지지력을 제공하는 이유를 서술하시오.\n17. 셀룰로오스 미세원섬유가 형성되는 과정과 그 기능을 서술하시오.","13. Explain, in terms of structure, why cellulose keeps plant cell walls rigid.\n15. Explain why cellulose forms a harder, sturdier structure than starch.\n16. Explain why cellulose provides strong mechanical support to plant cell walls.\n17. Describe how cellulose microfibrils form and what they do.",
+ "13. 셀룰로오스는 **β-포도당**이 1→4 글리코시드 결합으로 연결되어 곧고 단단한 사슬을 이루며, 여러 사슬 사이에 수소결합이 형성된다. 이로 인해 강한 구조를 형성하고 쉽게 분해되지 않아 식물 세포벽을 견고하게 유지할 수 있다.\n15. 셀룰로오스는 β-포도당이 **가지 없이 직선형**으로 연결되어 사슬들이 빽빽하게 배열될 수 있다. 이 때문에 녹말의 나선형 구조보다 단단하고 견고한 구조를 형성한다.\n16. 셀룰로오스 사슬의 **수산기** 사이에 **수소 결합**이 형성되어 여러 사슬이 단단히 결합하고, 이들이 **미세원섬유** 다발을 이루기 때문이다.\n17. 여러 셀룰로오스 분자가 **평행**하게 배열되고 **수소 결합**으로 결합하여 **미세원섬유**를 형성한다. 미세원섬유는 식물 세포벽에 강한 **기계적 지지력**을 제공해 식물의 **형태를 유지**한다."),
+Q(5,"14","","","","14. α-포도당과 β-포도당의 구조적 차이가 녹말과 셀룰로오스의 구조 차이를 만드는 이유를 간단히 서술하시오.","14. Briefly explain how the structural difference between α-glucose and β-glucose leads to the structural difference between starch and cellulose.",
+ "α-포도당과 **β-포도당**은 **1번 탄소의 –OH 위치**가 다르며, 이 차이로 1→4 결합 시 **배열 방식**이 달라진다. β-포도당은 고리가 **번갈아** 배열되어 **직선형**의 강한 셀룰로오스 구조를 형성한다."),
+Q(5,"18","","","","18. 인간이 셀룰로오스를 소화하지 못함에도 불구하고 장 건강에 도움이 되는 이유를 서술하시오.","18. Why is cellulose good for gut health even though humans cannot digest it?",
+ "셀룰로오스는 소화되지 않은 채 소화관을 통과하면서 **장벽을 자극**하고 음식물의 이동을 돕는 **불용성 식이섬유**로 작용하기 때문이다."),
+Q(5,"19","","","","19. 일부 동물이 셀룰로오스를 소화할 수 있는 이유와 셀룰로오스 분해가 생태계에서 중요한 이유를 서술하시오.","19. Explain why some animals can digest cellulose and why cellulose breakdown matters in ecosystems.",
+ "일부 동물은 셀룰로오스를 분해하는 **미생물과 공생**하여 소화를 할 수 있다. 또한 **균류** 등의 셀룰로오스 분해는 **탄소 순환**과 생태계의 **물질 순환**에 기여한다."),
+Q(5,"20","","","","20. 키틴의 구조적 특징과 생물체에서의 주요 기능을 서술하시오.","20. Describe the structural features of chitin and its main functions in organisms.",
+ "키틴은 **질소**를 포함하는 작용기를 가진 **β-결합 다당류**로, 단단하면서도 유연한 성질을 가진다. 주로 **절지동물의 외골격**과 **균류의 세포벽**을 구성한다."),
+Q(5,"21·22","","","","21. 지방의 기본 구성 성분과 이들이 결합하는 방식을 서술하시오.\n22. 지방산의 구조적 특징과 지방이 형성되는 과정을 간단히 서술하시오.","21. Describe the basic components of a fat and how they are joined.\n22. Briefly describe the structure of a fatty acid and how a fat forms.",
+ "21. 지방은 1개의 글리세롤과 3개의 **지방산**으로 구성되며, 글리세롤의 **수산기**와 지방산의 **카르복실기**가 **에스터 결합**을 형성한다.\n22. 지방산은 한쪽 끝에 **카르복실기**를, 나머지 부분에 **소수성 탄화수소 사슬**을 가진다. 지방은 글리세롤과 3개의 지방산이 **탈수반응**으로 에스터 결합을 형성하여 만들어지며, 이를 **트리아실글리세롤**(트리글리세리드)이라 한다."),
+Q(5,"23·24","","","","23. 포화 지방산이 실온에서 고체로 존재하는 이유를 구조적 특징과 관련지어 서술하시오.\n24. 불포화 지방산이 실온에서 액체 상태로 존재하는 이유를 구조적 특징과 관련지어 서술하시오.","23. Explain, in terms of structure, why saturated fatty acids are solid at room temperature.\n24. Explain, in terms of structure, why unsaturated fatty acids are liquid at room temperature.",
+ "23. **포화** 지방산은 탄소 사이에 **이중 결합이 없어** 사슬이 **곧게** 뻗어 있으며, 분자들이 서로 빽빽하게 배열될 수 있기 때문에 실온에서 **고체**로 존재한다.\n24. **불포화** 지방산의 **cis 이중결합**이 탄화수소 사슬을 **꺾이게** 하여 분자들이 빽빽하게 배열되지 못한다. 이 때문에 주로 실온에서 **액체** 상태로 존재한다."),
+Q(5,"25","","","","25. 불포화 지방산을 수소화하면 지방의 상태가 달라지는 이유를 서술하시오.","25. Explain why hydrogenating unsaturated fatty acids changes the state of the fat.",
+ "**수소화**로 일부 이중결합이 포화되어 지방산 사슬이 더 **곧아지고**, 분자들이 빽빽하게 배열될 수 있어 지방이 **고체** 상태가 된다. 이 과정에서 **트랜스 지방**이 형성될 수도 있다."),
+Q(5,"26","","","","26. 지질이 생물체에서 수행하는 주요 기능 세 가지를 서술하시오.","26. Describe three major functions of lipids in organisms.",
+ "지질은 에너지를 저장하고, 내부 기관을 보호하는 **완충 작용**을 하며, **단열**을 통해 체온 유지와 열 손실 감소에 기여한다."),
+Q(5,"27·28","","","","27. 인지질의 구조적 특징과 세포막을 형성할 수 있는 이유를 서술하시오.\n28. 인지질의 친수성 머리와 소수성 꼬리의 배열이 세포막의 선택적 투과성에 기여하는 이유를 설명하시오.","27. Describe the structure of phospholipids and why they can form cell membranes.\n28. Explain how the arrangement of hydrophilic heads and hydrophobic tails contributes to the selective permeability of the cell membrane.",
+ "27. 인지질은 **친수성 머리**와 **소수성 지방산 꼬리**를 함께 가지는 **양친매성** 분자이다. 이 때문에 물속에서 인지질 **이중층**을 형성하여 세포막의 기본 구조를 이룬다.\n28. 친수성 머리는 세포 안팎의 **수용성 환경**을 향하고 소수성 꼬리는 막 내부에서 서로 마주보아 **소수성 내부층**을 형성한다. 이 내부층이 친수성 물질이나 이온의 자유로운 통과를 제한하여 세포막에 선택적 투과성을 부여한다."),
+Q(5,"29","","","","29. 콜레스테롤이 생물체에서 수행하는 주요 기능 두 가지를 설명하시오.","29. Explain two major functions of cholesterol in organisms.",
+ "콜레스테롤은 동물 세포막의 **유동성과 안정성**을 조절하며, **스테로이드 호르몬** 합성의 전구체로 이용된다."),
+Q(5,"30·31","","","","30. 단백질이 생명체에서 수행하는 주요 기능을 세 가지 이상 서술하시오.\n31. 효소가 생명체의 물질대사를 조절할 수 있는 이유를 서술하시오.","30. Describe three or more major functions of proteins in living things.\n31. Explain why enzymes can regulate metabolism.",
+ "30. 단백질은 **효소 작용**, **면역 방어**, **물질 수송**, **신호 전달**, **운동**, **구조적 지지** 등 다양한 기능을 수행한다.\n31. 효소는 특정 화학 반응을 **선택적으로 촉진**하는 **촉매**이며, 반응 과정에서 **소모되지 않아** 반복적으로 작용할 수 있기 때문이다."),
+Q(5,"32","","","","32. 단백질의 기본 구성 단위와 단백질이 고유한 기능을 수행할 수 있는 이유를 서술하시오.","32. Describe the basic building blocks of proteins and why proteins can perform their specific functions.",
+ "단백질은 **아미노산**이 **펩타이드 결합**으로 연결된 **폴리펩타이드**로 이루어진다. 폴리펩타이드가 접혀 특유의 **3차원 구조**를 형성하기 때문에 고유한 기능을 수행할 수 있다."),
+Q(5,"33·34","","","","33. 아미노산의 공통 구조와 각 아미노산의 성질이 달라지는 이유를 서술하시오.\n34. 세포 내 pH에서 아미노산이 어떤 이온 형태로 존재하는지 설명하고, 아미노산마다 물과의 친화도가 달라지는 이유를 쓰시오.","33. Describe the common structure of amino acids and why their properties differ.\n34. Explain what ionic form amino acids take at intracellular pH, and why their affinity for water differs.",
+ "33. 아미노산은 공통적으로 **아미노기**와 **카르복실기**를 가지며, 서로 다른 **R기**를 갖는다. R기의 종류에 따라 아미노산의 성질이 달라져 단백질의 구조와 기능에도 차이가 생긴다.\n34. 세포 내 pH에서 아미노기는 **–NH₃⁺**, 카르복실기는 **–COO⁻** 형태로 존재한다. 또한 아미노산마다 R기의 극성과 전하 등의 성질이 다르기 때문에 **물과의 친화도**가 달라진다."),
+Q(5,"35","","","","35. 폴리펩타이드가 형성되는 과정과 방향성을 서술하시오.","35. Describe how a polypeptide forms and its directionality.",
+ "한 아미노산의 **카르복실기**와 다른 아미노산의 **아미노기** 사이에 **탈수반응**으로 **펩타이드 결합**이 형성되어 폴리펩타이드가 만들어진다. 폴리펩타이드는 **N-말단**에서 **C-말단**으로 이어지는 방향성을 가진다."),
+Q(5,"36·37","","","","36. 아미노산 서열이 단백질의 구조와 기능을 결정하는 이유를 서술하시오.\n37. 단백질이 특정 분자를 선택적으로 인식하고 결합할 수 있는 이유를 서술하시오.","36. Explain why amino acid sequence determines protein structure and function.\n37. Explain why a protein can selectively recognize and bind specific molecules.",
+ "36. 아미노산 서열에 따라 **수소 결합**, **이온 결합**, **소수성 상호작용** 등이 달라져 고유한 **3차원 구조**가 형성된다. 이 **입체 구조**에 의해 단백질의 기능이 결정된다.\n37. 단백질은 특정한 입체 구조를 가지며, 결합 대상 분자와 **구조적 상보성**을 이루기 때문에 선택적으로 결합할 수 있다."),
+Q(5,"38","","","","38. 단백질의 1차 구조가 무엇이며, 무엇에 의해 결정되는지 서술하시오.","38. What is the primary structure of a protein, and what determines it?",
+ "단백질의 1차 구조는 아미노산이 **일렬로 연결된 서열**이며, 이 서열은 유전정보인 **염기서열**에 의해 결정된다."),
+Q(5,"39","","","","39. 단백질의 2차 구조가 형성되는 원리와 대표적인 두 가지 형태를 서술하시오.","39. Describe how protein secondary structure forms and its two typical forms.",
+ "단백질의 2차 구조는 폴리펩타이드 **골격** 사이의 **수소결합**에 의해 형성된다. 대표적으로 **α-나선** 구조와 **β-병풍** 구조가 있다."),
+Q(5,"40","","","","40. 단백질의 3차 구조를 형성하고 안정화하는 주요 상호작용을 서술하시오.","40. Describe the main interactions that form and stabilize protein tertiary structure.",
+ "단백질의 3차 구조는 곁사슬 사이의 **소수성 상호작용**, **반데르발스 힘**, **이온 결합**, **수소 결합**, **이황화 결합** 등에 의해 형성되고 안정화된다."),
+Q(5,"41","","","","41. 단백질의 4차 구조란 무엇인지 서술하시오.","41. What is the quaternary structure of a protein?",
+ "단백질의 4차 구조는 **두 개 이상**의 폴리펩타이드 **소단위체**가 결합하여 하나의 기능적 단백질을 형성한 구조이다."),
+Q(5,"42","","","","42. 낫모양적혈구 빈혈증에서 글루탐산이 발린으로 치환되면 헤모글로빈이 서로 뭉치기 쉬워지는 이유를 설명하시오.","42. In sickle-cell disease, glutamic acid is replaced by valine. Explain why hemoglobin then clumps together easily.",
+ "**친수성**인 **글루탐산**이 **소수성**인 **발린**으로 바뀌면서 헤모글로빈 표면에 **소수성 부위**가 생기고, 이 부위가 다른 헤모글로빈의 소수성 부위와 **상호작용**하여 서로 뭉치기 쉬워지기 때문이다."),
+Q(5,"43","","","","43. 본질적으로 무질서한 단백질이 다양한 분자와 결합하여 여러 기능을 수행할 수 있는 이유를 설명하시오.","43. Explain why intrinsically disordered proteins can bind many molecules and perform various functions.",
+ "상호작용하기 전에는 **고정된 3차원 구조가 없지만**, 결합하는 **상대에 따라** 서로 다른 **입체 구조**를 형성할 수 있기 때문이다."),
+
+/* ===== 7장 ===== */
+Q(7,"1","(1)",C71[0],C71[1],"현미경의 성능을 결정하는 중요한 세 가지 요소를 쓰고, 각각의 개념을 정의하시오.","Name the three key factors that determine a microscope's performance and define each.",
+ "**배율**: 실제 크기 대비 상의 크기 비율\n**해상도|분해능**: 두 점을 구분할 수 있는 **최소 거리**\n**대조**: 시료 내 지역 간의 **명암 차이**"),
+Q(7,"1","(2)",C71[0],C71[1],"관찰한 상 A~E 중 가장 해상도가 좋은 것을 고르고, 그 이유를 쓰시오.","Which of A–E has the best resolution? Explain.",
+ "E. **전자빔**(나노미터 단위)을 쓰는 전자현미경이 가시광선(마이크로미터 단위)을 쓰는 광학현미경보다 해상도가 좋다. (C, D는 광학현미경이라 대조·입체감만 다름)"),
+Q(7,"1","(3)",C71[0],C71[1],"상피 세포(A~D) 중 세포가 고정·보존되는 과정을 거쳐 죽은 세포를 관찰하게 된 것을 고르고 이유를 쓰시오.","Which epithelial cell image (A–D) shows dead cells that were fixed and preserved? Explain.",
+ "B. **염색**하는 과정에서 **고정액**을 쓰므로 이미 죽은 세포이다."),
+Q(7,"1","(4)",C71[0],C71[1],"관찰한 상 중 C와 D를 A와 비교하여 설명하시오.","Compare C and D with A.",
+ "A는 일반 광학현미경(대조 낮음). C는 **위상차현미경**으로 A보다 **대조가 높다**. D는 **차등간섭 위상차현미경**으로 C보다 더 **입체적**이다."),
+Q(7,"1","(5)","","","세포 내 특정 분자의 위치는 자외선을 흡수해 빛을 내는 물질로 표지해서 알 수 있다. 무엇으로 표지하는가?","The location of specific molecules in a cell can be shown by labeling them with a substance that absorbs UV light and emits light. What is used to label them?",
+ "**형광물질|fluorescent**과 **항체|antibody**로 표지한다."),
+Q(7,"1","(6)","","","일반 형광현미경 상은 초점에서 벗어난 빛을 제거하지 못해 흐려 보인다. 초점 밖 빛을 제거해 선명한 상을 주는 현미경을 쓰시오.","Images from an ordinary fluorescence microscope look blurry because out-of-focus light is not removed. Name the microscopes that remove it and give a sharp image.",
+ "**공초점|confocal** 현미경(핀홀로 차단), **디컨볼루션|deconvolution** 현미경(컴퓨터로 제거)"),
+Q(7,"1","(7)","","","광학현미경이 전자현미경보다 유리한 점을 쓰시오.","State an advantage of the light microscope over the electron microscope.",
+ "**살아있는 세포|살아 있는|living|live**를 관찰할 수 있다. (전자현미경은 고정·진공이라 세포가 죽음)"),
+
+Q(7,"2","(1)",C72[0],C72[1],"Cytology의 개념을 정의하시오.","Define cytology.",
+ "**현미경**으로 관찰해 세포의 **구조**를 연구하는 학문. (cell biology는 구조와 **기능**까지)"),
+Q(7,"2","(2)",C72[0],C72[1],"세포생물학자들은 투과전자현미경(TEM)으로 무엇을 연구하는가?","What do cell biologists study with the transmission electron microscope (TEM)?",
+ "세포 내 **소기관|organelle** (얇은 단면의 내부 구조)"),
+Q(7,"2","(3)",C72[0],C72[1],"주사전자현미경(SEM)으로 무엇을 가장 잘 보여줄 수 있는지 쓰고, SEM과 TEM을 비교하시오.","What can the scanning electron microscope (SEM) show best? Compare SEM and TEM.",
+ "**SEM**: **표면**을 scan, **3D**, 예) 섬모·곤충 겹눈·꽃가루\n**TEM**: 얇은 **단면** 투과, **2D**, 예) 세포 내 소기관"),
+Q(7,"2","(4)",C72[0],C72[1],"그림 (다)의 상을 얻을 수 있는 현미경의 이름과 원리를 쓰시오.","Name the microscope that can produce the image in (c) and explain its principle.",
+ "**cryo-EM|저온전자현미경**. -160℃ 이하로 **급냉**해 물이 **유리질화**되어 결정이 안 생기고, **여러 방향**에서 찍은 상을 컴퓨터로 합쳐 3D 상을 만든다."),
+
+Q(7,"3","(1)",C73[0],C73[1],"침전물 A~D의 세포소기관이 각각 무엇인지 근거와 함께 쓰시오. (보기: 핵, 엽록체, 미토콘드리아, 리보솜)","Identify the organelle in each pellet A–D and give your evidence. (Choices: nucleus, chloroplast, mitochondrion, ribosome)",
+ "A **핵**(DNA 95%), B **엽록체**(CO₂ 소비=광합성), C **미토콘드리아**(O₂ 소비=세포호흡), D **리보솜**(RNA 82%)"),
+Q(7,"3","(2)",C73[0],C73[1],"세포소기관 A~D를 질량이 큰 순서로 나열하시오.","Arrange organelles A–D in order of decreasing mass.",
+ "**A → B → C → D|A-B-C-D|ABCD** (무거울수록 낮은 속도에서 먼저 침전)"),
+Q(7,"3","(3)",C73[0],C73[1],"B와 C의 세포소기관을 비교하여 구조적 유사성과 기능적 차이점을 설명하시오.","Compare the organelles in B and C: structural similarities and functional differences.",
+ "유사성: **이중막**, 자체 **리보솜**, **원형 DNA**\n차이: 엽록체는 **광합성**(빛E→화학E), 미토콘드리아는 **세포호흡**(화학E→ATP)"),
+
+Q(7,"4","(1)","","","3역 6계를 쓰시오.","Write the three domains and six kingdoms.",
+ "**진정세균역**(진정세균계), **고세균역**(고세균계), **진핵생물역**(**원생생물계**, **동물계**, **식물계**, **균계**)"),
+Q(7,"4","(2)","","","원핵세포와 진핵세포를 비교하여 서술하시오.","Compare prokaryotic and eukaryotic cells.",
+ "원핵: **막성 소기관 없음**, DNA는 **핵양체|nucleoid**\n진핵: **막성 소기관 있음**, DNA는 **핵|nucleus** 안 (nucleolus는 핵 속 ‘인’)"),
+
+Q(7,"5","(1)",C75[0],C75[1],"D가 있는 부분을 TEM으로 관찰한 사진이다. (가)의 D 구조와 (나)의 망상 구조를 설명하시오.","This is a TEM image of the region containing D. Explain the D structure in (a) and the mesh-like structure in (b).",
+ "(가) **핵공복합체|nuclear pore**: 핵막 구멍을 단백질이 에워싼 물질 이동 통로\n(나) **핵막하층|nuclear lamina**: **라민|lamin** 중간섬유로 된 망, 핵의 **형태 유지**"),
+Q(7,"5","(2)",C75[0],C75[1],"<보기>와 관련된 세포에 풍부한 소기관의 기호와 이름을 쓰시오.\n① 정소·난소의 성호르몬, 부신의 스테로이드계 호르몬 분비\n② 간세포에서 약물 분자에 수산기를 붙여 해독\n③ 근육세포에서 신경 자극 시 칼슘 이온을 세포질로 방출","Give the letter and name of the organelle abundant in cells described below.\n① Secretes sex hormones from testes/ovaries and steroid hormones from adrenal glands\n② Detoxifies drugs in liver cells by adding hydroxyl groups\n③ Releases calcium ions into the cytoplasm when a muscle cell is stimulated by a nerve",
+ "B, **활면소포체|smooth ER** (지질 합성·해독·Ca²⁺ 저장)"),
+Q(7,"5","Q",C75[0],C75[1],"조면소포체와 활면소포체의 구조적, 기능적 차이를 설명하시오.","Explain the structural and functional differences between rough ER and smooth ER.",
+ "조면: 표면에 **리보솜**, **단백질 합성**·막 보충\n활면: 리보솜 없음, **지질 합성**·**Ca²⁺ 저장**·**해독**"),
+Q(7,"5","(3)",C75[0],C75[1],"분열하지 않는 핵에서 뚜렷하게 보이는 구조 E의 이름과 기능을 쓰시오.","Name structure E, which is distinct in a non-dividing nucleus, and state its function.",
+ "**인|nucleolus**, **DNA**가 전사되어 **rRNA**가 되고, **핵공**을 통해 들어온 **단백질**과 결합하여 **소단위체**가 되어 핵공을 나간다."),
+
+Q(7,"6","(1)",C76[0],C76[1],"C와 같은 이중막 구조를 가진 세포소기관을 그림에서 찾아 쓰고 기능을 쓰시오.","Find another organelle in the figure with the same double-membrane structure as C and state its function.",
+ "A, **핵|nucleus** (핵막은 이중막): **DNA**(유전 정보) 저장"),
+Q(7,"6","(2)",C76[0],C76[1],"세균은 C가 없지만 세포호흡으로 에너지를 만든다. 세균에서 C를 대신하는 장소를 예상하고 구조적 이유를 설명하시오.","Bacteria lack C but still make energy by cellular respiration. Predict where this takes place in bacteria and explain why, based on their structure.",
+ "**원형질막|세포막|plasma membrane**. 막성 소기관이 없는 대신 **전자전달계**와 **ATP 합성효소**가 박힌 원형질막에서 세포호흡(**산화적 인산화**)을 한다.\n**세포벽**이 있어 원형질막과 세포벽 사이의 **공간**이 미토콘드리아의 **막 사이 공간** 역할을 해 **H⁺**가 모이며 농도 기울기가 만들어진다."),
+Q(7,"6","(3)",C76[0],C76[1],"그림에서 세균에서도 발견되는 것을 찾아 쓰고 기능을 설명하시오.","Which structure in the figure is also found in bacteria? State its function.",
+ "D, **리보솜|ribosome**: **단백질 합성**"),
+Q(7,"6","(4)",C76[0],C76[1],"C의 기원을 설명하는 가설의 이름과, 그 근거가 되는 구조를 세 가지 이상 쓰시오.","Name the hypothesis explaining the origin of C and give three or more structural features that support it.",
+ "**세포내공생설|endosymbiosis**. 근거: **이중막**, **원형 DNA**, 자체 **리보솜** (+ 자체 분열)"),
+Q(7,"6","(5)",C76[0],C76[1],"세포주기에서 A가 존재하는 시기와 없는 시기를 쓰고, A의 주요 내용물(DNA) 상대량이 가장 적은 세포와 그 이유를 쓰시오. (A가 없는 세포는 제외)","State when A exists and when it is absent in the cell cycle, and name the cell with the least relative amount of A's main content (DNA) and why. (Exclude cells without A.)",
+ "**간기**에 존재, **분열기**에 소실. DNA가 가장 적은 세포는 **생식세포** — **감수분열**로 염색체 수가 절반이 되기 때문"),
+
+Q(7,"7","(1)",C77[0],C77[1],"㉠~㉢의 이름을 쓰고, 방사능 물질의 이동 경로와 그 이유를 쓰시오.","Name organelles ㉠–㉢ and describe the path of the radioactive material and why.",
+ "㉠ **RER|거친면소포체|조면소포체**, ㉡ **골지체|Golgi**, ㉢ **분비소낭|secretory vesicle**. 표지 단백질이 RER에서 합성돼 **수송소낭|수송 소낭**으로 골지체 → 분비소낭 순으로 이동해 방사능 최고점이 차례로 나타난다."),
+Q(7,"7","(2)","","","식물세포에서 펙틴과 비셀룰로스성 다당류를 만들어 수송 소포로 내보내며, 소포가 원형질막과 융합하는 소기관은?","In plant cells, which organelle makes pectin and non-cellulose polysaccharides and ships them out in transport vesicles that fuse with the plasma membrane?",
+ "**골지체|Golgi**"),
+Q(7,"7","(3)","","","테이-삭스병이 왜 발병하는지 리소좀의 기능과 관련지어 쓰시오.","Explain why Tay-Sachs disease occurs in terms of lysosome function.",
+ "리소좀에 **지질 분해 효소**가 없어 **지질**이 들어 있는 **리소좀**이 **뇌세포|신경세포|brain**에 **축적**된다."),
+Q(7,"7","(4)",C774[0],C774[1],"빈칸 ①~③에 알맞은 말을 쓰시오.","Fill in blanks ①–③.",
+ "① **수축포|contractile vacuole** ② **중심액포|central vacuole** ③ **식포|food vacuole**"),
+Q(7,"7","(5)",C757[0],C757[1],"세포가 대사에 필요한 물질을 얻기 위해 요구되는 세포 표면적에 중심액포는 어떤 영향을 미치는가?","How does the central vacuole affect the cell surface area needed to obtain materials for metabolism?",
+ "성장하면서 **중심액포**가 커져 **세포질**을 가장자리로 밀어내 **얇게** 유지 → 세포질 부피에 대한 **표면적 대 부피 비**가 **증가**해 **물질교환**이 효율적 (표면적 자체를 늘리는 것은 아님)"),
+Q(7,"7","(6)","","","내막계를 정의하고, 퍼옥시좀이 내막계가 아닌 이유를 쓰시오.","Define the endomembrane system and explain why peroxisomes are not part of it.",
+ "**막 흐름|막흐름|membrane flow**으로 연결된 막계 (RER, 골지체, 리소좀, 액포, 원형질막). 퍼옥시좀은 막 흐름에 참여하지 않고 단백질이 **자유 리보솜**에서 만들어진다."),
+
+Q(7,"8","(1)",C78[0],C78[1],"그림 (가)와 (나)의 구조적 명칭을 각각 쓰시오.","Name structures (a) and (b).",
+ "(가) **미토콘드리아|mitochondri**, (나) **엽록체|chloroplast**\n(a 리보솜, b 원형 DNA, c 크리스타, d 기질 / e 틸라코이드, f 스트로마, g 그라나, h 리보솜, i 원형 DNA)"),
+Q(7,"8","(2)","","","두 세포소기관의 세포내공생설을 지지하는 근거 3가지를 쓰시오.","Give three pieces of evidence supporting endosymbiosis for these two organelles.",
+ "**이중막**, 자체 **리보솜**, **원형 DNA** (+ 자체 증식)"),
+Q(7,"8","(3)","","","(가)와 (나)의 구조적 유사성과 기능적 차이점을 쓰시오.","State the structural similarities and functional differences between (a) and (b).",
+ "유사성: **이중막**, **원형 DNA**, **리보솜**\n차이: 미토콘드리아는 **세포호흡**(화학E→화학E), 엽록체는 **광합성**(빛E→화학E)"),
+Q(7,"8","(4)","","","<보기>의 기능을 하는 소기관이 무엇이며 어떻게 기능하는지 쓰시오.\n① 간에서 특별한 대사과정으로 해독하는 소기관\n② 해바라기·땅콩처럼 지방을 많이 저장하는 씨앗의 특수한 소기관","Name the organelle for each function and explain how it works.\n① An organelle in the liver that detoxifies through special metabolism\n② A special organelle in seeds that store much fat, such as sunflower and peanut",
+ "① **퍼옥시좀|peroxisome**: **알코올**이나 다른 해로운 물질의 **수소**를 **산소로 전달**하여 **독성을 제거**하고, 이때 생긴 **H₂O₂**는 **카탈레이스|catalase**로 물과 산소로 분해\n② **글리옥시좀|glyoxysome**: 지방산을 당으로 전환하는 **효소**가 있어 **지방산을 당으로** 전환해 **발아** 이전까지 에너지원 공급"),
+
+Q(7,"9","(1)",C79[0],C79[1],"<보기>는 어떤 세포골격과 관련되는가? 소단위체를 포함한 구조를 쓰시오.\n① 신경전달물질 소낭이 축삭을 따라 신경말단으로 이동\n② 분비소낭이 골지체에서 세포막으로 이동하는 길 제공\n③ 세포분열 중 염색체 분리","Which cytoskeletal element is involved in each case? Describe its structure including its protein subunit.\n① Vesicles with neurotransmitters move along the axon to the nerve terminal\n② Provides tracks for secretory vesicles moving from Golgi to the cell membrane\n③ Takes part in chromosome separation during cell division",
+ "**미세소관|microtubule**: **α·β 튜불린|tubulin**이 **이합체|dimer**로 중합된 **속이 빈 관** (모터 단백질 키네신·다이네인이 소낭 운반)"),
+Q(7,"9","(2)","","","<보기>는 어떤 세포골격과 관련되는가? 소단위체를 포함한 구조를 쓰시오.\n① 장세포의 미세융모가 표면적 증가\n② 아메바 운동으로 위족 확장\n③ 검정말 세포질 유동\n④ 동물세포 세포질 분열에서 분할구 형성","Which cytoskeletal element is involved in each case? Describe its structure including its protein subunit.\n① Microvilli increase the surface area of intestinal cells\n② Amoeba extends pseudopodia by ameboid movement\n③ Cytoplasmic streaming in Elodea cells\n④ Forms the cleavage furrow in animal cytokinesis",
+ "**미세섬유|microfilament**: **액틴|actin** 필라멘트 두 사슬이 **꼬인** 구조 (미오신과 함께 작용)"),
+Q(7,"9","(3)",C793[0],C793[1],"TEM 사진에서 A와 B 부위의 미세구조를 쓰시오.","Describe the microstructure of regions A and B in the TEM image.",
+ "A: **9+2** (이중관 9쌍 + 가운데 단일 미세소관 2개)\nB(기저체): **9+0** (삼중관 9세트, 가운데 비어 있음)"),
+Q(7,"9","Q","","","미세소관 배열이 어떻게 편모와 섬모의 구부러지는 운동을 만들어내는가?","How does the arrangement of microtubules produce the bending movement of flagella and cilia?",
+ "**다이네인|디네인|dynein** 운동단백질에 의해 **sliding|미끄러|슬라이딩**되는데, **radial spoke**와 **cross-linking protein**에 의해 고정되어 미끄러지지 못하고 **구부러진다|bending**."),
+Q(7,"9","(4)",C794[0],C794[1],"간균과 정자의 편모를 비교하여 서술하시오.","Compare the flagella of the rod-shaped bacterium and the sperm cell.",
+ "간균: **flagellin|플라젤린** 단백질, **회전|rotation** 운동\n정자: **미세소관|microtubule**(9+2), **구부러짐|bending** 운동"),
+
+Q(7,"10","(1)",C710[0],C710[1],"(가)~(다) 세포 간 연접의 이름과 기능을 <보기>와 연결해 쓰시오.\n① 심장근육·동물 배아에서 많은 세포 간 교통에 필요\n② 근육의 근세포들을 서로 연결 (어떤 근육 파열은 이것이 찢어진 것)\n③ 세포 주변을 연속해 밀봉해 세포외용액이 표피세포 사이로 빠지는 것을 막음","Name junctions (a)–(c) and state their functions, linking them to the statements.\n① Needed for communication among many cells in heart muscle and animal embryos\n② Connects muscle cells to each other (some muscle tears are tears of this junction)\n③ Seals around the cell so extracellular fluid cannot leak between epithelial cells",
+ "(가) **밀착연접|tight junction**: 세포막을 빈틈없이 붙여 **물질이 새지 않게** 함 (③)\n(나) **데스모좀|desmosome**: 세포를 **고정**해 기계적 힘에도 떨어지지 않게 함 (②)\n(다) **간극연접|gap junction**: 세포질을 직접 연결해 **이온·작은 분자** 교환 (①)"),
+Q(7,"10","(2)","","","위 세포 간 연접 중 식물세포의 원형질연락사와 기능이 유사한 것은?","Which of these cell junctions is similar in function to plasmodesmata in plant cells?",
+ "**간극연접|gap junction**"),
+
+Q(7,"11","(1)","","","식물세포의 세포벽 형성 과정을 쓰시오.","Describe how the plant cell wall forms.",
+ "**골지체 소낭** → **세포판** → **중간 라멜라**(펙틴) → **셀룰로오스 합성효소**가 **1차 세포벽** 형성 → 일부 세포는 안쪽에 **2차 세포벽**(리그닌)"),
+Q(7,"11","(2)",C711[0],C711[1],"세포외기질을 구성하는 세 가지 분자 (가)~(다)를 쓰시오.","Name the three extracellular matrix molecules (a)–(c).",
+ "(가) **콜라겐|collagen** (나) **피브로넥틴|fibronectin** (다) **프로테오글리칸|proteoglycan**"),
+
+/* ===== 8장 ===== */
+Q(8,"1","(1)",C81[0],C81[1],"시간에 따른 (가)와 (나) 구역의 형광 세기 변화를 예상하고 이유를 설명하시오.","Predict how fluorescence in regions (a) and (b) changes over time, and explain why.",
+ "(가)는 탈색 직후 **급감**했다가 **서서히 증가**, (나)는 **서서히 감소**해 두 곳이 **같은 값**에 수렴한다(처음보다는 낮음). 막이 **유동 모자이크**라 막단백질이 **측면 확산**하기 때문이다."),
+Q(8,"1","(2)",C812[0],C812[1],"세포의 어떤 작용으로 이런 결과가 나타났는지 과정을 쓰시오.","Which cellular process produced this result? Describe the process.",
+ "**식세포작용|phagocytosis**: **미세섬유|액틴|actin**으로 **위족**을 내어 세균을 감싸 **식포**를 만들어 세포 안으로 들어온다. 표지된 막 단백질이 식포막이 되어 내부에서 형광이 보인다."),
+Q(8,"1","(3)","","","형광물질이 모이는 세포 내 소기관과 그 기능을 쓰시오.","Name the organelle where the fluorescent material gathers and state its function.",
+ "**리소좀|lysosome**: 식포와 융합해 **가수분해효소**로 세균을 분해한다 (자가소화로 생긴 식포도 마찬가지)."),
+
+Q(8,"2","(1)",C82[0],C82[1],"생체막이 이중층 구조로 보이는 이유를 구성 성분의 특성으로 설명하시오.","Explain, based on the properties of its components, why biological membranes look like a bilayer.",
+ "인지질은 **양친매성|amphipathic**: **친수성** 머리는 바깥, **소수성** 꼬리는 안쪽에 배열되어 이중층이 된다."),
+Q(8,"2","(2)","","","생체막이 선택적 투과성을 갖는 이유를 구조와 성분으로 설명하시오.","Explain why biological membranes are selectively permeable, in terms of structure and composition.",
+ "**유동 모자이크|fluid mosaic**: **인지질** 이중층은 **소수성** 물질(O₂, CO₂)만 단순확산시키고, **막단백질**은 **특이적** 분자만 촉진확산(물-아쿠아포린, 포도당-GluT)시킨다."),
+Q(8,"2","(3)","","","물 분자는 생체막을 자유롭게 통과할 수 있는가?","Can water molecules cross a biological membrane freely?",
+ "**극성** 분자라 인지질층은 **아주 느리게**만 통과하고, 대부분 **아쿠아포린|aquaporin**으로 빠르게 이동한다. 아쿠아포린은 H₃O⁺는 막아 선택성이 **크기만으로 결정되지 않고 전하**도 중요하다."),
+Q(8,"2","(4)","","","포도당과 과당(구조이성질체)은 포도당 운반체로 세포막을 이동할 수 있는가?","Can glucose and fructose, which are structural isomers, cross the membrane through the glucose transporter?",
+ "**포도당만** 이동한다. GluT는 **특이적**이라 분자식이 같아도 **구조**가 다른 과당은 결합 부위에 맞지 않는다."),
+Q(8,"2","(5)-가","","","Na⁺-K⁺ 펌프의 이온 수송 과정에서 ATP가 어떻게 쓰이는지 설명하시오.","Explain how ATP is used when the Na⁺-K⁺ pump transports ions.",
+ "ATP **가수분해**로 떨어진 **인산기**가 펌프를 **인산화**(탈인산화 반복)해 **구조가 변하고**, Na⁺ 3개는 밖으로, K⁺ 2개는 안으로 **농도 기울기를 거슬러** 이동한다."),
+Q(8,"2","(5)-나","","","전자 전달계에서 산소로의 전자 전달을 저해하는 물질을 처리하면 휴지 전위는 어떻게 되는가?","What happens to the resting potential if a substance blocking electron transfer to oxygen in the electron transport chain is applied?",
+ "**ATP 합성 감소** → **펌프 정지** → Na⁺·K⁺ **농도 기울기 붕괴** → 휴지 전위가 깨져 **0에 가까워진다|탈분극**."),
+
+Q(8,"3","(1)",C83[0],C83[1],"X와 Y의 수송 방법과 그렇게 판단한 이유를 쓰시오.","State the transport method of X and Y and give your reasoning.",
+ "X **촉진확산|facilitated**: **막단백질** 수가 한정돼 속도가 **포화|saturat**\nY **단순확산|simple**: 막단백질 없이 인지질을 통과, 농도 차에 **비례**해 증가"),
+Q(8,"3","(2)","","","분자량이 작은 이온이 인지질층을 직접 통과하지 못하는 이유를 쓰시오.","Why can small ions not cross the phospholipid layer directly?",
+ "이온은 **전하**를 띠어 **소수성**인 인지질 이중층 내부를 통과하기 어렵다."),
+Q(8,"3","(3)","","","DNA 같은 거대 생체 분자가 세포 내부에서 삼투압에 미치는 영향을 쓰시오.","How do large biomolecules such as DNA inside the cell affect its osmotic pressure?",
+ "막을 통과하지 못하고 **수화 껍질**을 만들어 안쪽 **자유 물분자**가 줄어 **물이 세포 안으로** 들어오려 한다 (삼투압↑)."),
+
+Q(8,"4","",C84[0],C84[1],"A와 B가 각각 무엇인지 쓰고, 높이 변화가 일어난 이유를 설명하시오.","Identify A and B and explain why the levels changed.",
+ "A **젖당|lactose**, B **설탕|sucrose**. 젖당이 **포도당+갈락토오스**로 분해돼 A의 **용질 수**가 늘고(자유 물분자↓), 단당류는 막을 못 지나므로 물이 B→A로 **삼투**한다."),
+
+Q(8,"5","(1)",C851[0],C851[1],"물의 높이 변화로 포도당 운반체 단백질-X의 특성을 설명하시오.","Use the water-level changes to explain the properties of glucose transporter protein-X.",
+ "(가·나) 포도당은 **GluT**로 이동해 농도가 같아져 변화 없음. (다·라) **포도당-6-인산**은 통과 못 해 **수화 껍질**로 자유 물분자↓, 물이 그쪽으로 이동 → GluT는 포도당에만 결합하는 **기질 특이성**이 높다."),
+Q(8,"5","(2)",C852[0],C852[1],"그래프로부터 운반체 단백질-X와 포도당 인산화 효소 발현에 의한 현상을 설명하시오.","From the graph, explain what happens with the expression of transporter protein-X and glucose kinase.",
+ "운반체 발현↑ → **농도 기울기**를 따라 흡수↑. 세포 내 포도당이 늘어 기울기↓ → 흡수↓. **인산화**로 포도당이 **포도당-6-인산**이 되어 세포 내 포도당↓ → 기울기 회복, 흡수↑."),
+
+Q(8,"6","",C86[0],C86[1],"소장 내부에서 상피세포로 포도당을 수송하는 운반체의 특징에 해당하는 결과를 모두 고르고 근거를 쓰시오.","Choose all results that match the transporter carrying glucose from the intestinal lumen into the epithelial cell, and give your reasoning.",
+ "③. SGLT는 **Na⁺ 기울기**를 이용하는 **능동수송|공동수송**이라, 미토콘드리아 저하→ATP↓→**Na⁺-K⁺ 펌프** 정지→Na⁺ 기울기 소실→수송↓. ①은 **GluT**, ②·④는 해당하지 않는다."),
+
+Q(8,"7","(1)",C87[0],C87[1],"외부 용액 A~C를 판단하고, A와 B 용액의 물 균형을 쓰시오.","Identify solutions A–C and describe the water balance in solutions A and B.",
+ "A **저장액|hypo**: 물이 순이동으로 **유입**, B **등장액|iso**: **순이동 0**, C **고장액|hyper**: 물이 **밖으로** 나감"),
+Q(8,"7","(2)","","","C 용액에 식물세포를 넣으면 형태가 어떻게 달라지는지 예측하고 원리를 쓰시오.","Predict how a plant cell would change in solution C and explain the principle.",
+ "**원형질 분리|plasmolysis**: **세포벽**은 유지되고 물이 빠져 **세포막**만 수축해 벽에서 떨어진다."),
+Q(8,"7","(3)","","","동물세포는 등장성 환경에서 부피가 일정하다. 대부분의 식물세포에게 등장액이 최적 환경이 아닌 이유를 쓰시오.","An animal cell keeps a constant volume in an isotonic environment. Why is an isotonic solution not optimal for most plant cells?",
+ "**저장액**에서 물이 들어와도 **세포벽** 때문에 **팽압|turgor**이 생겨 **팽윤** 상태가 되고, 형태 유지·지지가 가능해 가장 건강하다."),
+
+Q(8,"8","(1)","","","동물세포와 식물세포의 전기발생 펌프와 막전위 형성 원리를 쓰시오.","Name the electrogenic pump of animal cells and plant cells and explain how each creates a membrane potential.",
+ "동물: **Na⁺-K⁺ 펌프** (3Na⁺ 밖/2K⁺ 안 → 안쪽 **음전하**)\n식물: **H⁺ 펌프|양성자 펌프|proton pump** — ATP로 H⁺를 **밖으로** 내보내 안쪽이 음전하"),
+Q(8,"8","(2)","","","식물 체관에서 H⁺의 전기화학적 기울기를 이용해 물질이 수송되는 과정을 설명하시오.","Explain how substances are transported in phloem using the electrochemical gradient of H⁺.",
+ "H⁺가 기울기를 따라 **공동수송체|cotransport**로 들어올 때 **당(수크로스)|sucrose|sugar**이 함께 들어온다 → 당 농도↑로 **삼투**에 의해 물이 들어와 압력이 생겨 아래로 이동 (**압류설**)."),
+Q(8,"8","(3)","","","리소좀 효소는 산성 환경에서 가장 잘 작용한다. 리소좀 막에서 관찰할 수 있는 수송 단백질을 쓰시오.","Lysosomal enzymes work best in an acidic environment. Which transport protein is found in the lysosomal membrane?",
+ "**H⁺ 펌프|양성자 펌프|proton pump**: ATP로 H⁺를 세포질에서 **리소좀 안으로** 능동수송해 **산성**(pH 약 5)을 유지"),
+
+Q(8,"9","(1)",C891[0],C891[1],"<보기>와 같이 세포막을 통해 물질을 배출하는 과정을 쓰시오.","Describe the process by which substances are released through the cell membrane as in the examples.",
+ "**세포외배출|exocytosis**: 골지체(소포체)에서 **분비 소낭|소낭|vesicle**이 출아 → 세포막으로 이동 → **원형질막과 융합** → 내용물 **방출**"),
+Q(8,"9","(2)","","","LDL을 예로 수용체 매개 세포내섭취가 비특이적 세포내섭취와 구별되는 특징을 쓰시오.","Using LDL as an example, state what distinguishes receptor-mediated endocytosis from nonspecific endocytosis.",
+ "**수용체**가 LDL에만 결합하고 **클라트린|clathrin|클라스린**이 만든 **피복 함몰**에 수용체가 모여 **피복 소낭**으로 들어온다 → **낮은 농도**에서도 필요한 물질만 선택적 흡수"),
+Q(8,"9","(3)","","","가족성 고콜레스테롤혈증(FH)에서 LDL 수용체는 LDL과 정상 결합하지만 피복 함몰에 모이지 못하는 세포가 있다. 이 세포의 LDL 흡수를 예측하고 이유를 쓰시오.","In familial hypercholesterolemia (FH), some cells have LDL receptors that bind LDL normally but cannot gather in coated pits. Predict LDL uptake in these cells and explain why.",
+ "LDL 흡수가 **크게 감소|감소**한다. 수용체가 LDL과 결합은 하지만 **피복 함몰**에 **모이지 못해** **피복 소낭**으로 세포 안에 들어오지 못하기 때문이다.\n(정상: 소낭 → 엔도솜·리소좀에서 LDL과 콜레스테롤 분리 → 콜레스테롤이 세포막 유동성 조절)"),
+];
+
+/* ---------- 모식도 (직접 그림) ---------- */
+const FIG = (() => {
+  const f = (n) => Math.round(n * 10) / 10;
+
+  let LANG = 'ko';
+  const EN = {
+    '세포': 'Cell', '시간(초)': 'Time (s)', '형광도(상대값)': 'Fluorescence (relative)', '(가) 구역': 'Region (a)', '(나) 구역': 'Region (b)',
+    '탈색처리': 'Photobleaching', '37℃로 이동': 'Moved to 37℃', '(가)': '(a)', '(나)': '(b)', '(다)': '(c)',
+    '농도 차(상대값)': 'Concentration difference (relative)', '투과 속도(상대값)': 'Rate of transport (relative)',
+    '초기 상태': 'Initial state', '최종 상태': 'Final state', '반투과성막': 'Semipermeable membrane', '물': 'Water', '용질': 'Solute',
+    '포도당': 'Glucose', '포도당-6-인산': 'Glucose-6-phosphate', '※ 막의 짧은 막대는 포도당 운반체 단백질-X': '※ Short bars on the membrane = glucose transporter protein-X',
+    '시간': 'Time', '포도당 순흡수율': 'Net glucose uptake', '포도당 운반체': 'Glucose transporter', '단백질-X': 'protein-X', '인산화 효소': 'kinase',
+    '장내강': 'Lumen', '세포외액': 'Extracellular fluid', '미세융모': 'Microvilli', '밀착연접': 'Tight junction', '장 상피세포': 'Intestinal epithelial cell',
+    '이웃 세포': 'Neighboring cell', '원형질막': 'Plasma membrane', '세포질': 'Cytoplasm', '인테그린': 'Integrin', '미세섬유': 'Microfilaments',
+    '추적시간(분)': 'Chase time (min)', '단백질 1mg당 방사능(상대값)': 'Radioactivity per mg protein (relative)',
+    'A 섬모·편모의 축': 'A: axoneme', 'B 기저체': 'B: basal body', '9 + 2 (이중관 9쌍 + 가운데 2개)': '9 + 2 (9 doublets + 2 central)', '9 + 0 (삼중관 9세트)': '9 + 0 (9 triplets)',
+    '※ A는 생략한 모식도': '※ A omitted in this schematic',
+    '(가) 저속': '(a) Low speed', '(나) 고속': '(b) High speed', '(다) 고속': '(c) High speed', '(라) 초고속': '(d) Ultra-high speed',
+    '분쇄액': 'Homogenate', '핵막 확대': 'Close-up of nuclear envelope', '상층액': 'Supernatant', '침전물': 'Pellet', 'DNA 함량(%)': 'DNA (%)', 'RNA 함량(%)': 'RNA (%)', 'CO₂ 소비량(%)': 'CO₂ use (%)', 'O₂ 소비량(%)': 'O₂ use (%)',
+    '중심액포': 'Central vacuole', '핵': 'Nucleus', '세포벽': 'Cell wall', '엽록체': 'Chloroplast',
+    '녹색: 미세소관': 'Green: microtubules', '붉은색: 미세섬유': 'Red: microfilaments', '파란색: 핵 DNA': 'Blue: nuclear DNA',
+    '미세소관': 'Microtubules', '기저체': 'Basal body', '편모': 'Flagella', '간균': 'Rod bacterium', '정자': 'Sperm',
+    '세포막 단백질': 'Membrane protein', '형광 물질': 'Fluorescent dye', '표지': 'Labeling', '탈색': 'Bleaching', '백혈구': 'White blood cell', '위족': 'Pseudopod', '세균': 'Bacteria', '식포': 'Phagosome', '형광 표지된 막 단백질': 'Fluorescently labeled membrane protein',
+    '친수성 머리': 'Hydrophilic head', '소수성 꼬리': 'Hydrophobic tails', '전자현미경 상': 'Electron micrograph', '이중선으로 보임': 'Seen as two dark lines'
+  };
+  const tr = (x) => (LANG === 'en' && EN[x] !== undefined ? EN[x] : x);
+  const DEFS = '<defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="mk"/></marker></defs>';
+  const svg = (w, h, inner, label) => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + w + ' ' + h + '" role="img" aria-label="' + label + '">' + DEFS + inner + '</svg>';
+  const fx = (str) => {
+    let out = '', shift = 0;
+    String(str).split(/([₁₂₃₄⁺])/).forEach((tok) => {
+      if (!tok) return;
+      if (/^[₁₂₃₄⁺]$/.test(tok)) { const dy = tok === '⁺' ? -4 : 3; out += '<tspan dy="' + dy + '" font-size="9">' + (tok === '⁺' ? '+' : '₁₂₃₄'.indexOf(tok) + 1) + '</tspan>'; shift = dy; }
+      else if (shift) { out += '<tspan dy="' + (-shift) + '">' + tok + '</tspan>'; shift = 0; }
+      else out += tok;
+    });
+    return out;
+  };
+  const T = (x, y, s, cls, anchor) => '<text x="' + f(x) + '" y="' + f(y) + '" class="' + (cls || 't') + '" text-anchor="' + (anchor || 'middle') + '">' + fx(tr(s)) + '</text>';
+  const L = (x1, y1, x2, y2, cls, arrow) => '<path class="' + (cls || 'lnm') + '" d="M' + f(x1) + ' ' + f(y1) + 'L' + f(x2) + ' ' + f(y2) + '"' + (arrow ? ' marker-end="url(#ah)"' : '') + '/>';
+  const C = (x, y, r, cls) => '<circle cx="' + f(x) + '" cy="' + f(y) + '" r="' + r + '" class="' + cls + '"/>';
+  const E = (x, y, rx, ry, cls) => '<ellipse cx="' + f(x) + '" cy="' + f(y) + '" rx="' + rx + '" ry="' + ry + '" class="' + cls + '"/>';
+  const R = (x, y, w, h, cls, rx) => '<rect x="' + f(x) + '" y="' + f(y) + '" width="' + w + '" height="' + h + '" class="' + cls + '"' + (rx ? ' rx="' + rx + '"' : '') + '/>';
+  const P = (d, cls) => '<path class="' + cls + '" d="' + d + '"/>';
+  const poly = (pts, cls, close) => P('M' + pts.map((p) => f(p[0]) + ' ' + f(p[1])).join('L') + (close ? 'Z' : ''), cls);
+  const ease = (keys, step) => {
+    step = step || 2; const out = [];
+    for (let i = 0; i < keys.length - 1; i++) {
+      const a = keys[i], b = keys[i + 1];
+      for (let x = a[0]; x < b[0]; x += step) { const u = (x - a[0]) / (b[0] - a[0]); out.push([x, a[1] + (b[1] - a[1]) * (1 - Math.cos(Math.PI * u)) / 2]); }
+    }
+    out.push(keys[keys.length - 1]); return out;
+  };
+  const axes = (ox, oy, W, H, xl, yl) =>
+    P('M' + ox + ' ' + (oy - H) + 'V' + oy + 'H' + (ox + W), 'ln') +
+    T(ox + W / 2, oy + 34, xl, 't') +
+    '<text class="t" transform="translate(' + (ox - 40) + ' ' + (oy - H / 2) + ') rotate(-90)" text-anchor="middle">' + yl + '</text>';
+  let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const rad = (d) => d * Math.PI / 180;
+
+  /* 7장 1번: 현미경 상 A~E (모식도) */
+  const f71 = () => {
+    let s = '';
+    for (let i = 0; i < 5; i++) {
+      const x = 12 + i * 104, y = 8;
+      s += R(x, y, 94, 94, 'ln tl');
+      if (i === 1) { [[30, 35, 22], [62, 30, 18], [45, 62, 22], [76, 64, 15]].forEach((c) => { s += C(x + c[0], y + c[1], c[2], 'dk'); }); }
+      if (i === 2 || i === 3) {
+        const cells = [[30, 30, 22, 18], [66, 36, 22, 18], [48, 68, 24, 19]];
+        cells.forEach((c) => {
+          if (i === 3) s += E(x + c[0] + 4, y + c[1] + 4, c[2], c[3], 'mu');
+          s += E(x + c[0], y + c[1], c[2], c[3], 'ln' + (i === 3 ? ' tn' : ''));
+          s += C(x + c[0], y + c[1], 5, 'ln');
+        });
+      }
+      if (i === 4) {
+        for (let k = 0; k < 11; k++) {
+          const x0 = x + 8 + k * 7.8, bend = (k % 2 ? 5 : -5);
+          s += P('M' + f(x0) + ' ' + (y + 90) + 'Q' + f(x0 + bend) + ' ' + (y + 55) + ' ' + f(x0 + (k % 3 - 1) * 3) + ' ' + (y + 16), 'hr');
+        }
+      }
+      s += T(x + 47, y + 120, 'ABCDE'[i], 't tb');
+    }
+    return svg(538, 134, s, '현미경으로 관찰한 상 A부터 E까지를 단순하게 그린 모식도');
+  };
+
+  /* 7장 5번: 핵과 소포체 */
+  const f75 = () => {
+    const cx = 190, cy = 115; let s = '';
+    [84, 98, 112].forEach((r) => {
+      const a0 = rad(105), a1 = rad(255);
+      const p0 = [cx + r * Math.cos(a0), cy + r * Math.sin(a0)], p1 = [cx + r * Math.cos(a1), cy + r * Math.sin(a1)];
+      const d = 'M' + f(p0[0]) + ' ' + f(p0[1]) + 'A' + r + ' ' + r + ' 0 0 1 ' + f(p1[0]) + ' ' + f(p1[1]);
+      s += P(d, 'sac') + P(d, 'sac2');
+      for (let a = 105; a <= 255; a += 10) s += C(cx + (r + 10) * Math.cos(rad(a)), cy + (r + 10) * Math.sin(rad(a)), 2.2, 'dotk');
+    });
+    s += C(cx, cy, 62, 'ln tn') + C(cx, cy, 55, 'ln pa');
+    [-40, 25].forEach((a) => {
+      const q = (r) => [cx + r * Math.cos(rad(a)), cy + r * Math.sin(rad(a))];
+      const p = q(48), z = q(69);
+      s += L(p[0], p[1], z[0], z[1], 'gap');
+      const m1 = q(52), m2 = q(66);
+      s += C(m1[0], m1[1], 3, 'prot') + C(m2[0], m2[1], 3, 'prot');
+    });
+    s += C(cx - 10, cy + 6, 17, 'nu');
+    s += P('M200 85q8 -8 14 2t12 8', 'lnm') + P('M150 140q8 8 16 0t14 -6', 'lnm') + P('M210 140q8 6 16 -2', 'lnm');
+    ['M262 150Q282 130 302 150T342 150T382 150', 'M262 178Q282 158 302 178T342 178T382 178', 'M262 206Q282 186 302 206T342 206T382 206'].forEach((d) => { s += P(d, 'sac') + P(d, 'sac2'); });
+    const pore = [cx + 58.5 * Math.cos(rad(-40)), cy + 58.5 * Math.sin(rad(-40))];
+    s += L(pore[0] + 3, pore[1] - 2, 322, 44, 'lnm') + T(330, 42, 'D', 't tb', 'start');
+    s += L(172, 112, 112, 40, 'lnm') + T(104, 36, 'E', 't tb', 'end');
+    s += L(52, 201, 86, 175, 'lnm') + T(44, 210, 'C', 't tb', 'end');
+    s += L(388, 178, 408, 180, 'lnm') + T(414, 184, 'B', 't tb', 'start');
+    s += T(14, 236, '※ A는 생략한 모식도', 'ts', 'start');
+    return svg(440, 244, s, '핵과 소포체의 모식도. D는 핵막의 구멍, E는 핵 안의 구조, B는 관 모양 소포체, C는 리보솜이 붙은 소포체');
+  };
+
+  /* 7장 6번: 동물세포 */
+  const f76 = () => {
+    let s = E(210, 140, 190, 120, 'ln pa');
+    s += P('M150 160Q135 190 175 200Q205 205 225 190', 'lnm') + P('M144 150Q122 195 172 212Q215 222 240 198', 'lnm');
+    s += E(210, 125, 58, 47, 'ln tn') + E(210, 125, 52, 41, 'ln pa') + C(200, 128, 13, 'nu');
+    const beans = [[40, 92], [70, 184], [292, 204]];
+    beans.forEach((b) => { s += R(b[0], b[1], 46, 26, 'ln pa', 13) + P('M' + (b[0] + 8) + ' ' + (b[1] + 13) + 'q5 -9 10 0t10 0t10 0', 'lnm'); });
+    for (let k = 0; k < 4; k++) s += P('M150 ' + (222 + k * 8) + 'q35 -8 70 0', 'gol');
+    seed = 11; let n = 0, dT = null, last = null;
+    const box = [[139, 71, 281, 186], [34, 86, 92, 124], [64, 178, 120, 216], [286, 198, 344, 236], [140, 205, 232, 258]];
+    while (n < 32) {
+      const x = 50 + rnd() * 320, y = 36 + rnd() * 206;
+      if (Math.pow((x - 210) / 182, 2) + Math.pow((y - 140) / 112, 2) > 1) continue;
+      if (box.some((b) => x > b[0] && x < b[2] && y > b[1] && y < b[3])) continue;
+      s += C(x, y, 2.4, 'dotk'); n++; last = [x, y]; if (!dT && x > 305 && y < 150) dT = [x, y];
+    }
+    dT = dT || last;
+    s += L(292, 58, 254, 92, 'lnm') + T(298, 56, 'A', 't tb', 'start');
+    s += L(50, 138, 58, 121, 'lnm') + T(44, 148, 'C', 't tb', 'end');
+    s += L(dT[0] + 3, dT[1] - 3, dT[0] + 30, dT[1] - 28, 'lnm') + T(dT[0] + 34, dT[1] - 30, 'D', 't tb', 'start');
+    return svg(440, 270, s, '동물세포 모식도. A는 핵, C는 미토콘드리아, D는 세포질의 작은 점');
+  };
+
+  /* 7장 7번: 방사능 그래프 */
+  const f77 = () => {
+    const ox = 74, oy = 215, W = 310, H = 170, sx = 3.3;
+    const X = (t) => ox + t * sx, Y = (v) => oy - v / 100 * H;
+    let s = axes(ox, oy, W, H, '추적시간(분)', '단백질 1mg당 방사능(상대값)');
+    [3, 10, 20, 40, 60, 80].forEach((t) => { s += L(X(t), oy, X(t), oy + 4, 'ln') + T(X(t), oy + 17, t, 'ts'); });
+    [0, 20, 40, 60, 80, 100].forEach((v) => { s += L(ox - 4, Y(v), ox, Y(v), 'ln') + T(ox - 8, Y(v) + 4, v, 'ts', 'end'); });
+    const c1 = [], c2 = [], c3 = [];
+    for (let t = 3; t <= 90; t += 1) c1.push([X(t), Y(100 * Math.exp(-(t - 3) / 9))]);
+    for (let t = 3; t <= 90; t += 1) c2.push([X(t), Y(t <= 10 ? 39 * Math.sin(Math.PI / 2 * (t - 3) / 7) : 39 * Math.exp(-(t - 10) / 38))]);
+    for (let t = 10; t <= 90; t += 1) c3.push([X(t), Y(t <= 30 ? 50 * Math.sin(Math.PI / 2 * (t - 10) / 20) : 50 * Math.exp(-(t - 30) / 45))]);
+    s += poly(c1, 'cv') + poly(c2, 'cv') + poly(c3, 'cv dsh');
+    s += T(X(5) + 6, Y(96), '㉠', 't tb', 'start') + T(X(12) + 4, Y(45), '㉡', 't tb', 'start') + T(X(31), Y(55), '㉢', 't tb', 'start');
+    return svg(440, 262, s, '쥐의 이자 세포에서 시간에 따른 세포소기관의 방사능 변화 그래프');
+  };
+
+  /* 7장 8번: 미토콘드리아와 엽록체 */
+  const f78 = () => {
+    let s = '';
+    const mx = 135, my = 125;
+    s += R(mx - 110, my - 55, 220, 110, 'ln pa', 55);
+    const hw = 102, hh = 47, rr = 47, L0 = mx - (hw - rr), R0 = mx + (hw - rr);
+    const topF = [95, 125, 155, 185], botF = [110, 140, 170];
+    const disp = (arr, x) => arr.reduce((acc, fx0) => acc + 36 * Math.exp(-Math.pow((x - fx0) / 4.6, 2)), 0);
+    const mp = [];
+    for (let x = L0; x <= R0; x += 1.5) mp.push([x, my - hh + disp(topF, x)]);
+    for (let ang = -90; ang <= 90; ang += 6) mp.push([R0 + rr * Math.cos(rad(ang)), my + rr * Math.sin(rad(ang))]);
+    for (let x = R0; x >= L0; x -= 1.5) mp.push([x, my + hh - disp(botF, x)]);
+    for (let ang = 90; ang <= 270; ang += 6) mp.push([L0 + rr * Math.cos(rad(ang)), my + rr * Math.sin(rad(ang))]);
+    s += poly(mp, 'ln tn', true);
+    [[110, 98], [172, 98], [98, 150], [155, 152], [208, 100]].forEach((p0) => { s += C(p0[0], p0[1], 2.8, 'dotk'); });
+    s += C(205, 130, 8, 'cv');
+    s += L(64, 46, 106, 94, 'lnm') + T(60, 44, 'a', 't tb', 'end');
+    s += L(258, 74, 212, 124, 'lnm') + T(262, 72, 'b', 't tb', 'start');
+    s += L(196, 44, 156, 98, 'lnm') + T(200, 40, 'c', 't tb', 'start');
+    s += L(226, 204, 142, 128, 'lnm') + T(230, 208, 'd', 't tb', 'start');
+    s += T(mx, 222, '(가)', 't tb');
+    const cx = 405, cy = 125;
+    s += E(cx, cy, 105, 62, 'ln pa') + E(cx, cy, 96, 54, 'ln tn');
+    const gr = [[355, 108], [405, 98], [452, 112], [380, 148], [432, 150]];
+    gr.forEach((g) => { for (let k = 0; k < 4; k++) s += R(g[0] - 17, g[1] - 14 + k * 8, 34, 6, 'ln pa', 3); });
+    s += poly([[372, 108], [388, 100]], 'lnm') + poly([[422, 100], [436, 110]], 'lnm') + poly([[366, 122], [378, 144]], 'lnm') + poly([[396, 150], [414, 150]], 'lnm') + poly([[395, 112], [388, 140]], 'lnm') + poly([[418, 112], [428, 142]], 'lnm');
+    [[330, 128], [338, 142], [478, 130]].forEach((p) => { s += C(p[0], p[1], 2.8, 'dotk'); });
+    s += C(484, 150, 8, 'cv');
+    s += L(352, 38, 355, 94, 'lnm') + T(352, 32, 'e', 't tb');
+    s += L(470, 52, 432, 76, 'lnm') + T(476, 50, 'f', 't tb', 'start');
+    s += L(420, 28, 405, 82, 'lnm') + T(420, 22, 'g', 't tb');
+    s += L(332, 202, 332, 134, 'lnm') + T(332, 214, 'h', 't tb');
+    s += L(500, 196, 486, 158, 'lnm') + T(504, 206, 'i', 't tb', 'start');
+    s += T(cx, 232, '(나)', 't tb');
+    return svg(540, 240, s, '(가) 미토콘드리아와 (나) 엽록체의 내부 구조 모식도. 알파벳 a부터 i는 세부 구조');
+  };
+
+  /* 7장 9번 (3): 9+2, 9+0 */
+  const f79 = () => {
+    let s = '';
+    const ring = (cx, cy, kind) => {
+      for (let i = 0; i < 9; i++) {
+        const a = i / 9 * 2 * Math.PI - Math.PI / 2;
+        const px = cx + 54 * Math.cos(a), py = cy + 54 * Math.sin(a), tx = -Math.sin(a), ty = Math.cos(a);
+        if (kind === 'd') { s += C(px - 6.5 * tx, py - 6.5 * ty, 6.5, 'ln pa') + C(px + 6.5 * tx, py + 6.5 * ty, 6, 'ln pa'); }
+        else { for (let k = -1; k <= 1; k++) s += C(px + 11.5 * k * tx, py + 11.5 * k * ty, 5.5, 'ln pa'); }
+      }
+    };
+    s += T(110, 20, 'A 섬모·편모의 축', 't tb') + T(330, 20, 'B 기저체', 't tb');
+    s += C(110, 105, 74, 'ln tn'); ring(110, 105, 'd'); s += C(103, 105, 6, 'ln pa') + C(117, 105, 6, 'ln pa');
+    s += C(330, 105, 74, 'ln tn'); ring(330, 105, 't');
+    s += T(110, 202, '9 + 2 (이중관 9쌍 + 가운데 2개)', 't');
+    s += T(330, 202, '9 + 0 (삼중관 9세트)', 't');
+    return svg(440, 214, s, '섬모와 편모 축의 9+2 구조와 기저체의 9+0 구조 단면 모식도');
+  };
+
+  /* 7장 10번: 세포 간 연접 */
+  const f710 = () => {
+    let s = R(40, 20, 130, 230, 'ln pa') + R(190, 20, 130, 230, 'ln pa') + R(170, 20, 20, 230, 'tn');
+    s += L(170, 20, 170, 250, 'ln') + L(190, 20, 190, 250, 'ln');
+    for (let k = 0; k < 3; k++) s += E(180, 30 + k * 7, 11, 3.4, 'prot');
+    s += R(160, 108, 10, 30, 'prot') + R(190, 108, 10, 30, 'prot');
+    [114, 123, 132].forEach((y) => { s += L(170, y, 190, y, 'ln dsh'); });
+    s += P('M160 112Q108 123 160 134', 'lnm') + P('M160 118Q122 125 160 130', 'lnm') + P('M200 112Q252 123 200 134', 'lnm') + P('M200 118Q238 125 200 130', 'lnm');
+    [190, 203, 216].forEach((y) => { s += R(160, y - 5, 40, 10, 'ln tn', 3); s += C(171, y, 2, 'dt') + C(180, y, 2, 'dt') + C(189, y, 2, 'dt'); });
+    s += L(190, 38, 342, 38, 'lnm') + T(350, 42, '(가)', 't tb', 'start');
+    s += L(200, 123, 342, 123, 'lnm') + T(350, 127, '(나)', 't tb', 'start');
+    s += L(198, 203, 342, 203, 'lnm') + T(350, 207, '(다)', 't tb', 'start');
+    s += T(105, 70, '세포', 'ts') + T(255, 70, '이웃 세포', 'ts');
+    return svg(420, 262, s, '이웃한 두 상피세포 사이의 세 가지 연접 (가) (나) (다)');
+  };
+
+  /* 7장 11번: 동물세포 세포외기질 */
+  const f711 = () => {
+    let s = R(20, 150, 500, 26, 'tl');
+    for (let x = 26; x < 520; x += 12) s += C(x, 150, 3.4, 'mu') + C(x, 176, 3.4, 'mu');
+    s += L(20, 150, 520, 150, 'ln') + L(20, 176, 520, 176, 'ln');
+    s += P('M30 84Q150 40 260 88T500 74', 'col') + P('M30 84Q150 40 260 88T500 74', 'sac2');
+    s += P('M130 140Q130 118 148 70', 'ln') + C(148, 70, 3.5, 'prot') + P('M392 140Q392 122 373 106', 'ln') + C(373, 106, 3.5, 'prot');
+    [130, 392].forEach((x) => { s += E(x, 163, 14, 24, 'ln pa') + P('M' + (x - 8) + ' 140q8 -14 16 0', 'ln'); });
+    s += P('M130 188q-14 16 4 30t-6 26', 'lnm') + P('M392 188q14 16 -4 30t6 26', 'lnm') + P('M200 182q14 14 -2 28t10 30', 'lnm') + P('M300 182q-12 14 4 28t-8 30', 'lnm');
+    s += L(404, 50, 504, 50, 'ln'); for (let x = 408; x < 504; x += 8) s += L(x, 50, x + 3, 36, 'lnm') + L(x, 50, x + 3, 64, 'lnm');
+    s += L(86, 46, 96, 68, 'lnm') + T(80, 42, '(가)', 't tb', 'end');
+    s += L(212, 118, 142, 104, 'lnm') + T(218, 122, '(나)', 't tb', 'start');
+    s += L(454, 22, 454, 34, 'lnm') + T(454, 18, '(다)', 't tb');
+    s += T(24, 16, '세포외액', 'ts', 'start') + T(24, 250, '세포질', 'ts', 'start') + T(516, 168, '원형질막', 'ts', 'end');
+    s += T(130, 252, '인테그린', 'ts') + T(250, 252, '미세섬유', 'ts');
+    return svg(540, 262, s, '동물세포의 세포외기질. 가는 굵은 섬유, 나는 인테그린과 연결된 단백질, 다는 탄수화물이 많이 붙은 큰 분자');
+  };
+
+  /* 8장 1번: 세포 모식도 + 형광 회복 그래프 */
+  const frapCell = (cx, cy, stage) => {
+    let s = C(cx, cy, 34, 'ln tl');
+    for (let k = 0; k < 30; k++) {
+      const a = k / 30 * 2 * Math.PI, x = cx + 41 * Math.cos(a), y = cy + 41 * Math.sin(a), deg = (k / 30 * 360) % 360;
+      const top = deg > 235 && deg < 305;
+      s += C(x, y, 4.3, stage === 0 ? 'mu' : (stage === 2 && top ? 'lnm pa' : 'dotk'));
+    }
+    return s;
+  };
+  const frap = (ans) => {
+    const W = 170, H = 140, oy = ans ? 195 : 345, oxs = [90, 360];
+    let s = '';
+    if (!ans) {
+      const cy = 78, xs = [90, 300, 510];
+      xs.forEach((x, i) => { s += frapCell(x, cy, i); });
+      s += T(6, cy + 4, '세포', 't tb', 'start');
+      s += T(xs[0], 16, '세포막 단백질', 't') + L(xs[0], 20, xs[0], 34, 'lnm');
+      s += T(xs[1], 16, '형광 물질', 't') + L(xs[1], 20, xs[1], 34, 'lnm');
+      s += L(150, cy, 232, cy, 'ln', true) + T(191, cy - 8, '표지', 't');
+      s += L(360, cy, 442, cy, 'ln', true) + T(401, cy - 8, '탈색', 't');
+      s += T(xs[2], 14, '(가)', 't tb') + P('M' + (xs[2] - 36) + ' 34Q' + xs[2] + ' 16 ' + (xs[2] + 36) + ' 34', 'lnm');
+      s += T(xs[2], cy + 76, '(나)', 't tb') + P('M' + (xs[2] - 36) + ' ' + (cy + 52) + 'Q' + xs[2] + ' ' + (cy + 68) + ' ' + (xs[2] + 36) + ' ' + (cy + 52), 'lnm');
+    }
+    ['(가) 구역', '(나) 구역'].forEach((nm, k) => {
+      const ox = oxs[k] + (ans ? 0 : 0), y = (v) => oy - v * H;
+      s += axes(ox, oy, W, H, '시간(초)', '형광도(상대값)') + T(ox + W / 2, oy - H - 24, nm, 't tb');
+      [50, 100, 150].forEach((t) => { s += L(ox + t, oy, ox + t, oy + 4, 'ln') + T(ox + t, oy + 17, t, 'ts'); });
+      s += L(ox, y(.85), ox + 20, y(.85), 'ln') + L(ox + 22, y(.85), ox + 46, y(.85) - 14, 'lnm') + T(ox + 49, y(.85) - 14, '탈색처리', 't tb', 'start');
+      if (ans) {
+        const pts = k === 0 ? [[20, .85], [22, .08]] : [[20, .85], [22, .85]];
+        for (let t = 24; t <= 170; t += 2) pts.push([t, k === 0 ? .72 - .64 * Math.exp(-(t - 22) / 38) : .85 - .13 * Math.pow((t - 22) / 148, 2)]);
+        s += poly(pts.map((p) => [ox + p[0], y(p[1])]), 'cv');
+      }
+    });
+    return ans ? svg(600, 238, s, '(가)와 (나) 구역의 형광도 변화 예상 그래프')
+      : svg(600, 394, s, '세포막 단백질을 형광물질로 표지한 뒤 일부를 탈색하는 과정과, 비어 있는 두 개의 형광도 그래프');
+  };
+
+  /* 8장 3번: X, Y 그래프 */
+  const f83 = () => {
+    const ox = 70, oy = 195, W = 330, H = 160;
+    let s = axes(ox, oy, W, H, '농도 차(상대값)', '투과 속도(상대값)');
+    const X = [], Y = [];
+    for (let x = 0; x <= 300; x += 5) { X.push([ox + x, oy - H * 0.9 * (1 - Math.exp(-x / 75))]); Y.push([ox + x, oy - x * 0.085]); }
+    s += poly(X, 'cv') + poly(Y, 'cv dsh');
+    s += T(ox + 310, X[X.length - 1][1] + 4, 'X', 't tb', 'start') + T(ox + 310, Y[Y.length - 1][1] + 4, 'Y', 't tb', 'start');
+    return svg(440, 240, s, '물질 X와 Y의 농도 차에 따른 투과 속도 그래프. X는 포화되고 Y는 거의 직선');
+  };
+
+  /* 8장 4번: U자관 */
+  const tube = (ox, yA, yB, nL, nR, title, ref) => {
+    seed = 7;
+    let s = P('M' + ox + ',' + yA + 'V130Q' + ox + ',175 ' + (ox + 50) + ',175Q' + (ox + 100) + ',175 ' + (ox + 100) + ',130V' + yB + 'H' + (ox + 64) + 'V130Q' + (ox + 64) + ',140 ' + (ox + 50) + ',140Q' + (ox + 36) + ',140 ' + (ox + 36) + ',130V' + yA + 'Z', 'wt0');
+    s += P('M' + ox + ',40V130Q' + ox + ',175 ' + (ox + 50) + ',175Q' + (ox + 100) + ',175 ' + (ox + 100) + ',130V40', 'ln');
+    s += P('M' + (ox + 36) + ',40V130Q' + (ox + 36) + ',140 ' + (ox + 50) + ',140Q' + (ox + 64) + ',140 ' + (ox + 64) + ',130V40', 'ln');
+    const dots = (side, n, top) => {
+      let r = '';
+      for (let i = 0; i < n; i++) {
+        let x, y;
+        if (i % 3 === 2) { x = ox + (side === 'L' ? 12 + rnd() * 30 : 58 + rnd() * 30); y = 150 + rnd() * 14; }
+        else { x = ox + (side === 'L' ? 7 + rnd() * 22 : 71 + rnd() * 22); y = top + 8 + rnd() * (122 - top - 8); }
+        r += C(x, y, 2.4, 'dotk');
+      }
+      return r;
+    };
+    s += dots('L', nL, yA) + dots('R', nR, yB);
+    if (ref) s += L(ox - 10, ref, ox + 36, ref, 'lnm dsh') + L(ox + 64, ref, ox + 110, ref, 'lnm dsh');
+    s += L(ox + 50, 140, ox + 50, 175, 'acc dsh');
+    s += T(ox + 50, 16, title, 't tb') + T(ox + 18, 34, 'A', 't tb') + T(ox + 82, 34, 'B', 't tb') + T(ox + 50, 196, '반투과성막', 'ts');
+    return s;
+  };
+  const f84 = () => {
+    let s = tube(50, 78, 78, 8, 8, '초기 상태', 0) + tube(270, 60, 96, 16, 8, '최종 상태', 78);
+    s += R(398, 92, 12, 12, 'wt') + T(416, 103, '물', 't', 'start') + C(404, 124, 2.4, 'dotk') + T(416, 128, '용질', 't', 'start');
+    return svg(470, 206, s, '반투과성 막으로 나눈 U자관의 초기 상태와 최종 상태. 최종에는 A쪽 수면이 올라가고 B쪽이 내려감');
+  };
+
+  /* 8장 5번: 수조와 순흡수율 그래프 */
+  const tank = (x, y, lvL, lvR) => {
+    const w = 90, h = 58;
+    return R(x, y + lvL, w / 2, h - lvL, 'wt0') + R(x + w / 2, y + lvR, w / 2, h - lvR, 'wt0') +
+      P('M' + x + ' ' + y + 'V' + (y + h) + 'H' + (x + w) + 'V' + y, 'ln') + L(x + w / 2, y, x + w / 2, y + h, 'lnm dsh') +
+      R(x + w / 2 - 6, y + 22, 12, 4, 'prot') + R(x + w / 2 - 6, y + 34, 12, 4, 'prot');
+  };
+  const f85t = () => {
+    const defs = [['가', 0, 0, '포도당', 'L', 24, 24, 24, 24], ['나', 1, 0, '포도당', 'R', 24, 24, 24, 24],
+      ['다', 0, 1, '포도당-6-인산', 'L', 24, 24, 14, 34], ['라', 1, 1, '포도당-6-인산', 'R', 24, 24, 34, 14]];
+    let s = '';
+    defs.forEach((d) => {
+      const px = 10 + d[1] * 280, py = 6 + d[2] * 130, tx = px + 30, ty = py + 48;
+      const ax = tx + (d[4] === 'L' ? 22 : 68);
+      s += T(px, py + 14, '(' + d[0] + ')', 't tb', 'start') + T(ax, py + 28, d[3], 'ts') + L(ax, py + 32, ax, ty - 2, 'ln', true);
+      s += tank(tx, ty, d[5], d[6]) + L(px + 128, ty + 30, px + 152, ty + 30, 'ln', true) + tank(px + 160, ty, d[7], d[8]);
+    });
+    s += T(300, 250, '※ 막의 짧은 막대는 포도당 운반체 단백질-X', 'ts');
+    return svg(570, 262, s, '반투과성 막으로 나눈 수조 가 나 다 라의 처음과 나중 물 높이');
+  };
+  const f85g = () => {
+    const ox = 74, oy = 205, W = 330, H = 150, y = (v) => oy - v * H;
+    let s = axes(ox, oy, W, H, '시간', '포도당 순흡수율');
+    const pts = ease([[0, .25], [80, .25], [125, .62], [185, .38], [270, .85], [330, .9]], 2).map((p) => [ox + p[0], y(p[1])]);
+    s += poly(pts, 'cv');
+    [[80, 't₁'], [125, 't₂'], [185, 't₃'], [270, 't₄']].forEach((t) => { s += L(ox + t[0], oy, ox + t[0], y(.97), 'lnm dsh') + T(ox + t[0], oy + 17, t[1], 'ts'); });
+    s += L(ox + 80, 46, ox + 80, 70, 'ln', true) + T(ox + 80, 18, '포도당 운반체', 'ts') + T(ox + 80, 32, '단백질-X', 'ts');
+    s += L(ox + 185, 46, ox + 185, 70, 'ln', true) + T(ox + 185, 18, '포도당', 'ts') + T(ox + 185, 32, '인산화 효소', 'ts');
+    return svg(450, 246, s, '시간에 따른 포도당 순흡수율 그래프. t1에 운반체, t3에 인산화 효소의 발현을 증가시킴');
+  };
+
+  /* 8장 6번: 소장 상피세포 */
+  const f86 = () => {
+    let s = R(110, 8, 240, 52, 'tl') + L(110, 8, 110, 60, 'ln') + L(350, 8, 350, 60, 'ln') + L(110, 8, 350, 8, 'ln');
+    s += R(110, 238, 240, 56, 'tl');
+    for (let i = 0; i < 6; i++) s += R(135 + i * 34, 62, 22, 32, 'ln pa', 6);
+    s += R(130, 92, 200, 146, 'ln pa');
+    s += R(124, 86, 12, 12, 'prot') + R(324, 86, 12, 12, 'prot') + R(222, 86, 26, 12, 'prot');
+    s += R(150, 26, 44, 20, 'ln pa', 10) + T(172, 40, '포도당', 'ts') + C(266, 36, 12, 'ln pa') + T(266, 40, 'Na⁺', 'ts');
+    s += L(172, 48, 226, 84, 'ln', true) + L(266, 48, 244, 84, 'ln', true);
+    s += R(168, 128, 44, 20, 'ln pa', 10) + T(190, 142, '포도당', 'ts') + C(268, 138, 12, 'ln pa') + T(268, 142, 'Na⁺', 'ts');
+    s += L(228, 100, 206, 126, 'ln', true) + L(242, 100, 264, 126, 'ln', true);
+    s += R(173, 226, 26, 12, 'prot') + L(190, 150, 188, 222, 'ln', true);
+    s += E(282, 232, 15, 9, 'prot') + L(268, 152, 278, 219, 'ln', true);
+    s += C(312, 196, 12, 'ln pa') + T(312, 200, 'K⁺', 'ts') + L(290, 224, 306, 208, 'ln', true);
+    s += R(163, 258, 44, 20, 'ln pa', 10) + T(185, 272, '포도당', 'ts') + L(186, 242, 186, 256, 'ln', true);
+    s += C(282, 268, 12, 'ln pa') + T(282, 272, 'Na⁺', 'ts') + L(282, 245, 282, 254, 'ln', true);
+    s += T(100, 38, '장내강', 't', 'end') + T(100, 270, '세포외액', 't', 'end');
+    s += T(344, 76, '미세융모', 'ts', 'start') + T(344, 106, '밀착연접', 'ts', 'start') + T(344, 172, '장 상피세포', 'ts', 'start');
+    s += L(100, 92, 220, 92, 'lnm') + T(94, 96, 'A', 't tb', 'end');
+    s += L(100, 232, 171, 232, 'lnm') + T(94, 236, 'B', 't tb', 'end');
+    s += L(366, 232, 298, 232, 'lnm') + T(372, 236, 'C', 't tb', 'start');
+    return svg(440, 300, s, '소장 상피세포의 포도당 흡수 모식도. A는 장내강 쪽 운반체, B는 세포외액 쪽 운반체, C는 펌프');
+  };
+
+  /* 8장 7번: 세 용액 속 세포 */
+  const f87 = () => {
+    const xs = [90, 270, 450], cy = 100; let s = '';
+    const jag = []; for (let i = 0; i < 28; i++) { const a = i / 28 * 2 * Math.PI, r = 44 + (i % 2 ? 7 : -1); jag.push([xs[0] + r * Math.cos(a), cy + r * Math.sin(a)]); }
+    s += poly(jag, 'ln pa', true) + E(xs[0], cy, 24, 17, 'lnm dsh');
+    s += L(xs[0] - 66, 44, xs[0] - 30, 68, 'ln', true) + T(xs[0] - 104, 40, 'H₂O', 't', 'start');
+    s += E(xs[1], cy, 48, 26, 'ln pa') + E(xs[1], cy, 22, 10, 'ln tn');
+    s += L(xs[1] - 60, 48, xs[1] - 30, 72, 'ln', true) + L(xs[1] + 30, 72, xs[1] + 62, 48, 'ln', true) + T(xs[1] - 14, 36, 'H₂O', 't', 'start');
+    const st = []; for (let i = 0; i < 32; i++) { const a = i / 32 * 2 * Math.PI, r = i % 2 ? 26 : 42; st.push([xs[2] + r * Math.cos(a), cy + r * Math.sin(a)]); }
+    s += poly(st, 'ln pa', true);
+    s += L(xs[2] + 24, 66, xs[2] + 60, 38, 'ln', true) + T(xs[2] + 64, 36, 'H₂O', 't', 'start');
+    ['A solution', 'B solution', 'C solution'].forEach((t, i) => { s += T(xs[i], 176, t, 't tb') + T(xs[i], 194, ['Lysed', 'Normal', 'Shriveled'][i], 'ts'); });
+    return svg(540, 204, s, '세 가지 용액 A B C 속 세포벽이 없는 세포의 모양');
+  };
+
+
+  /* 7장 2번: 전자현미경 사진 (가)(나)(다) */
+  const f72 = () => {
+    let s = '';
+    [10, 195, 380].forEach((x) => { s += R(x, 8, 170, 150, 'ln tl'); });
+    s += P('M25 158Q95 60 165 158Z', 'ln pa');
+    for (let i = 0; i < 17; i++) {
+      const t = (i + 1) / 18, bx = (1 - t) * (1 - t) * 25 + 2 * t * (1 - t) * 95 + t * t * 165, by = (1 - t) * (1 - t) * 158 + 2 * t * (1 - t) * 60 + t * t * 158;
+      const lean = (bx - 95) * 0.45;
+      s += P('M' + f(bx) + ' ' + f(by) + 'Q' + f(bx + lean * 0.4 + (i % 2 ? 6 : -6)) + ' ' + f(by - 22) + ' ' + f(bx + lean) + ' ' + f(by - 40), 'hr');
+    }
+    s += L(118, 26, 158, 26, 'ln') + T(138, 20, '2 µm', 'ts');
+    for (let i = 0; i < 10; i++) { s += L(205 + i * 15, 150, 225 + i * 15, 36, 'hr') + E(225 + i * 15, 33, 3, 6, 'dk'); }
+    s += L(303, 26, 343, 26, 'ln') + T(323, 20, '2 µm', 'ts');
+    [441, 489].forEach((cx) => { [[0, 0], [14, -8], [14, 8], [-14, -8], [-14, 8], [0, -17], [0, 17]].forEach((o) => { s += C(cx + o[0], 83 + o[1], 11, 'dk'); }); });
+    s += C(465, 70, 10, 'dk') + C(465, 96, 10, 'dk');
+    s += T(95, 180, '(가)', 't tb') + T(280, 180, '(나)', 't tb') + T(465, 180, '(다)', 't tb');
+    return svg(560, 190, s, '전자현미경 사진 가 나는 섬모로 덮인 세포 표면, 다는 효소 단백질 상');
+  };
+
+  /* 7장 3번: 세포 분획 실험 */
+  const f73 = () => {
+    let s = '';
+    const xs = [100, 220, 340, 460], y = 36, lab = ['(가) 저속', '(나) 고속', '(다) 고속', '(라) 초고속'];
+    xs.forEach((x, i) => {
+      s += P('M' + x + ' ' + (y + 18) + 'V' + (y + 58) + 'Q' + x + ' ' + (y + 76) + ' ' + (x + 14) + ' ' + (y + 76) + 'Q' + (x + 28) + ' ' + (y + 76) + ' ' + (x + 28) + ' ' + (y + 58) + 'V' + (y + 18) + 'Z', 'wt0');
+      s += P('M' + x + ' ' + y + 'V' + (y + 58) + 'Q' + x + ' ' + (y + 76) + ' ' + (x + 14) + ' ' + (y + 76) + 'Q' + (x + 28) + ' ' + (y + 76) + ' ' + (x + 28) + ' ' + (y + 58) + 'V' + y, 'ln');
+      s += E(x + 14, y + 70, 9, 4.5, 'dk') + T(x + 14, y - 10, lab[i], 't tb') + T(x + 14, y + 96, 'ABCD'[i], 't tb');
+      if (i < 3) s += L(x + 36, y + 42, xs[i + 1] - 8, y + 42, 'ln', true) + T((x + 36 + xs[i + 1] - 8) / 2, y + 32, '상층액', 'ts');
+    });
+    s += L(10, y + 42, 92, y + 42, 'ln', true) + T(52, y + 32, '분쇄액', 'ts');
+    const rows = [['침전물', 'A', 'B', 'C', 'D'], ['DNA 함량(%)', '95', '5', '4', '0'], ['RNA 함량(%)', '15', '2', '3', '82'], ['CO₂ 소비량(%)', '7', '93', '5', '0'], ['O₂ 소비량(%)', '7', '10', '80', '3']];
+    rows.forEach((r, ri) => { let x = 20; r.forEach((c, ci) => { const w = ci === 0 ? 150 : 95; s += R(x, 160 + ri * 26, w, 26, ri === 0 ? 'ln tl' : 'ln pa'); s += ci === 0 ? T(x + 8, 160 + ri * 26 + 18, c, 't tb', 'start') : T(x + w / 2, 160 + ri * 26 + 18, c, ri === 0 ? 't tb' : 't'); x += w; }); });
+    return svg(560, 296, s, '세포 분획 실험 순서와 침전물 A부터 D의 측정 결과 표');
+  };
+
+  /* 7장 7번 (5): 식물세포 중심액포 */
+  const f757 = () => {
+    let s = R(30, 20, 300, 170, 'cw', 16) + R(37, 27, 286, 156, 'lnm', 12);
+    s += E(190, 105, 98, 60, 'wt') + C(66, 105, 20, 'ln tn') + C(62, 108, 7, 'nu');
+    [[100, 45], [280, 45], [285, 165], [100, 165]].forEach((p) => { s += E(p[0], p[1], 20, 10, 'ln pa') + L(p[0] - 12, p[1], p[0] + 12, p[1], 'lnm'); });
+    s += T(345, 94, '중심액포', 't', 'start') + L(342, 92, 288, 100, 'lnm');
+    s += T(345, 40, '세포벽', 't', 'start') + L(342, 38, 331, 30, 'lnm');
+    s += T(345, 172, '엽록체', 't', 'start') + L(342, 170, 306, 166, 'lnm');
+    s += T(24, 62, '핵', 't', 'end') + L(28, 60, 50, 92, 'lnm');
+    s += T(24, 172, '세포질', 't', 'end') + L(28, 170, 56, 160, 'lnm');
+    s += L(250, 207, 292, 207, 'ln') + T(271, 220, '5 µm', 'ts');
+    return svg(470, 228, '<g transform="translate(34 0)">' + s + '</g>', '식물세포의 중심액포 모식도');
+  };
+
+  /* 7장 9번 (1): 세포골격 형광 사진 */
+  const f791 = () => {
+    let s = '<rect x="10" y="10" width="280" height="200" rx="4" fill="#0c1722" stroke="#14283a" stroke-width="1.5"/>';
+    for (let i = 0; i < 22; i++) {
+      const a = i / 22 * 2 * Math.PI + .1, r1 = 70 + (i % 3) * 12;
+      const x0 = 150 + 30 * Math.cos(a), y0 = 110 + 22 * Math.sin(a), x1 = 150 + r1 * 1.2 * Math.cos(a + .12), y1 = 110 + r1 * .85 * Math.sin(a + .12);
+      s += '<path d="M' + f(x0) + ' ' + f(y0) + 'Q' + f((x0 + x1) / 2 + 6) + ' ' + f((y0 + y1) / 2 - 6) + ' ' + f(x1) + ' ' + f(y1) + '" stroke="#46d6a0" stroke-width="1.4" fill="none"/>';
+    }
+    for (let i = 0; i < 12; i++) {
+      const a0 = i / 12 * 2 * Math.PI, a1 = a0 + .36;
+      s += '<path d="M' + f(150 + 120 * Math.cos(a0)) + ' ' + f(110 + 88 * Math.sin(a0)) + 'A120 88 0 0 1 ' + f(150 + 120 * Math.cos(a1)) + ' ' + f(110 + 88 * Math.sin(a1)) + '" stroke="#ff5d73" stroke-width="2" fill="none"/>';
+    }
+    s += '<path d="M60 176L240 168M70 184L230 180M90 40L210 46" stroke="#ff5d73" stroke-width="1.4" fill="none"/>';
+    s += '<ellipse cx="150" cy="110" rx="30" ry="22" fill="#3b6cff" fill-opacity=".9"/>';
+    s += '<path d="M20 198H60" stroke="#fff" stroke-width="2"/><text x="40" y="192" fill="#fff" font-size="11" text-anchor="middle" font-family="sans-serif">10 µm</text>';
+    [['#46d6a0', '녹색: 미세소관', 62], ['#ff5d73', '붉은색: 미세섬유', 92], ['#3b6cff', '파란색: 핵 DNA', 122]].forEach((r) => { s += '<rect x="312" y="' + (r[2] - 11) + '" width="14" height="14" rx="2" fill="' + r[0] + '"/>' + T(334, r[2], r[1], 't', 'start'); });
+    return svg(480, 220, s, '세포골격을 형광으로 염색한 사진을 단순하게 그린 모식도');
+  };
+
+  /* 7장 9번 (3): 섬모 세로 단면 (TEM 사진 느낌) */
+  const f793q = () => {
+    seed = 21;
+    let s = R(50, 10, 200, 280, 'ln tl');
+    s += R(51, 171, 198, 118, 'mu');
+    for (let i = 0; i < 26; i++) {
+      const x = 58 + rnd() * 184, y = 178 + rnd() * 104;
+      if (x > 118 && x < 182 && y < 250) continue;
+      s += C(x, y, 1.3, 'dotk');
+    }
+    s += L(50, 170, 122, 170, 'hr') + L(178, 170, 250, 170, 'hr');
+    s += P('M122 170V40Q122 18 150 18Q178 18 178 40V170', 'ln pa');
+    [129, 133, 167, 171].forEach((x) => { s += L(x, 30, x, 170, 'ln'); });
+    for (let y = 44; y < 168; y += 14) { s += L(133, y, 146, y + 3, 'lnm') + L(167, y, 154, y + 3, 'lnm'); }
+    [146, 154].forEach((x) => { s += L(x, 34, x, 170, 'lnm'); });
+    s += R(126, 172, 48, 74, 'ln pa');
+    [129, 133, 137, 163, 167, 171].forEach((x) => { s += L(x, 173, x, 245, 'ln'); });
+    [188, 204, 220, 236].forEach((y) => { s += L(139, y, 161, y, 'lnm dsh'); });
+    s += T(40, 82, 'A', 't tb', 'end') + L(44, 80, 127, 80, 'lnm');
+    s += T(40, 217, 'B', 't tb', 'end') + L(44, 215, 126, 215, 'lnm');
+    s += T(262, 62, '미세소관', 'ts', 'start') + L(259, 60, 172, 60, 'lnm');
+    s += T(262, 152, '원형질막', 'ts', 'start') + L(259, 150, 178, 150, 'lnm');
+    s += T(262, 217, '기저체', 'ts', 'start') + L(259, 215, 175, 215, 'lnm');
+    s += L(62, 40, 102, 40, 'ln') + T(82, 34, '0.5 µm', 'ts');
+    return svg(360, 300, s, '섬모의 세로 단면 모식도. A는 바깥쪽 축의 미세소관, B는 기저체');
+  };
+
+  /* 7장 9번 (4): 간균과 정자의 편모 */
+  const f794 = () => {
+    let s = R(40, 50, 90, 34, 'ln pa', 17) + P('M60 67q8 -10 16 0t16 0t14 0', 'lnm');
+    for (let i = 0; i < 12; i++) { const x = 52 + i * 6.5; s += L(x, 50, x - 2, 42, 'lnm') + L(x, 84, x - 2, 92, 'lnm'); }
+    s += P('M48 86q-10 18 4 30t-6 32', 'hr') + P('M58 88q-4 20 10 30t-4 30', 'hr') + P('M68 88q2 18 14 26t2 30', 'hr');
+    s += T(118, 152, '편모', 't', 'start') + L(114, 148, 80, 134, 'lnm');
+    s += E(340, 85, 22, 14, 'ln pa') + E(333, 85, 9, 8, 'nu') + P('M362 85q20 -14 40 0t40 0t40 0t30 0', 'hr');
+    s += T(440, 64, '편모', 't') + L(440, 70, 440, 82, 'lnm');
+    s += T(90, 196, '간균', 't tb') + T(430, 196, '정자', 't tb');
+    return svg(540, 205, s, '간균의 편모와 정자의 편모를 비교한 모식도');
+  };
+
+  /* 8장 1번 (2): 백혈구가 세균을 삼킴 */
+  const f812 = () => {
+    let s = P('M255 68Q300 46 338 78Q318 78 302 92Q282 96 262 102Z', 'ln pa') + P('M255 162Q300 184 338 152Q318 152 302 138Q282 134 262 128Z', 'ln pa');
+    s += E(190, 115, 92, 74, 'ln pa');
+    s += R(284, 106, 44, 18, 'ln tl', 9) + R(370, 48, 40, 16, 'ln tl', 8) + R(380, 150, 40, 16, 'ln tl', 8);
+    s += E(150, 92, 22, 16, 'nu') + E(182, 100, 20, 15, 'nu') + E(158, 122, 18, 13, 'nu');
+    s += C(205, 150, 26, 'ln pa') + R(190, 144, 30, 12, 'ln tl', 6);
+    for (let i = 0; i < 12; i++) { const a = i / 12 * 2 * Math.PI; s += C(205 + 26 * Math.cos(a), 150 + 26 * Math.sin(a), 3, 'dt'); }
+    for (let i = 0; i < 40; i++) { const a = i / 40 * 2 * Math.PI, x = 190 + 94 * Math.cos(a), y = 115 + 76 * Math.sin(a); if (x > 262 && Math.abs(y - 115) < 40) continue; s += C(x, y, 3.2, 'dt'); }
+    s += T(60, 28, '백혈구', 't tb') + L(80, 34, 112, 58, 'lnm');
+    s += T(300, 34, '위족', 't tb', 'start') + L(310, 40, 308, 56, 'lnm');
+    s += T(440, 38, '세균', 't tb') + L(432, 44, 408, 54, 'lnm');
+    s += T(70, 214, '식포', 't tb') + L(90, 206, 180, 166, 'lnm');
+    s += C(300, 208, 3.2, 'dt') + T(310, 212, '형광 표지된 막 단백질', 'ts', 'start');
+    return svg(520, 226, s, '백혈구가 위족으로 세균을 삼켜 식포를 만드는 모식도');
+  };
+
+  /* 8장 2번 (1): 인지질 이중층과 전자현미경 상 */
+  const f821 = () => {
+    let s = '';
+    for (let i = 0; i < 9; i++) {
+      const x = 30 + i * 24;
+      s += C(x, 60, 8, 'ln pa') + L(x - 3, 68, x - 3, 108, 'ln') + L(x + 3, 68, x + 3, 108, 'ln');
+      s += C(x, 160, 8, 'ln pa') + L(x - 3, 152, x - 3, 112, 'ln') + L(x + 3, 152, x + 3, 112, 'ln');
+    }
+    s += T(240, 64, '친수성 머리', 't', 'start') + L(236, 62, 224, 60, 'lnm');
+    s += T(240, 114, '소수성 꼬리', 't', 'start') + L(236, 112, 222, 110, 'lnm');
+    s += L(345, 110, 392, 110, 'ln', true);
+    s += R(400, 50, 140, 120, 'ln tl') + R(400, 86, 140, 9, 'prot') + R(400, 125, 140, 9, 'prot');
+    s += T(470, 190, '전자현미경 상', 't tb') + T(470, 206, '이중선으로 보임', 'ts');
+    return svg(560, 216, s, '인지질 이중층과 전자현미경에서 이중선으로 보이는 모습');
+  };
+
+
+  /* 7장 5번 (1): D 부분을 TEM으로 본 사진 (가)(나) */
+  const f75b = () => {
+    let s = R(10, 30, 170, 150, 'ln tl') + R(380, 30, 170, 150, 'ln tl');
+    [[48, 70], [120, 62], [82, 118], [148, 124], [44, 150]].forEach((p) => {
+      s += C(p[0], p[1], 15, 'ln pa') + C(p[0], p[1], 6, 'ln tn');
+      for (let k = 0; k < 8; k++) { const a = k / 8 * 2 * Math.PI + .2; s += C(p[0] + 11 * Math.cos(a), p[1] + 11 * Math.sin(a), 2.6, 'dk'); }
+    });
+    for (let i = 0; i < 7; i++) {
+      const x = 392 + i * 24;
+      s += P('M' + x + ' 38Q' + (x + (i % 2 ? 6 : -6)) + ' 105 ' + (x + 2) + ' 172', 'lnm');
+    }
+    for (let j = 0; j < 6; j++) {
+      const y = 46 + j * 25;
+      s += P('M388 ' + y + 'Q455 ' + (y + (j % 2 ? 8 : -8)) + ' 544 ' + (y + 2), 'lnm');
+    }
+    for (let i = 0; i < 7; i++) for (let j = 0; j < 6; j++) if ((i + j) % 2 === 0) s += C(392 + i * 24 + 1, 46 + j * 25 + 1, 2.2, 'dk');
+    s += T(280, 24, '핵막 확대', 'ts');
+    s += P('M206 154Q280 40 354 154', 'ln') + P('M218 154Q280 62 342 154', 'ln');
+    s += P('M228 152Q280 84 332 152', 'lnm dsh') + P('M240 150L252 128M262 150L268 116M284 150L286 112M306 150L302 118M326 150L314 130', 'lnm');
+    s += R(270, 88, 20, 28, 'tn') + R(262, 91, 8, 22, 'prot') + R(290, 91, 8, 22, 'prot');
+    s += T(334, 74, 'D', 't tb', 'start') + L(330, 76, 300, 98, 'lnm');
+    s += L(204, 116, 186, 116, 'ln', true) + L(356, 116, 374, 116, 'ln', true);
+    s += L(20, 198, 60, 198, 'ln') + T(40, 214, '0.25 µm', 'ts');
+    s += L(392, 198, 442, 198, 'ln') + T(417, 214, '0.5 µm', 'ts');
+    s += T(95, 228, '(가)', 't tb') + T(465, 228, '(나)', 't tb');
+    return svg(560, 236, s, '핵막의 확대 그림과 D 부분을 투과전자현미경으로 본 사진 가와 나');
+  };
+
+  const fns = { f75b, f71, f72, f73, f75, f757, f76, f77, f78, f791, f79, f793q, f794, f710, f711, frapQ: () => frap(false), frapA: () => frap(true), f812, f821, f83, f84, f85t, f85g, f86, f87 };
+  const out = {};
+  Object.keys(fns).forEach((k) => { out[k] = (lang) => { LANG = lang === 'en' ? 'en' : 'ko'; return fns[k](); }; });
+  return out;
+})();
+
+/* 허용 학번 (PBKDF2 해시로만 저장) */
+
+/* ---------- 그림 연결 ---------- */
+const FIGMAP = {
+  "7-1-(1)": ["f71"], "7-1-(2)": ["f71"], "7-1-(3)": ["f71"], "7-1-(4)": ["f71"],
+  "7-2-(1)": ["f72"], "7-2-(2)": ["f72"], "7-2-(3)": ["f72"], "7-2-(4)": ["f72"],
+  "7-5-(1)": ["f75+f75b"], "7-5-(2)": ["f75"], "7-5-Q": ["f75"], "7-5-(3)": ["f75"],
+  "7-6-(1)": ["f76"], "7-6-(2)": ["f76"], "7-6-(3)": ["f76"], "7-6-(4)": ["f76"], "7-6-(5)": ["f76"],
+  "7-7-(1)": ["f77"], "7-7-(5)": ["f757"], "7-8-(1)": ["f78"],
+  "7-9-(1)": ["f791"], "7-9-(3)": ["f793q"], "7-9-(4)": ["f794"],
+  "7-10-(1)": ["f710"], "7-11-(2)": ["f711"],
+  "8-1-(1)": ["frapQ", "frapA"], "8-2-(1)": ["f821"], "8-3-(1)": ["f83"], "8-4-": ["f84"],
+  "8-5-(1)": ["f85t"], "8-5-(2)": ["f85g"], "8-6-": ["f86"], "8-7-(1)": ["f87"]
+};
+const MERGE_FROM = {"2-8·9-": ["2-8-", "2-9-"], "3-1·5-": ["3-1-", "3-5-"], "3-2·8-": ["3-2-", "3-8-"], "3-3·19-": ["3-3-", "3-19-"], "3-10·11-": ["3-10-", "3-11-"], "3-12·13·14-": ["3-12-", "3-13-", "3-14-"], "3-21·22-": ["3-21-", "3-22-"], "3-25·26-": ["3-25-", "3-26-"], "4-1·3-": ["4-1-", "4-3-"], "4-2·13-": ["4-2-", "4-13-"], "4-5·6-": ["4-5-", "4-6-"], "4-7·8-": ["4-7-", "4-8-"], "4-11·12-": ["4-11-", "4-12-"], "4-14·15-": ["4-14-", "4-15-"], "5-4·8-": ["5-4-", "5-8·9-"], "5-9-": ["5-8·9-"], "5-13·15·16·17-": ["5-13·15·16-", "5-17-"]};
+QS.forEach((q) => { if (MERGE_FROM[q.id]) q.from = MERGE_FROM[q.id]; });
+QS.forEach((q) => { const m = FIGMAP[q.id]; if (m) { q.fig = m[0] || null; q.afig = m[1] || null; } });
+
+/* ---------- 상태 ---------- */
+let st = {}, ans = {}, sid = null;
+const state = { ch: "all", order: "seq", scope: "all", lang: "ko", list: [], pos: 0, revealed: false, attempt: {} };
+const net = { db: null, user: null, owner: false, canWrite: null, ready: false };
+const $ = (s) => document.querySelector(s);
+
+function el(tag, props, ...kids) {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(props || {})) {
+    if (k === "class") e.className = v;
+    else if (k === "text") e.textContent = v;
+    else if (k.startsWith("on")) e.addEventListener(k.slice(2), v);
+    else e.setAttribute(k, v);
+  }
+  kids.flat().forEach((c) => { if (c == null) return; e.append(c.nodeType ? c : document.createTextNode(c)); });
+  return e;
+}
+function norm(s) { return String(s).toLowerCase().replace(/\s+/g, "").replace(/⁺/g, "+"); }
+function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+const qText = (q) => (state.lang === "en" ? q.qE : q.q);
+const cText = (q) => (state.lang === "en" ? q.ctxE : q.ctx);
+
+/* 모범 답안의 **키워드** 처리 */
+function kwList(a) {
+  const out = [], seen = new Set();
+  a.replace(/\*\*(.+?)\*\*/g, (m, g) => { const alts = g.split("|"); if (!seen.has(alts[0])) { seen.add(alts[0]); out.push(alts); } return m; });
+  return out;
+}
+function richP(text) {
+  const p = el("p", { class: "rich" });
+  text.split("\n").forEach((line, i) => {
+    if (i) p.append(document.createElement("br"));
+    let last = 0;
+    line.replace(/\*\*(.+?)\*\*/g, (m, g, idx) => {
+      if (idx > last) p.append(line.slice(last, idx));
+      p.append(el("mark", { class: "kw", text: g.split("|")[0] }));
+      last = idx + m.length; return m;
+    });
+    if (last < line.length) p.append(line.slice(last));
+  });
+  return p;
+}
+function figEl(key) {
+  if (key.indexOf("+") >= 0) { const fr = document.createDocumentFragment(); key.split("+").forEach((k) => fr.append(figEl(k))); return fr; }
+  const w = el("figure", { class: "fig" });
+  const box = el("div", { class: "fw" });
+  box.innerHTML = FIG[key](state.lang);
+  w.append(box, el("figcaption", { text: state.lang === "en" ? "Schematic drawn for this quiz; it may differ slightly from the original figure." : "직접 그린 모식도예요. 문제지 원본 그림과 모양이 조금 다를 수 있어요." }));
+  return w;
+}
+
+/* ---------- 화면 전환 ---------- */
+function show(view) {
+  $("#login").hidden = view !== "login";
+  $("#quiz").hidden = view !== "quiz";
+  $("#logoutBtn").hidden = view !== "quiz";
+  $("#who").textContent = view === "quiz" ? (window.FB && FB.name ? FB.name : "로그인됨") : "2~5장(단백질까지) · 7~8장 · " + QS.length + "문항";
+}
+function setLogin(text, kind) { const m = $("#loginMsg"); m.textContent = text; m.className = "msg" + (kind ? " " + kind : ""); }
+
+/* ---------- 학번 확인 · 기록 저장 ---------- */
+let netReady = null;
+function connect() { netReady = Promise.resolve(); return netReady; }
+const useServer = () => !!(net.db && net.canWrite !== false);
+const LKEY = (id) => "cellquiz-7-8:rec:" + id;
+function localLoad(id) { try { const r = localStorage.getItem(LKEY(id)); return r ? JSON.parse(r) : {}; } catch (e) { return {}; } }
+let localOk = true;
+function localSave() {
+  try { localStorage.setItem(LKEY(sid), JSON.stringify({ st, ans, lang: state.lang, updated: Date.now() })); localOk = true; return true; }
+  catch (e) { localOk = false; return false; }
+}
+function mergeRec(a, b) {
+  a = a || {}; b = b || {};
+  const older = (a.updated || 0) <= (b.updated || 0) ? a : b, newer = older === a ? b : a;
+  return { st: Object.assign({}, older.st || {}, newer.st || {}), ans: Object.assign({}, older.ans || {}, newer.ans || {}), lang: newer.lang || older.lang };
+}
+let serverOk = true;
+function saveNote() {
+  if (useServer() && serverOk) return "서버와 이 기기에 저장돼요.";
+  if (useServer() && !serverOk) return "서버 기록을 불러오지 못해 이번에는 이 기기에만 저장해요. 새로고침 후 다시 입장해 주세요.";
+  return "이 기기·브라우저에 학번별로 저장돼요. 다른 기기에서는 보이지 않아요.";
+}
+async function enter(id) {
+  try {
+    st = {}; ans = {};
+    let srv = {}; serverOk = true;
+    if (useServer()) {
+      try { const snap = await net.db.doc("records/" + id).get(); srv = snap.exists ? snap.data() : {}; } catch (e) { serverOk = false; }
+    }
+    const d = mergeRec(srv, localLoad(id));
+    st = Object.assign({}, d.st || {}); ans = Object.assign({}, d.ans || {});
+    QS.forEach((q) => {
+      if (!q.from || st[q.id] !== undefined) return;
+      const ss = q.from.map((i) => st[i]).filter(Boolean);
+      if (ss.length) st[q.id] = ss.indexOf("bad") >= 0 ? "bad" : ss.indexOf("mid") >= 0 ? "mid" : "ok";
+      const aa = q.from.map((i) => ans[i]).filter(Boolean);
+      if (aa.length && !ans[q.id]) ans[q.id] = aa.join("\n");
+    });
+    if (d.lang === "en" || d.lang === "ko") state.lang = d.lang;
+    sid = id;
+    syncSeg("#seg-lang", state.lang);
+    setSave(saveNote(), false);
+    show("quiz"); buildList();
+    flush();
+  } catch (e) { setLogin("불러오는 중 오류가 났어요. 새로고침해 주세요.", "warn"); }
+}
+window.onFirebaseUser = function (u) {
+  if (u) {
+    net.db = {
+      doc: () => ({
+        get: async () => { const s = await FB.getDoc(); return { exists: s.exists() && !!s.data().midterm, data: () => JSON.parse(s.data().midterm) }; },
+        set: async (o) => { await FB.setMid(JSON.stringify(o)); }
+      })
+    };
+    net.canWrite = true;
+    enter(u.uid);
+  } else {
+    net.db = null; sid = null; st = {}; ans = {};
+    show("login"); setLogin("로그인이 필요해요.", "");
+  }
+};
+function logout() { syncSeg("#seg-tab", "quiz"); $("#quizMain").hidden = false; $("#materials").hidden = true; $("#backup").hidden = true; if (window.FB) FB.signOut(); }
+
+let saving = false, dirty = false, wipe = false;
+function setSave(t, warn) { const e = $("#saveState"); e.textContent = t; e.className = "save" + (warn ? " warn" : ""); }
+async function flush() {
+  if (!sid) return;
+  const localDone = localSave();
+  if (!useServer() || !serverOk) { if (!localDone) setSave("이 브라우저에서는 기록을 저장할 수 없어요. 창을 닫으면 사라져요.", true); else setSave(saveNote(), !serverOk); return; }
+  if (saving) { dirty = true; return; }
+  saving = true;
+  try {
+    do {
+      dirty = false; setSave("저장 중…");
+      const ref = net.db.doc("records/" + sid);
+      let cur = {};
+      if (!wipe) { try { const sn = await ref.get(); cur = sn.exists ? sn.data() : {}; } catch (e) { cur = {}; } }
+      const mine = { st: Object.assign({}, st), ans: Object.assign({}, ans), lang: state.lang, updated: Date.now() };
+      const m = wipe ? mine : mergeRec(cur, mine);
+      if (!wipe) { st = Object.assign({}, m.st); ans = Object.assign({}, m.ans); }
+      wipe = false;
+      await ref.set({ st: m.st, ans: m.ans, lang: m.lang || state.lang, updated: mine.updated });
+    } while (dirty);
+    setSave(saveNote());
+  } catch (e) { setSave("서버에 저장하지 못했어요. 이 기기에는 저장돼 있어요.", true); }
+  finally { saving = false; }
+}
+
+/* ---------- 목록 · 렌더링 ---------- */
+function buildList() {
+  let l = QS.filter((q) => state.ch === "all" || String(q.ch) === state.ch);
+  if (state.scope === "wrong") l = l.filter((q) => st[q.id] === "bad" || st[q.id] === "mid");
+  if (state.scope === "new") l = l.filter((q) => !st[q.id]);
+  if (state.scope === "after") l = l.filter((q) => q.no.indexOf("예상") !== 0);
+  if (state.scope === "pred") l = l.filter((q) => q.no.indexOf("예상") === 0);
+  if (state.order === "shuffle") shuffle(l);
+  state.list = l; state.pos = 0; state.revealed = false;
+  render();
+}
+function render() { renderStats(); renderMap(); renderCard(); }
+
+function renderStats() {
+  const c = { ok: 0, mid: 0, bad: 0 };
+  QS.forEach((q) => { if (c[st[q.id]] !== undefined) c[st[q.id]]++; });
+  const left = QS.length - c.ok - c.mid - c.bad;
+  const s = $("#stats"); s.textContent = "";
+  const item = (cls, label, n) => el("span", {}, el("i", { class: "dot " + cls }), label + " ", el("b", { text: String(n) }));
+  const here = state.list.length && state.pos < state.list.length ? el("span", {}, "이번 목록 ", el("b", { text: (state.pos + 1) + " / " + state.list.length })) : null;
+  s.append(...[here, item("ok", "맞음", c.ok), item("mid", "헷갈림", c.mid), item("bad", "틀림", c.bad), item("new", "안 푼 것", left)].filter(Boolean));
+}
+function renderMap() {
+  const m = $("#map"); m.textContent = "";
+  let last = null;
+  state.list.forEach((q, i) => {
+    if (q.ch !== last) { m.append(el("span", { class: "maplabel", text: q.ch + "장" })); last = q.ch; }
+    const label = q.ch + "장 " + q.no + (/^\d+(·\d+)*$/.test(q.no) ? "번" : "") + (q.sub ? " " + q.sub : "");
+    m.append(el("button", { type: "button", class: (st[q.id] || "") + (i === state.pos ? " cur" : ""), title: label, "aria-label": label, onclick: () => { state.pos = i; state.revealed = false; render(); } }));
+  });
+}
+function renderCard() {
+  const card = $("#card"); card.textContent = "";
+  if (!state.list.length) {
+    card.append(el("div", { class: "slide" }, el("div", { class: "slide-label" }, el("span", { class: "ch", text: "–" })),
+      el("div", { class: "slide-body done" }, el("h2", { text: "해당하는 문제가 없어요" }), el("p", { text: "범위를 ‘전체’로 바꾸거나, 먼저 문제를 풀고 채점해 보세요." }))));
+    return;
+  }
+  if (state.pos >= state.list.length) { card.append(doneView()); return; }
+  const q = state.list[state.pos];
+  const label = el("div", { class: "slide-label" },
+    el("span", { class: "ch", text: q.ch + "장" }),
+    q.no ? el("span", { class: "no", text: q.no + (/^\d+(·\d+)*$/.test(q.no) ? "번" : "") }) : null,
+    q.sub ? el("span", { class: "sub", text: q.sub }) : null);
+  const body = el("div", { class: "slide-body" });
+  if (cText(q)) body.append(el("div", { class: "ctx", text: cText(q), lang: state.lang === "en" ? "en" : "ko" }));
+  if (q.fig) body.append(figEl(q.fig));
+  body.append(el("h2", { class: "q", text: qText(q), lang: state.lang === "en" ? "en" : "ko" }));
+  if (!state.revealed) {
+    const ta = el("textarea", { id: "ans", rows: "5", "aria-label": "내 답", placeholder: "여기에 답을 써 보세요. 모범 답안은 한국어예요. 모르겠으면 비워 두고 정답을 확인해도 돼요." });
+    const graded = !!st[q.id];
+    ta.value = state.attempt[q.id] !== undefined ? state.attempt[q.id] : (graded ? "" : (ans[q.id] || ""));
+    ta.addEventListener("input", () => { state.attempt[q.id] = ta.value; if (!graded) ans[q.id] = ta.value; });
+    if (graded) body.append(el("p", { class: "hint", text: "전에 푼 문제예요 (" + ({ ok: "맞음", mid: "헷갈림", bad: "틀림" })[st[q.id]] + "). 이전 답은 지우고 새로 써 보세요." }));
+    ta.addEventListener("keydown", (e) => { if ((e.ctrlKey || e.metaKey) && e.key === "Enter") reveal(); });
+    body.append(ta, el("div", { class: "actions" },
+      el("button", { type: "button", class: "btn primary", text: "정답 확인", onclick: reveal }),
+      el("button", { type: "button", class: "btn", text: "이전", onclick: prev, ...(state.pos === 0 ? { disabled: "" } : {}) }),
+      el("button", { type: "button", class: "btn", text: "건너뛰기", onclick: next })),
+      el("p", { class: "hint", text: "Ctrl(또는 ⌘) + Enter로도 정답을 확인할 수 있어요." }));
+  } else body.append(revealView(q));
+  card.append(el("div", { class: "slide" }, label, body));
+}
+function revealView(q) {
+  const mine = (state.attempt[q.id] !== undefined ? state.attempt[q.id] : (ans[q.id] || "")).trim();
+  const w = el("div", { class: "reveal" });
+  w.append(
+    el("div", { class: "box" }, el("h3", { text: "내 답" }), el("p", { class: mine ? "" : "empty", text: mine || "(작성한 답이 없어요)" })),
+    el("div", { class: "box model" }, el("h3", { text: "모범 답안 (굵게 표시된 말이 키워드)" }), richP(q.a), el("p", { class: "hint", text: "직접 제작한 답안이니 수정할 부분은 2412 주하연에게 제보해주세요." })),
+    ...(q.afig ? [figEl(q.afig)] : []));
+  const kws = kwList(q.a);
+  if (mine && kws.length) {
+    const n = norm(mine), chips = el("div", { class: "chips" });
+    kws.forEach((alts) => { const hit = alts.some((a) => n.includes(norm(a))); chips.append(el("span", { class: "chip " + (hit ? "hit" : "miss"), text: (hit ? "✓ " : "빠짐 ") + alts[0] })); });
+    w.append(el("div", {}, el("p", { class: "chips-title", text: "내 답에 들어간 키워드 (글자가 같을 때만 체크돼요. 표현이 달라도 맞을 수 있어요)" }), chips));
+  }
+  w.append(el("p", { class: "grade-title", text: "모범 답안과 비교해 채점하세요" }));
+  const g = el("div", { class: "grade" });
+  [["ok", "맞았어요"], ["mid", "헷갈려요"], ["bad", "틀렸어요"]].forEach(([k, t]) =>
+    g.append(el("button", { type: "button", class: "btn g-" + k, text: t, "aria-pressed": st[q.id] === k ? "true" : "false", onclick: () => { st[q.id] = k; delete state.attempt[q.id]; flush(); next(); } })));
+  w.append(g, el("div", { class: "actions" },
+    el("button", { type: "button", class: "btn", text: "이전", onclick: prev, ...(state.pos === 0 ? { disabled: "" } : {}) }),
+    el("button", { type: "button", class: "btn", text: "다시 써보기", onclick: () => { state.attempt[q.id] = ""; state.revealed = false; renderCard(); } }),
+    el("button", { type: "button", class: "btn", text: "채점 안 하고 다음", onclick: next })));
+  return w;
+}
+function doneView() {
+  const c = { ok: 0, mid: 0, bad: 0, none: 0 };
+  state.list.forEach((q) => { c[st[q.id] || "none"]++; });
+  const again = c.mid + c.bad;
+  const body = el("div", { class: "slide-body done" },
+    el("h2", { text: "이번 목록을 끝까지 봤어요" }),
+    el("p", { text: "맞음 " + c.ok + "  헷갈림 " + c.mid + "  틀림 " + c.bad + (c.none ? "  채점 안 함 " + c.none : "") }),
+    el("div", { class: "actions" },
+      again ? el("button", { type: "button", class: "btn primary", text: "틀림·헷갈림 " + again + "문항만 다시 풀기", onclick: () => setScope("wrong") }) : null,
+      el("button", { type: "button", class: "btn", text: "이 목록 처음부터", onclick: () => { state.pos = 0; state.revealed = false; render(); } })));
+  return el("div", { class: "slide" }, el("div", { class: "slide-label" }, el("span", { class: "ch", text: "끝" })), body);
+}
+
+/* ---------- 동작 ---------- */
+function reveal() { const ta = $("#ans"); const q = state.list[state.pos]; if (ta && q) { const v = ta.value; state.attempt[q.id] = v; if (v.trim() || !st[q.id]) ans[q.id] = v; } state.revealed = true; renderCard(); flush(); }
+function next() { state.pos = Math.min(state.pos + 1, state.list.length); state.revealed = false; render(); $("#card").scrollIntoView({ block: "nearest" }); }
+function prev() { if (state.pos > 0) { state.pos--; state.revealed = false; render(); } }
+function setScope(v) { state.scope = v; syncSeg("#seg-scope", v); buildList(); }
+function syncSeg(sel, v) { document.querySelectorAll(sel + " button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.v === v ? "true" : "false")); }
+[["#seg-ch", "ch"], ["#seg-order", "order"], ["#seg-scope", "scope"]].forEach(([sel, key]) => {
+  document.querySelectorAll(sel + " button").forEach((b) => b.addEventListener("click", () => { state[key] = b.dataset.v; syncSeg(sel, b.dataset.v); buildList(); }));
+});
+document.querySelectorAll("#seg-lang button").forEach((b) => b.addEventListener("click", () => { state.lang = b.dataset.v; syncSeg("#seg-lang", b.dataset.v); renderCard(); flush(); }));
+
+$("#gBtn").addEventListener("click", () => { setLogin("로그인 창을 여는 중…", ""); FB.signIn().catch(() => setLogin("로그인하지 못했어요. 다시 시도해 주세요.", "warn")); });
+$("#logoutBtn").addEventListener("click", logout);
+
+function isDark() { const t = document.documentElement.dataset.theme; if (t) return t === "dark"; return window.matchMedia("(prefers-color-scheme: dark)").matches; }
+function themeLabel() { $("#theme").textContent = isDark() ? "밝게" : "어둡게"; }
+$("#theme").addEventListener("click", () => { document.documentElement.dataset.theme = isDark() ? "light" : "dark"; themeLabel(); });
+themeLabel();
+
+let armed = false, armTimer = null;
+$("#reset").addEventListener("click", (e) => {
+  if (!armed) { armed = true; e.target.textContent = "한 번 더 누르면 지워져요"; armTimer = setTimeout(() => { armed = false; e.target.textContent = "내 기록 지우기"; }, 3500); return; }
+  clearTimeout(armTimer); armed = false; e.target.textContent = "내 기록 지우기"; st = {}; ans = {}; wipe = true; flush(); buildList();
+});
+
+
+/* ---------- 기록 코드 저장 · 불러오기 ---------- */
+function makeCode() {
+  const a = {}; Object.keys(ans).forEach((k) => { if (ans[k] && String(ans[k]).trim()) a[k] = ans[k]; });
+  const o = { v: 1, id: sid, st: st, ans: a, lang: state.lang, updated: Date.now() };
+  return "CQ1." + btoa(unescape(encodeURIComponent(JSON.stringify(o))));
+}
+function codeMsg(t, kind) { const m = $("#codeMsg"); m.textContent = t; m.className = "msg" + (kind ? " " + kind : ""); }
+$("#backupBtn").addEventListener("click", () => {
+  const p = $("#backup"); p.hidden = !p.hidden;
+  if (!p.hidden) { $("#codeOut").value = makeCode(); codeMsg("", ""); }
+});
+$("#codeCopy").addEventListener("click", async () => {
+  const t = $("#codeOut"); t.value = makeCode(); t.select();
+  try { await navigator.clipboard.writeText(t.value); codeMsg("복사했어요.", "ok"); }
+  catch (e) { try { document.execCommand("copy"); codeMsg("복사했어요.", "ok"); } catch (e2) { codeMsg("자동 복사가 안 돼요. 코드가 선택돼 있으니 직접 복사해 주세요.", "warn"); } }
+});
+$("#codeLoad").addEventListener("click", () => {
+  const raw = $("#codeIn").value.trim();
+  if (!raw) { codeMsg("코드를 붙여넣어 주세요.", "warn"); return; }
+  let o;
+  try {
+    if (raw.indexOf("CQ1.") !== 0) throw 0;
+    o = JSON.parse(decodeURIComponent(escape(atob(raw.slice(4).replace(/\s+/g, "")))));
+    if (!o || o.v !== 1 || typeof o.st !== "object" || typeof o.ans !== "object") throw 0;
+  } catch (e) { codeMsg("코드를 읽을 수 없어요. 끝까지 정확히 복사했는지 확인해 주세요.", "warn"); return; }
+  if (o.id !== sid) { codeMsg("다른 학번(" + o.id + ")의 코드예요. 그 학번으로 입장해서 불러와 주세요.", "warn"); return; }
+  const cur = { st: st, ans: ans, updated: 0 };
+  const m = mergeRec(cur, { st: o.st, ans: o.ans, updated: o.updated || 0 });
+  st = m.st; ans = m.ans;
+  const n = Object.keys(o.st).length;
+  flush(); buildList(); $("#codeOut").value = makeCode(); $("#codeIn").value = "";
+  codeMsg("불러왔어요. 채점 기록 " + n + "개를 합쳤어요.", "ok");
+});
+
+/* ---------- 자료 탭 ---------- */
+const MATS = [[2,"files/unit2.pdf","10쪽"],[3,"files/unit3.pdf","22쪽"],[4,"files/unit4.pdf","12쪽"],[5,"files/unit5.pdf","42쪽"],[7,"files/unit7.pdf","23쪽"],[8,"files/unit8.pdf","23쪽"]];
+const matName = (n) => n + "단원 프린트_2412주하연.pdf";
+function matMsg(t, kind) { const m = $("#matMsg"); m.textContent = t; m.className = "msg" + (kind ? " " + kind : ""); }
+async function downloadMat(n, url) {
+  matMsg("파일을 가져오는 중…", "");
+  let blob = null;
+  try { const r = await fetch(url); if (!r.ok) throw 0; blob = await r.blob(); } catch (e) { matMsg("파일을 불러오지 못했어요. “열어 보기”로 열어서 저장해 주세요.", "warn"); return; }
+  let dl = null;
+  try { if (window.claude && window.claude.use) dl = await window.claude.use("downloads"); } catch (e) { dl = null; }
+  if (dl) {
+    try { await dl.save({ filename: matName(n), data: blob }); matMsg("저장했어요.", "ok"); return; }
+    catch (e) { if (e && e.code === "declined") { matMsg("저장을 취소했어요.", ""); return; } }
+  }
+  try {
+    const u = URL.createObjectURL(blob), a = document.createElement("a");
+    a.href = u; a.download = matName(n); document.body.append(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(u), 4000); matMsg("다운로드를 시작했어요.", "ok");
+  } catch (e) { matMsg("자동 저장이 안 돼요. “열어 보기”로 열어서 저장해 주세요.", "warn"); }
+}
+(function buildMats() {
+  const box = $("#matList");
+  MATS.forEach(([n, url, pg]) => {
+    box.append(el("div", { class: "mat" },
+      el("div", { class: "nm" }, matName(n), el("small", { text: pg })),
+      el("a", { class: "btn", href: url, target: "_blank", rel: "noopener", text: "열어 보기" }),
+      el("button", { type: "button", class: "btn primary", text: "다운로드", onclick: () => downloadMat(n, url) })));
+  });
+  document.querySelectorAll("#seg-tab button").forEach((b) => b.addEventListener("click", () => {
+    syncSeg("#seg-tab", b.dataset.v);
+    $("#quizMain").hidden = b.dataset.v !== "quiz"; $("#materials").hidden = b.dataset.v !== "mat";
+  }));
+})();
+show("login");
+setLogin("로그인 상태를 확인하는 중…", "");
+connect();
+
+</script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+const app = initializeApp({
+  apiKey: "AIzaSyBgB8vf5w7mtkCRl2VuRPoABnXAfxdPPkg",
+  authDomain: "saengmyeong-quiz.firebaseapp.com",
+  projectId: "saengmyeong-quiz",
+  storageBucket: "saengmyeong-quiz.firebasestorage.app",
+  messagingSenderId: "598031348152",
+  appId: "1:598031348152:web:41d485e6ad9a3eda3d9f4d"
+});
+const auth = getAuth(app), db = getFirestore(app);
+const ref = () => doc(db, "users", auth.currentUser.uid);
+window.FB = {
+  name: "",
+  signIn: () => signInWithPopup(auth, new GoogleAuthProvider()),
+  signOut: () => signOut(auth),
+  getDoc: () => getDoc(ref()),
+  setMid: (s) => setDoc(ref(), { midterm: s }, { merge: true })
+};
+onAuthStateChanged(auth, (u) => { FB.name = u ? (u.displayName || "") : ""; window.onFirebaseUser(u); });
+</script>
+</body>
+</html>
+
+</body></html>
