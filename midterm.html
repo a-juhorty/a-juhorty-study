@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
 <style>
 
 :root{
@@ -20,9 +21,9 @@
   --sans:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
 }
 :root[data-theme="dark"]{
-  --bg:#0E1626; --paper:#16213A; --ink:#E8ECF4; --muted:#9AA5BB; --line:#2A3858;
-  --label:#1D2B49; --stain:#E0604F; --on-stain:#fff; --blue:#7FA6D8;
-  --ok:#7FA6D8; --mid:#E3C15A; --bad:#E0604F; --tint:#1D2B49;
+  --bg:#17181C; --paper:#1F2026; --ink:#F1EFE9; --muted:#A4A6B0; --line:#33353E;
+  --label:#272A33; --stain:#E0604F; --on-stain:#FFFFFF; --blue:#7FA6D8;
+  --ok:#7FA6D8; --mid:#E3C15A; --bad:#E0604F; --tint:#272A33;
 }
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *,*::before,*::after{box-sizing:inherit}
@@ -1501,7 +1502,7 @@ $("#logoutBtn").addEventListener("click", logout);
 
 function isDark() { const t = document.documentElement.dataset.theme; return t === "dark"; }
 function themeLabel() { $("#theme").textContent = isDark() ? "밝게" : "어둡게"; }
-$("#theme").addEventListener("click", () => { document.documentElement.dataset.theme = isDark() ? "light" : "dark"; themeLabel(); });
+$("#theme").addEventListener("click", () => { const v = isDark() ? "light" : "dark"; document.documentElement.dataset.theme = v; try{localStorage.setItem("theme",v)}catch(e){} themeLabel(); });
 themeLabel();
 
 let armed = false, armTimer = null;
