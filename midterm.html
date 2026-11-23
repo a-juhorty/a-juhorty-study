@@ -19,13 +19,6 @@
   --serif:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
   --sans:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
 }
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --bg:#0E1626; --paper:#16213A; --ink:#E8ECF4; --muted:#9AA5BB; --line:#2A3858;
-    --label:#1D2B49; --stain:#E0604F; --on-stain:#fff; --blue:#7FA6D8;
-    --ok:#7FA6D8; --mid:#E3C15A; --bad:#E0604F; --tint:#1D2B49;
-  }
-}
 :root[data-theme="dark"]{
   --bg:#0E1626; --paper:#16213A; --ink:#E8ECF4; --muted:#9AA5BB; --line:#2A3858;
   --label:#1D2B49; --stain:#E0604F; --on-stain:#fff; --blue:#7FA6D8;
@@ -1506,7 +1499,7 @@ document.querySelectorAll("#seg-lang button").forEach((b) => b.addEventListener(
 $("#gBtn").addEventListener("click", () => { setLogin("로그인 창을 여는 중…", ""); FB.signIn().catch(() => setLogin("로그인하지 못했어요. 다시 시도해 주세요.", "warn")); });
 $("#logoutBtn").addEventListener("click", logout);
 
-function isDark() { const t = document.documentElement.dataset.theme; if (t) return t === "dark"; return window.matchMedia("(prefers-color-scheme: dark)").matches; }
+function isDark() { const t = document.documentElement.dataset.theme; return t === "dark"; }
 function themeLabel() { $("#theme").textContent = isDark() ? "밝게" : "어둡게"; }
 $("#theme").addEventListener("click", () => { document.documentElement.dataset.theme = isDark() ? "light" : "dark"; themeLabel(); });
 themeLabel();
