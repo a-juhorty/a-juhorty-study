@@ -213,6 +213,7 @@
     <p class="lead">김희경T 퀴즈 준비 파일의 객관식 문제예요. 선택지를 고르면 바로 채점돼요. 정답은 직접 풀어서 넣은 것이라 틀릴 수 있어요.</p>
     <div class="bar" id="mChapters"></div>
     <div class="stats" id="mStats"></div>
+    <div class="row" style="margin:0 0 12px"><button class="btn ghost sm" id="mReset" type="button">↺ 기록 초기화</button><button class="btn ghost sm" id="mRedoWrong" type="button">틀린 문제만 다시 풀기</button></div>
     <div class="nav" id="mNav"></div>
     <div class="card" id="mCard"></div>
     <div class="row" style="justify-content:space-between">
@@ -221,7 +222,6 @@
       <button class="btn ghost" id="mWrongOnly">틀린 문제만</button>
       <button class="btn ghost" id="mNext">다음 →</button>
     </div>
-    <div class="row" style="justify-content:center"><button class="btn ghost sm" id="mReset">이 장 기록 지우기</button></div>
   </div>
   <div class="hint">Google로 로그인하면 풀이 기록이 계정에 저장돼 다른 기기에서도 이어져요.</div>
   </section>
@@ -2307,6 +2307,10 @@ function mRender(){
     h += `<div class="mexp"><b style="color:var(--${r.ok?"ok":"bad"})">${r.ok?"정답!":"오답"}</b> 정답은 <b>${L[q.a]}</b>예요. ${esc(q.e)}${q.low?'<span class="low">※ 이 문제는 제가 푼 답에 확신이 낮아요. 선생님 답과 꼭 확인해 보세요.</span>':""}</div>`;
     h += '<div class="row"><button class="btn ghost sm" id="mRetry">다시 풀기</button></div>';
   }
+  if(mOrder.every(id=>mstore[id])){
+    const okN = mOrder.filter(id=>mstore[id].ok).length;
+    h += `<div class="mexp" style="margin-top:12px"><b>모두 풀었어요!</b> ${mOrder.length}문제 중 <b style="color:var(--ok)">${okN}개</b> 맞혔어요. 위의 <b>↺ 기록 초기화</b>로 처음부터, <b>틀린 문제만 다시 풀기</b>로 틀린 것만 다시 풀 수 있어요.</div>`;
+  }
   card.innerHTML = h;
   card.querySelectorAll(".opt").forEach(b=>b.onclick = ()=>{
     mstore[q.id] = {a:+b.dataset.k, ok:+b.dataset.k===q.a}; save(); mRender();
@@ -2318,10 +2322,20 @@ $("mNext").onclick = ()=>{ if(mPos<mOrder.length-1){mPos++; mRender();} };
 $("mShuffle").onclick = ()=>mRebuild(2);
 $("mWrongOnly").onclick = ()=>{ mOnlyWrong=!mOnlyWrong; mRebuild(); };
 $("mReset").onclick = ()=>{
-  const t = mChap==="전체" ? "전체" : mChap+"장";
-  if(!confirm(t+" 객관식 풀이 기록을 지울까요?")) return;
+  const t = mChap==="전체" ? "전체" : MCQ_CHAPTERS.find(c=>c.id===mChap).label;
+  const n = MCQ.filter(q=>(mChap==="전체"||q.ch===mChap) && mstore[q.id]).length;
+  if(!n){ alert("초기화할 기록이 없어요."); return; }
+  if(!confirm(t+" 객관식 풀이 기록 "+n+"개를 모두 지우고 처음부터 다시 풀까요?")) return;
   MCQ.forEach(q=>{ if(mChap==="전체"||q.ch===mChap) delete mstore[q.id]; });
-  save(); mRebuild();
+  mOnlyWrong = false; save(); mRebuild();
+};
+$("mRedoWrong").onclick = ()=>{
+  // 현재 장에서 틀린 문제의 기록만 지워서 다시 풀게 함
+  const wrong = MCQ.filter(q=>(mChap==="전체"||q.ch===mChap) && mstore[q.id] && mstore[q.id].ok===false);
+  if(!wrong.length){ alert("틀린 문제가 없어요."); return; }
+  wrong.forEach(q=>delete mstore[q.id]);
+  mOnlyWrong = false; save(); mRebuild();
+  mOrder = wrong.map(q=>q.id); mPos = 0; mRender();
 };
 function setMode(m){
   mMode = m;
