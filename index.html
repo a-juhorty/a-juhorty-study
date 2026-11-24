@@ -142,6 +142,21 @@
   :root[data-theme="dark"] .nav button.mid{background:var(--card)}
   :root[data-theme="dark"] .g-ok,:root[data-theme="dark"] .g-mid{color:#17181C!important}
   :root[data-theme="dark"] .card{border-top-color:var(--ink)}
+  .tabs{display:flex;gap:0;margin:0 0 16px;border-bottom:2px solid var(--line)}
+  .tabs button{border:0;background:transparent;color:var(--sub);font:inherit;font-size:15px;font-weight:700;padding:10px 20px;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px}
+  .tabs button.on{color:var(--ink);border-bottom-color:var(--accent)}
+  .tabs small{font-weight:500;opacity:.7}
+  .opts{display:flex;flex-direction:column;gap:8px;margin-top:6px}
+  .opt{display:flex;gap:10px;align-items:flex-start;text-align:left;width:100%;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);border-radius:12px;padding:11px 14px;font:inherit;font-size:15px;cursor:pointer}
+  .opt b{flex:0 0 22px;color:var(--sub)}
+  .opt:hover:not(:disabled){border-color:var(--blue)}
+  .opt:disabled{cursor:default}
+  .opt.right{border-color:var(--ok);background:var(--ok-soft)}
+  .opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+  .qfig{display:block;max-width:100%;margin:0 0 14px;border:1px solid var(--line);border-radius:10px;background:#fff}
+  .mexp{margin-top:14px;padding:12px 14px;border-radius:12px;background:var(--bg);border:1px solid var(--line);font-size:14px;line-height:1.6}
+  .mexp .low{display:block;margin-top:8px;color:var(--mid);font-size:13px}
+  .opt.right b{color:var(--ok)} .opt.wrong b{color:var(--bad)}
 </style>
 </head>
 <body class="home">
@@ -174,6 +189,8 @@
   <section id="quizView" hidden>
   <div class="crumbrow"><p class="crumb"><a href="#">← 주하연 공부방</a></p><button class="btn ghost sm" id="themeBtn" type="button">어둡게</button></div>
   <h2 class="qtitle">생명 퀴즈 <span>대비</span></h2>
+  <div class="tabs" id="modeTabs"><button type="button" data-m="essay" class="on">서술형</button><button type="button" data-m="mcq">객관식 <small>105</small></button></div>
+  <div id="essayPane">
   <p class="lead">답을 먼저 직접 써 보고, 핵심 키워드와 모범답안으로 스스로 채점하세요.</p>
   <div class="bar" id="langbar"></div>
   <div class="bar" id="chapters"></div>
@@ -187,6 +204,21 @@
     <button class="btn ghost" id="shuffle">섞기</button>
     <button class="btn ghost" id="wrongOnly">모름·헷갈림만</button>
     <button class="btn ghost" id="next">다음 →</button>
+  </div>
+  </div>
+  <div id="mcqPane" hidden>
+    <p class="lead">희경T 퀴즈 준비 파일의 객관식 문제예요. 선택지를 고르면 바로 채점돼요. 정답은 직접 풀어서 넣은 것이라 틀릴 수 있어요.</p>
+    <div class="bar" id="mChapters"></div>
+    <div class="stats" id="mStats"></div>
+    <div class="nav" id="mNav"></div>
+    <div class="card" id="mCard"></div>
+    <div class="row" style="justify-content:space-between">
+      <button class="btn ghost" id="mPrev">← 이전</button>
+      <button class="btn ghost" id="mShuffle">섞기</button>
+      <button class="btn ghost" id="mWrongOnly">틀린 문제만</button>
+      <button class="btn ghost" id="mNext">다음 →</button>
+    </div>
+    <div class="row" style="justify-content:center"><button class="btn ghost sm" id="mReset">이 장 기록 지우기</button></div>
   </div>
   <div class="hint">Google로 로그인하면 풀이 기록이 계정에 저장돼 다른 기기에서도 이어져요.</div>
   </section>
@@ -585,19 +617,24 @@ const QUESTIONS = [
 const $ = id => document.getElementById(id);
 let store = {};
 try { store = JSON.parse(localStorage.getItem("essay-progress") || "{}"); } catch(e){}
+let mstore = {};
+try { mstore = JSON.parse(localStorage.getItem("mcq-progress") || "{}"); } catch(e){}
 let remoteDoc = null, saveTimer = null, saving = false, dirty = false;
 const save = () => {
-  try { localStorage.setItem("essay-progress", JSON.stringify(store)); } catch(e){}
+  try { localStorage.setItem("essay-progress", JSON.stringify(store)); localStorage.setItem("mcq-progress", JSON.stringify(mstore)); } catch(e){}
   if(!remoteDoc) return;
   dirty = true; clearTimeout(saveTimer); saveTimer = setTimeout(flush, 800);
 };
 async function flush(){
   if(saving || !dirty || !remoteDoc) return;
   saving = true; dirty = false;
-  try { await remoteDoc.set({progress: JSON.stringify(store)}); } catch(e){}
+  try { await remoteDoc.set({progress: JSON.stringify(store), mcq: JSON.stringify(mstore)}); } catch(e){}
   saving = false; if(dirty) flush();
 }
-function connectRemote(progressStr, saver){
+function connectRemote(progressStr, saver, mcqStr){
+  if(mcqStr){
+    try { mstore = Object.assign({}, mstore, JSON.parse(mcqStr)); try{localStorage.setItem("mcq-progress",JSON.stringify(mstore));}catch(e){} } catch(e){}
+  }
   if(progressStr){
     try {
       const r = JSON.parse(progressStr);
@@ -606,7 +643,7 @@ function connectRemote(progressStr, saver){
     } catch(e){}
   }
   remoteDoc = { set: saver };
-  render();
+  render(); mRebuild(true);
   dirty = true; flush();
 }
 function disconnectRemote(){ remoteDoc = null; }
@@ -719,6 +756,1581 @@ $("wrongOnly").onclick = () => { onlyWrong = !onlyWrong; rebuild(false); };
 
 renderLang(); renderChapters(); rebuild(false);
 
+/* 객관식 문제 (7~8장, 10장, 11장, 12장). low=1은 정답 확신이 낮은 문제 */
+const MCQ_CHAPTERS = [{"id": "7-8", "label": "7~8장"}, {"id": "10", "label": "10장"}, {"id": "11", "label": "11장"}, {"id": "12", "label": "12장"}];
+const MCQ = [
+{
+"id": "7-8-1",
+"ch": "7-8",
+"n": 1,
+"q": "Which of the following are NOT found in any prokaryotic cell?",
+"o": [
+"ribosomes",
+"membrane-bound organelles",
+"polysaccharide capsules",
+"cell walls",
+"flagella"
+],
+"a": 1,
+"e": "원핵세포에는 막으로 둘러싸인 세포소기관이 없다."
+},
+{
+"id": "7-8-2",
+"ch": "7-8",
+"n": 2,
+"q": "All cells except bacteria and archaea",
+"o": [
+"are eukaryotes.",
+"possess a nucleus.",
+"use organelles for compartmentalization.",
+"have a dynamic \"skeleton\" of proteins.",
+"are all of these."
+],
+"a": 4,
+"e": "세균과 고세균을 제외한 모든 세포는 진핵세포이므로 보기 a~d가 모두 해당한다."
+},
+{
+"id": "7-8-3",
+"ch": "7-8",
+"n": 3,
+"q": "Which is the correct sequence of polypeptide transport in the secretory pathway?",
+"o": [
+"plasma membrane → Golgi bodies → ER → ribosome",
+"plasma membrane → ER → Golgi bodies → ribosome",
+"ribosome → Golgi bodies → ER → plasma membrane",
+"ribosome → ER → Golgi bodies → plasma membrane",
+"Golgi bodies → ribosomes → ER → plasma membrane"
+],
+"a": 3,
+"e": "분비 경로는 리보솜 → 소포체 → 골지체 → 원형질막 순서이다."
+},
+{
+"id": "7-8-4",
+"ch": "7-8",
+"n": 4,
+"q": "Which of the following are the primary structures that package cellular secretions for export from the cell?",
+"o": [
+"Golgi bodies",
+"ribosomes",
+"mitochondria",
+"lysosomes",
+"endoplasmic reticula"
+],
+"a": 0,
+"e": "골지체가 분비물을 포장해 세포 밖으로 내보낸다."
+},
+{
+"id": "7-8-5",
+"ch": "7-8",
+"n": 5,
+"q": "Which of the following contain enzymes, are the main organelles of intracellular digestion, and can digest whole cells?",
+"o": [
+"Golgi bodies",
+"vesicles",
+"peroxisomes",
+"lysosomes",
+"endoplasmic reticula"
+],
+"a": 3,
+"e": "리소좀은 가수분해 효소로 세포 내 소화를 담당한다."
+},
+{
+"id": "7-8-6",
+"ch": "7-8",
+"n": 6,
+"q": "Energy stored in which of the following substances is converted by mitochondria to a form usable by the cell?",
+"o": [
+"water",
+"carbon-hydrogen compounds",
+"NAD+",
+"ATP",
+"carbon dioxide"
+],
+"a": 1,
+"e": "미토콘드리아는 탄소-수소 결합에 저장된 에너지를 ATP로 전환한다."
+},
+{
+"id": "7-8-7",
+"ch": "7-8",
+"n": 7,
+"q": "Plasmodesmata are cell junctions that are similar in function to",
+"o": [
+"gap junctions in animal cells.",
+"tight junctions in animal cells.",
+"adhering junctions in animal cells.",
+"the cuticle in plant cells.",
+"stomata in plant cells."
+],
+"a": 0,
+"e": "원형질연락사는 동물 세포의 간극 결합과 기능이 비슷하다."
+},
+{
+"id": "7-8-8",
+"ch": "7-8",
+"n": 8,
+"q": "Kinesins, dyneins, and myosins are all",
+"o": [
+"components of microtubules.",
+"components of microfilaments.",
+"components of intermediate filaments.",
+"motor proteins.",
+"involved in moving chromosomes."
+],
+"a": 3,
+"e": "키네신, 다이네인, 미오신은 모두 모터 단백질이다."
+},
+{
+"id": "7-8-9",
+"ch": "7-8",
+"n": 9,
+"q": "Lamins, desmins, and vimentins are associated with",
+"o": [
+"myosin.",
+"microtubules.",
+"intermediate filaments.",
+"microfilaments.",
+"all of these."
+],
+"a": 2,
+"e": "라민, 데스민, 비멘틴은 중간 섬유 단백질이다."
+},
+{
+"id": "7-8-10",
+"ch": "7-8",
+"n": 10,
+"q": "The pseudopods of amoebas and certain other cells are produced by the action of ______ and motor proteins.",
+"o": [
+"myosin",
+"microtubules",
+"intermediate filaments",
+"microfilaments",
+"all of these"
+],
+"a": 3,
+"e": "위족은 미세섬유(액틴)와 모터 단백질(미오신)의 작용으로 만들어진다."
+},
+{
+"id": "7-8-11",
+"ch": "7-8",
+"n": 11,
+"q": "One primary advantage of light microscopy over electron microscopy is that ______.",
+"o": [
+"light microscopy provides for higher magnification than electron microscopy",
+"light microscopy provides for higher resolution than electron microscopy",
+"light microscopy allows the visualization of dynamic processes in living cells",
+"light microscopy provides higher contrast than electron microscopy"
+],
+"a": 2,
+"e": "광학현미경은 살아 있는 세포의 동적 과정을 볼 수 있다."
+},
+{
+"id": "7-8-12",
+"ch": "7-8",
+"n": 12,
+"q": "In the fractionation of homogenized cells using differential centrifugation, which of the following will require the greatest speed to form pellets at the bottom of the tube?",
+"o": [
+"nuclei",
+"mitochondria",
+"chloroplasts",
+"ribosomes"
+],
+"a": 3,
+"e": "가장 작은 리보솜이 가장 빠른 속도에서 침전한다."
+},
+{
+"id": "7-8-13",
+"ch": "7-8",
+"n": 13,
+"q": "Which of the following is a major difference between prokaryotic cells and eukaryotic cells?",
+"o": [
+"Prokaryotic cells have cell walls, while eukaryotic cells do not.",
+"Eukaryotic cells have flagella, while prokaryotic cells do not.",
+"Eukaryotic cells have membrane-bound organelles, while prokaryotic cells do not.",
+"Prokaryotic cells are generally larger than eukaryotic cells."
+],
+"a": 2,
+"e": "진핵세포에는 막으로 둘러싸인 세포소기관이 있다."
+},
+{
+"id": "7-8-14",
+"ch": "7-8",
+"n": 14,
+"q": "Which structure is common to plant and animal cells?",
+"o": [
+"chloroplast",
+"central vacuole",
+"mitochondrion",
+"centriole"
+],
+"a": 2,
+"e": "미토콘드리아는 식물과 동물 세포에 모두 있다."
+},
+{
+"id": "7-8-15",
+"ch": "7-8",
+"n": 15,
+"q": "Which of the following are found in plant, animal, and bacterial cells?",
+"o": [
+"mitochondria",
+"ribosomes",
+"chloroplasts",
+"endoplasmic reticulum"
+],
+"a": 1,
+"e": "리보솜은 모든 세포에 있다."
+},
+{
+"id": "7-8-16",
+"ch": "7-8",
+"n": 16,
+"q": "A characteristic 9 + 2 arrangement of microtubules, consisting of nine doublets of microtubules surrounding a pair of single microtubules is associated with ______.",
+"o": [
+"bacterial flagella",
+"eukaryotic flagella and motile cilia",
+"eukaryotic flagella, motile cilia, and nonmotile cilia",
+"centrioles and basal bodies"
+],
+"a": 1,
+"e": "9+2 구조는 진핵생물의 편모와 운동성 섬모의 구조이다."
+},
+{
+"id": "7-8-17",
+"ch": "7-8",
+"n": 17,
+"q": "The phospholipid molecules of most membranes have",
+"o": [
+"a hydrophobic head and a hydrophilic tail.",
+"a hydrophobic head and a hydrophobic tail.",
+"a hydrophobic head and two hydrophobic tails.",
+"a hydrophilic head and two hydrophobic tails.",
+"none of these."
+],
+"a": 3,
+"e": "인지질은 친수성 머리와 두 개의 소수성 꼬리를 가진다."
+},
+{
+"id": "7-8-18",
+"ch": "7-8",
+"n": 18,
+"q": "A membrane is more \"fluid\" than solid because",
+"o": [
+"phospholipid tails prevent close packing.",
+"proteins can shift positions.",
+"water is the main component.",
+"phospholipid tails prevent close packing, and proteins can shift positions.",
+"phospholipid tails prevent close packing, proteins can shift positions, and water is the main component."
+],
+"a": 3,
+"e": "인지질 꼬리가 촘촘한 배열을 막고 단백질이 위치를 옮길 수 있어 유동적이다.",
+"low": 1
+},
+{
+"id": "7-8-19",
+"ch": "7-8",
+"n": 19,
+"q": "Glycolipids differ from other membrane lipids in that they",
+"o": [
+"have hydrophilic heads.",
+"have hydrophobic heads.",
+"have molecules of a monosaccharide associated with them.",
+"have saturated and partially unsaturated tails.",
+"are stationary molecules found scattered throughout the membrane."
+],
+"a": 2,
+"e": "당지질에는 당(탄수화물) 사슬이 붙어 있다."
+},
+{
+"id": "7-8-20",
+"ch": "7-8",
+"n": 20,
+"q": "Most of the functions of plasma membranes are carried out by",
+"o": [
+"cholesterol.",
+"proteins.",
+"hydrophilic heads.",
+"hydrophobic tails.",
+"carbohydrates."
+],
+"a": 1,
+"e": "막의 대부분 기능은 단백질이 수행한다."
+},
+{
+"id": "7-8-21",
+"ch": "7-8",
+"n": 21,
+"q": "Movement of a molecule against a concentration gradient is",
+"o": [
+"simple diffusion",
+"facilitated diffusion",
+"osmosis",
+"active transport",
+"bulk flow"
+],
+"a": 3,
+"e": "농도 기울기를 거슬러 이동하는 것은 능동 수송이다."
+},
+{
+"id": "7-8-22",
+"ch": "7-8",
+"n": 22,
+"q": "The sodium-potassium pump is an example of",
+"o": [
+"simple diffusion",
+"facilitated diffusion",
+"osmosis",
+"active transport",
+"bulk flow"
+],
+"a": 3,
+"e": "나트륨-칼륨 펌프는 능동 수송이다."
+},
+{
+"id": "7-8-23",
+"ch": "7-8",
+"n": 23,
+"q": "The glucose transport mechanism is an example of",
+"o": [
+"simple diffusion",
+"facilitated diffusion",
+"osmosis",
+"active transport",
+"bulk flow"
+],
+"a": 1,
+"e": "포도당은 수송 단백질을 통한 촉진 확산으로 이동한다."
+},
+{
+"id": "7-8-24",
+"ch": "7-8",
+"n": 24,
+"q": "If a plant cell is placed in a hypotonic solution, the",
+"o": [
+"entire cell will not swell or shrink.",
+"entire cell will shrink.",
+"turgor pressure will increase.",
+"cell wall prevents the cell from exploding.",
+"turgor pressure will increase, but the cell wall prevents the cell from exploding."
+],
+"a": 4,
+"e": "저장액에서 식물세포는 팽압이 커지지만 세포벽이 터지는 것을 막는다."
+},
+{
+"id": "7-8-25",
+"ch": "7-8",
+"n": 25,
+"q": "The membranes of winter wheat are able to remain fluid when it is extremely cold by ______.",
+"o": [
+"increasing the proportion of unsaturated phospholipids in the membrane",
+"decreasing the percentage of cholesterol molecules in the membrane",
+"decreasing the number of hydrophobic proteins in the membrane",
+"increasing the proportion of glycolipids in the membrane"
+],
+"a": 0,
+"e": "불포화 인지질 비율이 높아지면 낮은 온도에서도 막이 유동성을 유지한다."
+},
+{
+"id": "7-8-26",
+"ch": "7-8",
+"n": 26,
+"q": "An animal cell lacking carbohydrates on the external surface of its plasma membrane would likely be impaired in which function?",
+"o": [
+"transporting ions against an electrochemical gradient",
+"cell-cell recognition",
+"attaching the plasma membrane to the cytoskeleton",
+"establishing a diffusion barrier to charged molecules"
+],
+"a": 1,
+"e": "막 바깥쪽 탄수화물은 세포 간 인식에 관여한다."
+},
+{
+"id": "7-8-27",
+"ch": "7-8",
+"n": 27,
+"q": "Which of the following statements correctly describes osmosis?",
+"o": [
+"Osmosis only takes place in red blood cells.",
+"Osmosis is an energy-demanding or \"active\" process.",
+"In osmosis, water moves across a membrane from areas of lower solute concentration to areas of higher solute concentration.",
+"In osmosis, solutes move across a membrane from areas of lower water concentration to areas of higher water concentration."
+],
+"a": 2,
+"e": "삼투에서 물은 용질 농도가 낮은 쪽에서 높은 쪽으로 이동한다."
+},
+{
+"id": "7-8-28",
+"ch": "7-8",
+"n": 28,
+"q": "Which of the following statements correctly describes the normal tonicity conditions for typical plant and animal cells? The animal cell is in ______.",
+"o": [
+"a hypotonic solution, and the plant cell is in an isotonic solution",
+"an isotonic solution, and the plant cell is in a hypertonic solution",
+"a hypertonic solution, and the plant cell is in an isotonic solution",
+"an isotonic solution, and the plant cell is in a hypotonic solution"
+],
+"a": 3,
+"e": "동물세포는 등장액, 식물세포는 저장액에 있는 것이 정상이다."
+},
+{
+"id": "7-8-29",
+"ch": "7-8",
+"n": 29,
+"q": "The voltage across a membrane is called the ______.",
+"o": [
+"chemical gradient",
+"membrane potential",
+"osmotic potential",
+"electrochemical gradient"
+],
+"a": 1,
+"e": "막을 가로지르는 전압은 막전위이다."
+},
+{
+"id": "7-8-30",
+"ch": "7-8",
+"n": 30,
+"q": "A bacterium engulfed by a white blood cell through phagocytosis will be digested by enzymes contained in ______.",
+"o": [
+"lysosomes",
+"Golgi vesicles",
+"vacuoles",
+"secretory vesicles"
+],
+"a": 0,
+"e": "식세포 작용으로 삼킨 세균은 리소좀 효소가 분해한다."
+},
+{
+"id": "10-1",
+"ch": "10",
+"n": 1,
+"q": "In which reactions of cellular respiration and fermentation does substrate-level phosphorylation occur?",
+"o": [
+"only in glycolysis",
+"only in the citric acid cycle",
+"only in the electron transport chain",
+"in both glycolysis and the citric acid cycle"
+],
+"a": 3,
+"e": "기질 수준 인산화는 해당과정과 시트르산 회로에서 일어난다."
+},
+{
+"id": "10-2",
+"ch": "10",
+"n": 2,
+"q": "Which of the summary statements below describes the results of the following reaction?\nC6H12O6 + 6 O2 → 6 CO2 + 6 H2O + Energy",
+"o": [
+"C6H12O6 is oxidized and O2 is reduced.",
+"O2 is oxidized and H2O is reduced.",
+"CO2 is reduced and O2 is oxidized.",
+"O2 is reduced and CO2 is oxidized."
+],
+"a": 0,
+"e": "포도당은 산화되고 산소는 환원된다."
+},
+{
+"id": "10-3",
+"ch": "10",
+"n": 3,
+"q": "When a molecule of NAD+ (nicotinamide adenine dinucleotide) gains a hydrogen atom (not a proton), the molecule becomes ______.",
+"o": [
+"dehydrogenated",
+"oxidized",
+"reduced",
+"redoxed"
+],
+"a": 2,
+"e": "수소(전자)를 얻으면 환원된다."
+},
+{
+"id": "10-4",
+"ch": "10",
+"n": 4,
+"q": "Which of the following statements about NAD+ is true?",
+"o": [
+"NAD+ is reduced to NADH during glycolysis, pyruvate oxidation, and the citric acid cycle.",
+"NAD+ has more chemical energy than NADH.",
+"NAD+ can donate electrons for use in oxidative phosphorylation.",
+"In the absence of NAD+, glycolysis can still function."
+],
+"a": 0,
+"e": "NAD+는 해당과정, 피루브산 산화, 시트르산 회로에서 NADH로 환원된다."
+},
+{
+"id": "10-5",
+"ch": "10",
+"n": 5,
+"q": "Why are carbohydrates and fats frequently considered high-energy foods?",
+"o": [
+"They contain many oxygen atoms.",
+"They contain no nitrogen atoms.",
+"They contain many electrons associated with hydrogen atoms.",
+"They are strong oxidizing molecules."
+],
+"a": 2,
+"e": "수소 원자와 결합한 전자가 많아 에너지가 높다."
+},
+{
+"id": "10-6",
+"ch": "10",
+"n": 6,
+"q": "Starting with one molecule of glucose, glycolysis results in the net production of which of the following sets of energy-containing products?",
+"o": [
+"2 NAD+, 2 pyruvate, and 2 ATP",
+"2 NADH, 2 pyruvate, and 2 ATP",
+"4 NADH, 2 pyruvate, and 4 ATP",
+"6 CO2, 2 pyruvate, and 2 ATP"
+],
+"a": 1,
+"e": "해당과정의 순생산은 2 NADH, 2 피루브산, 2 ATP이다."
+},
+{
+"id": "10-7",
+"ch": "10",
+"n": 7,
+"q": "In glycolysis, for each molecule of glucose oxidized to pyruvate, ______.",
+"o": [
+"two molecules of ATP are used, and two molecules of ATP are produced",
+"two molecules of ATP are used, and four molecules of ATP are produced",
+"four molecules of ATP are used, and two molecules of ATP are produced",
+"two molecules of ATP are used, and six molecules of ATP are produced"
+],
+"a": 1,
+"e": "2 ATP를 쓰고 4 ATP를 만들어 순 2 ATP가 생긴다."
+},
+{
+"id": "10-8",
+"ch": "10",
+"n": 8,
+"q": "Following glycolysis and the citric acid cycle, but before the electron transport chain and oxidative phosphorylation, the carbon skeleton of glucose has been broken down to CO2 with some net gain of ATP. Most of the energy from the original glucose molecule at that point in the process, however, is stored in the form of which of the following molecules?",
+"o": [
+"acetyl-CoA",
+"NAD+",
+"pyruvate",
+"NADH"
+],
+"a": 3,
+"e": "에너지 대부분은 NADH(와 FADH2)에 저장되어 있다."
+},
+{
+"id": "10-9",
+"ch": "10",
+"n": 9,
+"q": "Which electron carrier(s) function in the citric acid cycle?",
+"o": [
+"NAD+ only",
+"NADH and FADH2",
+"the electron transport chain",
+"ADP and ATP"
+],
+"a": 1,
+"e": "시트르산 회로에서는 NADH와 FADH2가 전자를 나른다."
+},
+{
+"id": "10-10",
+"ch": "10",
+"n": 10,
+"q": "Carbon dioxide (CO2) is released during which of the following stages of cellular respiration?",
+"o": [
+"glycolysis and the oxidation of pyruvate to acetyl CoA",
+"oxidation of pyruvate to acetyl CoA and the citric acid cycle",
+"oxidative phosphorylation and fermentation",
+"fermentation and glycolysis"
+],
+"a": 1,
+"e": "CO2는 피루브산 산화와 시트르산 회로에서 나온다."
+},
+{
+"id": "10-11",
+"ch": "10",
+"n": 11,
+"q": "If glucose is the sole energy source, what fraction of the carbon dioxide exhaled by animals is generated only by the reactions involved in oxidation of pyruvate to acetyl CoA?",
+"o": [
+"1/6",
+"1/3",
+"2/3",
+"all of it"
+],
+"a": 1,
+"e": "포도당 1분자에서 나오는 CO2 6개 중 2개가 피루브산 산화에서 나온다."
+},
+{
+"id": "10-12",
+"ch": "10",
+"n": 12,
+"q": "For each mole of glucose (C6H12O6) oxidized by cellular respiration, how many moles of CO2 are released in the citric acid cycle (see the accompanying figure)?",
+"o": [
+"2",
+"4",
+"6",
+"32"
+],
+"a": 1,
+"e": "한 바퀴에 CO2 2개이고 포도당 1분자는 두 바퀴를 돌므로 4개이다.",
+"fig": "fig_ch10_cycle.png"
+},
+{
+"id": "10-13",
+"ch": "10",
+"n": 13,
+"q": "If pyruvate oxidation is blocked, what will happen to the levels of oxaloacetate and citric acid in the citric acid cycle shown in the accompanying figure?",
+"o": [
+"Oxaloacetate will decrease and citric acid will accumulate.",
+"Oxaloacetate will accumulate and citric acid will decrease.",
+"Both oxaloacetate and citric acid will decrease.",
+"Both oxaloacetate and citric acid will accumulate."
+],
+"a": 1,
+"e": "아세틸 CoA가 공급되지 않으면 시트르산이 만들어지지 않아 감소하고 옥살아세트산은 쌓인다.",
+"fig": "fig_ch10_cycle.png"
+},
+{
+"id": "10-14",
+"ch": "10",
+"n": 14,
+"q": "Starting with citrate, which of the following combinations of products would result from three acetyl CoA molecules entering the citric acid cycle?",
+"o": [
+"1 ATP, 2 CO2, 3 NADH, and 1 FADH2",
+"3 ATP, 3 CO2, 3 NADH, and 3 FADH2",
+"3 ATP, 6 CO2, 9 NADH, and 3 FADH2",
+"6 ATP, 6 CO2, 3 NADH, and 12 FADH2"
+],
+"a": 2,
+"e": "한 바퀴당 1 ATP, 2 CO2, 3 NADH, 1 FADH2이므로 세 바퀴면 3배이다.",
+"fig": "fig_ch10_cycle.png"
+},
+{
+"id": "10-15",
+"ch": "10",
+"n": 15,
+"q": "In the presence of oxygen, the three-carbon compound pyruvate can be catabolized in the citric acid cycle. First, however, the pyruvate (1) loses a carbon, which is given off as a molecule of CO2, (2) is oxidized to form a two-carbon compound called acetate, and (3) is bonded to coenzyme A. Which of the following sets of products result from these reactions?",
+"o": [
+"acetyl CoA, O2, and ATP",
+"acetyl CoA, FADH2, and CO2",
+"acetyl CoA, NADH, and CO2",
+"acetyl CoA, NAD+, ATP, and CO2"
+],
+"a": 2,
+"e": "피루브산 산화의 산물은 아세틸 CoA, NADH, CO2이다."
+},
+{
+"id": "10-16",
+"ch": "10",
+"n": 16,
+"q": "Which one of the following is formed by the removal of a carbon (as CO2) from a molecule of pyruvate?",
+"o": [
+"ATP",
+"acetyl CoA",
+"citrate",
+"water"
+],
+"a": 1,
+"e": "피루브산에서 CO2가 빠지면 아세틸 CoA가 만들어진다."
+},
+{
+"id": "10-17",
+"ch": "10",
+"n": 17,
+"q": "Which of the following events takes place in the electron transport chain?",
+"o": [
+"the breakdown of glucose into six carbon dioxide molecules",
+"the breakdown of an acetyl group to carbon dioxide",
+"the harnessing of energy from high-energy electrons derived from glycolysis and the citric acid cycle",
+"substrate-level phosphorylation"
+],
+"a": 2,
+"e": "전자 전달계는 해당과정과 시트르산 회로에서 온 고에너지 전자의 에너지를 이용한다."
+},
+{
+"id": "10-18",
+"ch": "10",
+"n": 18,
+"q": "Which of the following statements about the electron transport chain is true?",
+"o": [
+"It is driven by ATP hydrolysis.",
+"It includes a series of hydrolysis reactions associated with mitochondrial membranes.",
+"It consists of a series of redox reactions.",
+"It occurs in the cytoplasm of both prokaryotic and eukaryotic cells."
+],
+"a": 2,
+"e": "전자 전달계는 일련의 산화·환원 반응이다."
+},
+{
+"id": "10-19",
+"ch": "10",
+"n": 19,
+"q": "Which of the following processes is driven by chemiosmosis?",
+"o": [
+"substrate-level phosphorylation",
+"oxidative phosphorylation",
+"ATP hydrolysis",
+"reduction of NAD+ to NADH"
+],
+"a": 1,
+"e": "화학삼투가 산화적 인산화를 일으킨다."
+},
+{
+"id": "10-20",
+"ch": "10",
+"n": 20,
+"q": "Which of the following sequences describes the path by which electrons travel downhill energetically in aerobic respiration?",
+"o": [
+"glucose → NADH → electron transport chain → oxygen",
+"glucose → pyruvate → ATP → oxygen",
+"glucose → pyruvate → electron transport chain → NADH → ATP",
+"food → glycolysis → citric acid cycle → NADH → ATP"
+],
+"a": 0,
+"e": "전자는 포도당에서 NADH, 전자 전달계를 거쳐 산소로 간다."
+},
+{
+"id": "10-21",
+"ch": "10",
+"n": 21,
+"q": "Where are the proteins of the electron transport chain located?",
+"o": [
+"mitochondrial outer membrane",
+"mitochondrial inner membrane",
+"mitochondrial intermembrane space",
+"mitochondrial matrix"
+],
+"a": 1,
+"e": "전자 전달계 단백질은 미토콘드리아 내막에 있다."
+},
+{
+"id": "10-22",
+"ch": "10",
+"n": 22,
+"q": "Which of the following statements best describes the primary role played by oxygen in cellular respiration?",
+"o": [
+"It yields energy in the form of ATP as it is passed down the electron transport chain.",
+"It oxidizes glucose to form two molecules of pyruvate.",
+"It serves as an acceptor for carbon, forming CO2 in the citric acid cycle.",
+"It serves as the final acceptor for electrons from the electron transport chain."
+],
+"a": 3,
+"e": "산소는 전자 전달계의 최종 전자 수용체이다."
+},
+{
+"id": "10-23",
+"ch": "10",
+"n": 23,
+"q": "In chemiosmosis, what is the most direct source of energy that is used to convert ADP + Pi to ATP?",
+"o": [
+"energy released as electrons flow through the electron transport chain",
+"energy released from substrate-level phosphorylation",
+"energy released from movement of protons through ATP synthase, down their electrochemical gradient",
+"energy released as electrons are transported across the inner mitochondrial membrane"
+],
+"a": 2,
+"e": "ATP 합성효소를 통해 양성자가 전기화학적 기울기를 따라 이동할 때 나오는 에너지를 쓴다."
+},
+{
+"id": "10-24",
+"ch": "10",
+"n": 24,
+"q": "Energy released by the electron transport chain is used to pump H+ ions into which location in eukaryotic cells?",
+"o": [
+"cytoplasm adjacent to the mitochondrial outer membrane",
+"mitochondrial inner membrane",
+"mitochondrial intermembrane space",
+"mitochondrial matrix"
+],
+"a": 2,
+"e": "H+는 막 사이 공간으로 퍼 올려진다."
+},
+{
+"id": "10-25",
+"ch": "10",
+"n": 25,
+"q": "Which of the following processes generates a proton-motive force in mitochondria?",
+"o": [
+"the flow of protons through ATP synthase down their concentration gradient",
+"the reduction of NAD+ by the first electron carrier in the electron transport chain",
+"lowering of pH in the mitochondrial matrix",
+"pumping of hydrogen ions from the mitochondrial matrix across the inner membrane and into the intermembrane space"
+],
+"a": 3,
+"e": "기질에서 막 사이 공간으로 H+를 퍼 올려 양성자 구동력이 생긴다."
+},
+{
+"id": "10-26",
+"ch": "10",
+"n": 26,
+"q": "Exposing inner mitochondrial membranes to ultrasonic vibrations will disrupt the membranes. However, the fragments will reseal \"inside out.\" The little vesicles that result can still transfer electrons from NADH to oxygen and synthesize ATP. After the disruption, which components involved in oxidative phosphorylation must be present for electron transfer and ATP synthesis to still occur?",
+"o": [
+"only the electron transport system",
+"only the ATP synthase system",
+"all of the electron transport system and the proteins that add CoA to acetyl groups",
+"all of the electron transport system and ATP synthase"
+],
+"a": 3,
+"e": "전자 전달계 전체와 ATP 합성효소가 모두 있어야 한다."
+},
+{
+"id": "10-27",
+"ch": "10",
+"n": 27,
+"q": "What kinds of cells carry out ATP synthesis by chemiosmosis?",
+"o": [
+"all cells, both prokaryotic and eukaryotic, exclusively using oxygen as the electron acceptor",
+"only animal cells in mitochondria, exclusively using oxygen as the electron acceptor",
+"only eukaryotic cells, both plant and animal, using either oxygen or other electron acceptors",
+"all respiring cells, both prokaryotic and eukaryotic, using either oxygen or other electron acceptors"
+],
+"a": 3,
+"e": "호흡하는 모든 세포(원핵, 진핵)가 산소 또는 다른 전자 수용체로 화학삼투를 한다."
+},
+{
+"id": "10-28",
+"ch": "10",
+"n": 28,
+"q": "In the absence of oxygen, yeast cells can obtain energy by fermentation, which results in the production of which of the following sets of molecules?",
+"o": [
+"ATP, CO2, and ethanol (ethyl alcohol)",
+"ATP, CO2, and lactate",
+"ATP, NADH, and ethanol",
+"ATP, CO2, and acetyl CoA"
+],
+"a": 0,
+"e": "효모의 발효 산물은 ATP, CO2, 에탄올이다."
+},
+{
+"id": "10-29",
+"ch": "10",
+"n": 29,
+"q": "Which of the following statements describes a primary function of both alcohol fermentation and lactic acid fermentation?",
+"o": [
+"reduction of NAD+ to NADH",
+"reduction of FAD to FADH2",
+"oxidation of NADH to NAD+",
+"hydrolysis of ATP to ADP + Pi"
+],
+"a": 2,
+"e": "두 발효 모두 NADH를 NAD+로 산화시켜 해당과정이 계속되게 한다."
+},
+{
+"id": "10-30",
+"ch": "10",
+"n": 30,
+"q": "An organism is discovered that thrives in both the presence and absence of oxygen. Interestingly, as oxygen is removed from the organism's environment, the rate of sugar consumption increases while the growth rate decreases. What do these observations suggest about the likely identity of this organism?",
+"o": [
+"It is an unremarkable eukaryotic organism.",
+"It is a photosynthetic organism.",
+"It is an obligate anaerobic organism.",
+"It is a facultative anaerobic organism."
+],
+"a": 3,
+"e": "산소 유무에 관계없이 사는 통성 혐기성 생물이다."
+},
+{
+"id": "10-31",
+"ch": "10",
+"n": 31,
+"q": "What is the oxidizing agent in the following reaction?\nPyruvate + NADH + H+ → Lactate + NAD+",
+"o": [
+"NADH",
+"NAD+",
+"lactate",
+"pyruvate"
+],
+"a": 3,
+"e": "전자를 받아 환원되는 피루브산이 산화제이다."
+},
+{
+"id": "10-32",
+"ch": "10",
+"n": 32,
+"q": "High levels of citric acid inhibit the enzyme phosphofructokinase, a key enzyme in glycolysis. Citric acid binds to the enzyme at a different location from the active site. This is an example of ______.",
+"o": [
+"competitive inhibition",
+"allosteric regulation",
+"the specificity of enzymes for their substrates",
+"positive feedback regulation"
+],
+"a": 1,
+"e": "활성 부위가 아닌 곳에 결합하는 조절은 알로스테릭 조절이다."
+},
+{
+"id": "10-33",
+"ch": "10",
+"n": 33,
+"q": "The enzyme phosphofructokinase (PFK) catalyzes a key step in glycolysis. PFK is inhibited by high levels of which of the following molecules?",
+"o": [
+"glucose and NAD+",
+"AMP and ATP",
+"ATP and citrate",
+"citrate and CO2"
+],
+"a": 2,
+"e": "PFK는 ATP와 시트르산이 많을 때 억제된다."
+},
+{
+"id": "10-34",
+"ch": "10",
+"n": 34,
+"q": "Fatty acids usually have an even number of carbons in their structures. Catabolism of fatty acids produces two-carbon fragments that are converted to acetyl CoA molecules. What is the most likely way in which these acetyl CoA molecules would be metabolized in aerobic cellular respiration?",
+"o": [
+"They would directly enter the electron transport chain.",
+"They would directly enter the energy-yielding phase of glycolysis.",
+"They would be converted to pyruvate and then undergo pyruvate oxidation upon transport into mitochondria.",
+"They would directly enter the citric acid cycle."
+],
+"a": 3,
+"e": "지방산에서 만든 아세틸 CoA는 시트르산 회로로 바로 들어간다."
+},
+{
+"id": "11-1",
+"ch": "11",
+"n": 1,
+"q": "The oxygen released by photosynthesis is produced by which of the following processes?",
+"o": [
+"splitting water molecules",
+"chemiosmosis",
+"the electron transfer system of photosystem I",
+"the electron transfer system of photosystem II"
+],
+"a": 0,
+"e": "광합성에서 나오는 산소는 물이 분해될 때 생긴다."
+},
+{
+"id": "11-2",
+"ch": "11",
+"n": 2,
+"q": "The figure shows the absorption spectrum for chlorophyll a and the action spectrum for photosynthesis. Why are they different?",
+"o": [
+"Green and yellow wavelengths inhibit the absorption of red and blue wavelengths.",
+"Oxygen given off during photosynthesis interferes with the absorption of light.",
+"Other pigments absorb light in addition to chlorophyll a.",
+"Aerobic bacteria take up oxygen, which changes the measurement of the rate of photosynthesis."
+],
+"a": 2,
+"e": "엽록소 a 외의 다른 색소도 빛을 흡수하기 때문에 작용 스펙트럼이 흡수 스펙트럼과 다르다.",
+"fig": "fig_ch11_spectrum.png"
+},
+{
+"id": "11-3",
+"ch": "11",
+"n": 3,
+"q": "Theodor W. Engelmann illuminated a filament of algae with light that passed through a prism, thus exposing different segments of algae to different wavelengths of light. He added aerobic bacteria and then noted in which areas the bacteria congregated. He noted that the largest groups were found in the areas illuminated by the red and blue light. Which of the following statements describes a relationship that Engelmann's experiment helped to determine?",
+"o": [
+"the relationship between wavelength of light and the rate of aerobic respiration",
+"the relationship between wavelength of light and the amount of heat released",
+"the relationship between wavelength of light and the rate of photosynthesis",
+"the relationship between carbon dioxide concentration and the rate of photosynthesis"
+],
+"a": 2,
+"e": "세균이 모인 곳은 산소가 많이 나오는 곳, 즉 광합성이 활발한 파장이다."
+},
+{
+"id": "11-4",
+"ch": "11",
+"n": 4,
+"q": "Which of the following events accompanies absorption of energy by chlorophyll molecules of the reaction-center complex?",
+"o": [
+"ATP is synthesized from the energy absorbed.",
+"An electron is excited.",
+"NADP+ is reduced to NADPH.",
+"A molecule of water is split."
+],
+"a": 1,
+"e": "반응 중심 엽록소가 빛을 흡수하면 전자가 들뜬다."
+},
+{
+"id": "11-5",
+"ch": "11",
+"n": 5,
+"q": "What happens to the free energy released as electrons are passed from photosystem II to photosystem I through a series of electron carriers?",
+"o": [
+"It excites electrons of the reaction center in photosystem I.",
+"It is used to establish and maintain a proton gradient.",
+"It is used to synthesize ATP through substrate-level phosphorylation.",
+"It is used to phosphorylate NAD+ to NADPH."
+],
+"a": 1,
+"e": "전자 전달 중 나온 에너지로 양성자 기울기를 만든다."
+},
+{
+"id": "11-6",
+"ch": "11",
+"n": 6,
+"q": "Which molecule is the final electron acceptor for electrons from photosystem I?",
+"o": [
+"oxygen",
+"chlorophyll in photosystem II",
+"carbon dioxide",
+"NADP+"
+],
+"a": 3,
+"e": "광계 I의 전자는 NADP+로 전달된다."
+},
+{
+"id": "11-7",
+"ch": "11",
+"n": 7,
+"q": "What is the function of the pigment molecules in a light-harvesting complex in the thylakoid membranes?",
+"o": [
+"They split water and release oxygen from the reaction-center chlorophyll.",
+"They absorb and transfer light energy to the reaction-center chlorophyll.",
+"They synthesize ATP from ADP and Pi.",
+"They transfer electrons to NADP+."
+],
+"a": 1,
+"e": "집광 복합체의 색소는 빛에너지를 흡수해 반응 중심 엽록소로 전달한다."
+},
+{
+"id": "11-8",
+"ch": "11",
+"n": 8,
+"q": "Which of the following processes is directly associated with photosystem I?",
+"o": [
+"receiving electrons from the thylakoid membrane electron transport chain",
+"generation of molecular oxygen",
+"extraction of hydrogen electrons from the splitting of water",
+"passing electrons to NADP+"
+],
+"a": 3,
+"e": "광계 I은 전자를 NADP+에 전달한다."
+},
+{
+"id": "11-9",
+"ch": "11",
+"n": 9,
+"q": "Some photosynthetic organisms contain chloroplasts that lack photosystem II, yet are able to survive. Which of the following approaches would be the best way to detect the lack of photosystem II in these organisms?",
+"o": [
+"Determine whether they have thylakoid membranes.",
+"Determine whether they consume CO2 in the dark.",
+"Determine whether they produce O2 in the light.",
+"Determine the action spectrum for photosynthesis in these organisms."
+],
+"a": 2,
+"e": "광계 II가 없으면 물을 분해하지 못해 빛을 받아도 O2가 나오지 않는다."
+},
+{
+"id": "11-10",
+"ch": "11",
+"n": 10,
+"q": "What are the products of linear electron flow during the light reactions of photosynthesis?",
+"o": [
+"heat and fluorescence",
+"ATP and P700",
+"ATP and NADPH",
+"ADP and NADP+"
+],
+"a": 2,
+"e": "비순환 전자 흐름의 산물은 ATP와 NADPH이다."
+},
+{
+"id": "11-11",
+"ch": "11",
+"n": 11,
+"q": "What are the products of cyclic electron flow during the light reactions of photosynthesis?",
+"o": [
+"heat and fluorescence",
+"ATP",
+"ATP and NADPH",
+"ADP and NADP+"
+],
+"a": 1,
+"e": "순환 전자 흐름은 ATP만 만든다."
+},
+{
+"id": "11-12",
+"ch": "11",
+"n": 12,
+"q": "Which of the following processes would be most directly affected if a thylakoid membrane is punctured so that the interior of the thylakoid is no longer separated from the stroma?",
+"o": [
+"splitting of water",
+"flow of electrons from photosystem II to photosystem I",
+"synthesis of ATP",
+"reduction of NADP+"
+],
+"a": 2,
+"e": "양성자 기울기가 사라져 ATP 합성이 가장 직접적으로 영향을 받는다."
+},
+{
+"id": "11-13",
+"ch": "11",
+"n": 13,
+"q": "Where are ATP synthase complexes located in plant cells?",
+"o": [
+"thylakoid membrane only",
+"inner mitochondrial membrane only",
+"thylakoid membrane and inner mitochondrial membrane",
+"thylakoid membrane and plasma membrane"
+],
+"a": 2,
+"e": "식물 세포에서는 틸라코이드 막과 미토콘드리아 내막에 있다."
+},
+{
+"id": "11-14",
+"ch": "11",
+"n": 14,
+"q": "In mitochondria, an electron transport chain pumps protons from the matrix into the intermembrane space, whereas in chloroplasts, an electron transport chain pumps protons from the ______.",
+"o": [
+"matrix to the stroma",
+"stroma to the thylakoid space",
+"thylakoid space to the matrix",
+"thylakoid space to the stroma"
+],
+"a": 1,
+"e": "엽록체에서는 스트로마에서 틸라코이드 내부로 H+를 퍼 올린다."
+},
+{
+"id": "11-15",
+"ch": "11",
+"n": 15,
+"q": "Which of the following events are associated with chemiosmosis in chloroplasts?",
+"o": [
+"The pH of the stroma increases and ATP is synthesized.",
+"The pH of the thylakoid space increases and ATP is synthesized.",
+"The pH of the cytoplasm outside the chloroplast decreases and ATP is synthesized.",
+"The pH of the stroma decreases and ATP is hydrolyzed."
+],
+"a": 0,
+"e": "H+가 스트로마에서 빠져나가 스트로마의 pH가 오르고 ATP가 합성된다."
+},
+{
+"id": "11-16",
+"ch": "11",
+"n": 16,
+"q": "In photosynthetic cells, synthesis of ATP by chemiosmosis occurs during ______.",
+"o": [
+"photosynthesis only",
+"respiration only",
+"photosynthesis and respiration",
+"photosynthesis, respiration, and fermentation"
+],
+"a": 2,
+"e": "광합성 세포는 광합성과 호흡 모두에서 화학삼투로 ATP를 만든다."
+},
+{
+"id": "11-17",
+"ch": "11",
+"n": 17,
+"q": "P680+ is said to be the strongest biological oxidizing agent. Given its function, why is this necessary?",
+"o": [
+"It is the receptor for the most excited electron in either photosystem of photosynthesis.",
+"It is the molecule that transfers electrons to plastoquinone (Pq) of the electron transfer system.",
+"It transfers its electrons to reduce NADP+ to NADPH.",
+"It obtains electrons from the oxygen atom in a water molecule, so it must have a stronger attraction for electrons than oxygen has."
+],
+"a": 3,
+"e": "물의 산소에서 전자를 빼앗아 오려면 산소보다 전자를 더 강하게 끌어당겨야 한다."
+},
+{
+"id": "11-18",
+"ch": "11",
+"n": 18,
+"q": "Carotenoids are often found in foods that are considered to have antioxidant properties in human nutrition. What related function do they have in plants?",
+"o": [
+"They serve as accessory pigments to increase light absorption.",
+"They protect against oxidative damage from excessive light energy.",
+"They shield the sensitive chromosomes of the plant from harmful ultraviolet radiation.",
+"They reflect orange light and enhance red light absorption by chlorophyll."
+],
+"a": 1,
+"e": "카로티노이드는 과도한 빛에너지로 인한 산화 손상을 막는다.",
+"low": 1
+},
+{
+"id": "11-19",
+"ch": "11",
+"n": 19,
+"q": "Which of the following processes is most directly driven by light energy?",
+"o": [
+"creation of a pH gradient by pumping protons across the thylakoid membrane",
+"carbon fixation in the stroma",
+"reduction of NADP+ molecules",
+"removal of electrons from chlorophyll molecules"
+],
+"a": 3,
+"e": "빛에너지가 직접 하는 일은 엽록소에서 전자를 떼어 내는 것이다."
+},
+{
+"id": "11-20",
+"ch": "11",
+"n": 20,
+"q": "Where in a plant cell does the Calvin cycle take place?",
+"o": [
+"stroma of the chloroplast",
+"thylakoid membrane",
+"interior of the thylakoid (thylakoid space)",
+"outer membrane of the chloroplast"
+],
+"a": 0,
+"e": "캘빈 회로는 엽록체 스트로마에서 일어난다."
+},
+{
+"id": "11-21",
+"ch": "11",
+"n": 21,
+"q": "In the initial step in carbon fixation, a molecule of CO2 is attached to RuBP to produce a six-carbon molecule, which is immediately split to produce two molecules of 3-phosphoglycerate. After phosphorylation and reduction produces glyceraldehyde 3-phosphate (G3P), what more needs to occur to complete the Calvin cycle?",
+"o": [
+"addition of a pair of electrons from NADPH",
+"regeneration of ATP from ADP",
+"regeneration of RuBP",
+"regeneration of NADP+"
+],
+"a": 2,
+"e": "회로를 완성하려면 CO2를 받을 RuBP를 재생해야 한다."
+},
+{
+"id": "11-22",
+"ch": "11",
+"n": 22,
+"q": "Which of the following sequences correctly represents the flow of electrons during photosynthesis?",
+"o": [
+"NADPH → O2 → CO2",
+"H2O → NADPH → Calvin cycle",
+"NADPH → chlorophyll → Calvin cycle",
+"NADPH → electron transport chain → O2"
+],
+"a": 1,
+"e": "전자는 H2O에서 NADPH를 거쳐 캘빈 회로로 간다."
+},
+{
+"id": "11-23",
+"ch": "11",
+"n": 23,
+"q": "The reducing power for Calvin cycle reactions is provided by which of the following molecules?",
+"o": [
+"ATP",
+"NADH",
+"NADP+",
+"NADPH"
+],
+"a": 3,
+"e": "캘빈 회로의 환원력은 NADPH가 제공한다."
+},
+{
+"id": "11-24",
+"ch": "11",
+"n": 24,
+"q": "Why are C4 plants able to photosynthesize with no apparent photorespiration?",
+"o": [
+"They do not participate in the Calvin cycle.",
+"They use PEP carboxylase to initially fix CO2.",
+"They conserve water more efficiently.",
+"They exclude oxygen from their tissues."
+],
+"a": 1,
+"e": "PEP 카르복실화효소는 산소와 반응하지 않아 광호흡이 거의 없다."
+},
+{
+"id": "11-25",
+"ch": "11",
+"n": 25,
+"q": "CAM plants keep stomata closed in the daytime, thus reducing loss of water. They can do this because they ______.",
+"o": [
+"fix CO2 into organic acids during the night",
+"fix CO2 into sugars in the bundle-sheath cells",
+"fix CO2 into pyruvate in the mesophyll cells",
+"use photosystem I and photosystem II at night"
+],
+"a": 0,
+"e": "CAM 식물은 밤에 CO2를 유기산으로 고정해 둔다."
+},
+{
+"id": "11-26",
+"ch": "11",
+"n": 26,
+"q": "Why might the alternative pathways of photosynthesis using C4 or CAM systems be described as metabolic compromises?",
+"o": [
+"Both pathways increase the rate of photosynthesis but also increase the rate of water loss.",
+"The CAM pathway allows more CO2 into the plant but also increases the rate of water loss.",
+"The C4 pathway decreases water loss but also increases the rate of photorespiration.",
+"Both pathways minimize photorespiration but also expend more ATP during carbon fixation."
+],
+"a": 3,
+"e": "두 경로 모두 광호흡을 줄이지만 CO2 고정에 ATP를 더 쓴다."
+},
+{
+"id": "11-27",
+"ch": "11",
+"n": 27,
+"q": "Compared to C3 plants, C4 plants ______.",
+"o": [
+"can continue to fix CO2 even at lower CO2 concentrations and higher oxygen concentrations",
+"have higher rates of photorespiration",
+"do not use rubisco for carbon fixation",
+"make a four-carbon compound, oxaloacetate, which is then delivered to the citric acid cycle in mitochondria"
+],
+"a": 0,
+"e": "C4 식물은 낮은 CO2, 높은 O2 조건에서도 CO2를 고정할 수 있다."
+},
+{
+"id": "11-28",
+"ch": "11",
+"n": 28,
+"q": "How is photosynthesis similar in C4 plants and CAM plants?",
+"o": [
+"In both cases, only photosystem I is used.",
+"Both types of plants make sugar without the Calvin cycle.",
+"In both cases, rubisco is not used to fix carbon initially.",
+"Both types of plants make most of their sugar in the dark."
+],
+"a": 2,
+"e": "두 경우 모두 처음에는 루비스코가 아닌 PEP 카르복실화효소가 CO2를 고정한다."
+},
+{
+"id": "12-1",
+"ch": "12",
+"n": 1,
+"q": "What is the name of the microtubule-organizing center found in animal cells as an identifiable structure present during all phases of the cell cycle?",
+"o": [
+"centriole",
+"centrosome",
+"centromere",
+"kinetochore"
+],
+"a": 1,
+"e": "동물세포의 미세소관 형성 중심은 중심체(centrosome)이다."
+},
+{
+"id": "12-2",
+"ch": "12",
+"n": 2,
+"q": "The mitotic spindle plays a critical role in which of the following processes?",
+"o": [
+"splitting of the cell (cytokinesis) following mitosis",
+"triggering the compaction and condensation of chromosomes",
+"dissolving the nuclear membrane",
+"separation of sister chromatids"
+],
+"a": 3,
+"e": "방추사는 자매 염색분체를 분리한다."
+},
+{
+"id": "12-3",
+"ch": "12",
+"n": 3,
+"q": "Metaphase is characterized by ______.",
+"o": [
+"alignment of chromosomes on the equator of the cell",
+"separation of the centromeres",
+"cytokinesis",
+"separation of sister chromatids"
+],
+"a": 0,
+"e": "중기에는 염색체가 세포 적도판에 배열된다."
+},
+{
+"id": "12-4",
+"ch": "12",
+"n": 4,
+"q": "How is plant cell cytokinesis different from animal cell cytokinesis?",
+"o": [
+"The contractile filaments found in plant cells are structures composed of carbohydrates; the cleavage furrow in animal cells is composed of contractile proteins.",
+"Plant cells deposit vesicles containing cell wall building blocks on the metaphase plate; animal cells form a cleavage furrow.",
+"The structural proteins of plant cells separate the two cells; in animal cells, a cell membrane separates the two daughter cells.",
+"Plant cells divide after metaphase but before anaphase; animal cells divide after anaphase."
+],
+"a": 1,
+"e": "식물세포는 세포판을 만들고 동물세포는 분열구를 만든다."
+},
+{
+"id": "12-5",
+"ch": "12",
+"n": 5,
+"q": "Movement of the chromosomes during anaphase would be most affected by a drug that prevents which of the following events in mitosis and cell division?",
+"o": [
+"nuclear envelope breakdown",
+"elongation of microtubules",
+"shortening of microtubules",
+"formation of a cleavage furrow"
+],
+"a": 2,
+"e": "후기에는 동원체 미세소관이 짧아지면서 염색체가 이동한다."
+},
+{
+"id": "12-6",
+"ch": "12",
+"n": 6,
+"q": "During which phase of mitosis do the chromatids become chromosomes?",
+"o": [
+"telophase",
+"anaphase",
+"prophase",
+"metaphase"
+],
+"a": 1,
+"e": "자매 염색분체가 분리되면 각각 독립된 염색체가 되므로 후기이다. (전기라고 보는 자료도 있어 확인이 필요함)",
+"low": 1
+},
+{
+"id": "12-7",
+"ch": "12",
+"n": 7,
+"q": "Which of the following events occurs during interphase of the cell cycle?",
+"o": [
+"condensation of the chromosomes",
+"separation of the spindle poles",
+"spindle formation",
+"replication of the DNA"
+],
+"a": 3,
+"e": "DNA 복제는 간기(S기)에 일어난다."
+},
+{
+"id": "12-8",
+"ch": "12",
+"n": 8,
+"q": "What two components constitute an active MPF?",
+"o": [
+"a growth factor and mitotic factor",
+"ATP synthetase and a protease",
+"cyclin and tubulin",
+"cyclin and a cyclin-dependent kinase"
+],
+"a": 3,
+"e": "활성 MPF는 사이클린과 Cdk로 이루어진다."
+},
+{
+"id": "12-9",
+"ch": "12",
+"n": 9,
+"q": "What would you expect to happen if MPF (maturation-promoting factor) is introduced into immature frog oocytes that are arrested in G2?",
+"o": [
+"The cells would remain arrested in G2.",
+"The cells would enter G0.",
+"The cells would enter mitosis.",
+"The cells would begin DNA synthesis."
+],
+"a": 2,
+"e": "MPF가 들어가면 G2에서 멈춘 세포가 M기로 들어간다."
+},
+{
+"id": "12-10",
+"ch": "12",
+"n": 10,
+"q": "Once a cell enters mitosis, the molecules that activate division must be turned off. What happens to MPF during mitosis?",
+"o": [
+"It is completely degraded.",
+"It is phosphorylated by a Cdk, which inactivates it.",
+"The cyclin component of MPF is degraded.",
+"The Cdk component of MPF is degraded."
+],
+"a": 2,
+"e": "사이클린이 분해되어 MPF가 비활성화된다."
+},
+{
+"id": "12-11",
+"ch": "12",
+"n": 11,
+"q": "Which of the following molecules triggers the cell's passage past the G2 checkpoint into mitosis?",
+"o": [
+"PDGF",
+"MPF",
+"cyclin",
+"Cdk"
+],
+"a": 1,
+"e": "MPF가 G2 검문점을 통과시켜 M기로 들어가게 한다."
+},
+{
+"id": "12-12",
+"ch": "12",
+"n": 12,
+"q": "Density-dependent inhibition is explained by which of the following processes?",
+"o": [
+"As cells become more numerous, they begin to squeeze against each other, restricting their size.",
+"As cells become more numerous, the cell surface proteins of one cell contact the adjoining cells, and they signal each other to stop dividing.",
+"As cells become more numerous, the protein kinases they produce begin to compete with each other, such that the proteins produced by one cell essentially cancel those produced by its neighbor.",
+"As cells become more numerous, the level of waste products increases, which slows metabolism and inhibits growth."
+],
+"a": 1,
+"e": "세포 표면 단백질이 이웃 세포와 접촉하면 서로 분열을 멈추라는 신호를 보낸다."
+},
+{
+"id": "12-13",
+"ch": "12",
+"n": 13,
+"q": "Cells from advanced malignant tumors often have very abnormal chromosomes and an abnormal number of chromosomes. What might explain the association between malignant tumors and chromosomal abnormalities?",
+"o": [
+"Cancer cells are no longer density-dependent.",
+"Cancer cells are no longer anchorage-dependent.",
+"Cell cycle checkpoints are not in place to stop cells with chromosome abnormalities.",
+"Transformation introduces new chromosomes into cells."
+],
+"a": 2,
+"e": "세포주기 검문점이 작동하지 않아 염색체 이상이 있는 세포도 분열한다."
+}
+];
+
+let mMode = "essay", mChap = "전체", mOrder = [], mPos = 0, mOnlyWrong = false;
+const mFind = id => MCQ.find(q=>q.id===id);
+function mRebuild(keep){
+  let idx = MCQ.filter(q => mChap==="전체" || q.ch===mChap);
+  if(mOnlyWrong) idx = idx.filter(q => mstore[q.id] && mstore[q.id].ok===false);
+  mOrder = idx.map(q=>q.id);
+  if(keep===2) mOrder.sort(()=>Math.random()-.5);
+  if(keep!==true) mPos = 0;
+  if(mPos>=mOrder.length) mPos = 0;
+  mRender();
+}
+function mRender(){
+  // chapters
+  const cb = $("mChapters"); cb.innerHTML = "";
+  [{id:"전체",label:"전체"}, ...MCQ_CHAPTERS].forEach(c=>{
+    const b = document.createElement("button"); b.className = "chip"+(c.id===mChap?" on":""); b.textContent = c.label;
+    b.onclick = ()=>{ mChap=c.id; mRebuild(); }; cb.appendChild(b);
+  });
+  const all = MCQ.filter(q => mChap==="전체" || q.ch===mChap);
+  const done = all.filter(q=>mstore[q.id]).length, ok = all.filter(q=>mstore[q.id] && mstore[q.id].ok).length;
+  $("mStats").innerHTML = `<span>전체 <b>${all.length}</b></span><span>푼 문제 <b>${done}</b></span><span>맞음 <b style="color:var(--ok)">${ok}</b></span><span>틀림 <b style="color:var(--bad)">${done-ok}</b></span>`;
+  const nav = $("mNav"); nav.innerHTML = "";
+  mOrder.forEach((id,p)=>{
+    const q = mFind(id), r = mstore[id];
+    const b = document.createElement("button");
+    b.textContent = mChap==="전체" ? q.ch+"-"+q.n : q.n;
+    b.className = (r ? (r.ok?"ok":"bad") : "") + (p===mPos?" cur":"");
+    b.onclick = ()=>{ mPos=p; mRender(); }; nav.appendChild(b);
+  });
+  $("mWrongOnly").style.borderColor = mOnlyWrong ? "var(--accent)" : "";
+  const card = $("mCard");
+  if(!mOrder.length){ card.innerHTML = '<p class="q">해당하는 문제가 없어요.</p>'; $("mPrev").disabled = $("mNext").disabled = true; return; }
+  $("mPrev").disabled = mPos===0; $("mNext").disabled = mPos===mOrder.length-1;
+  const q = mFind(mOrder[mPos]), r = mstore[q.id], L = "ABCDE";
+  let h = `<div class="meta"><span class="tag">${esc(MCQ_CHAPTERS.find(c=>c.id===q.ch).label)} ${q.n}번</span><span>${mPos+1} / ${mOrder.length}</span></div>`;
+  h += `<p class="q">${esc(q.q)}</p>`;
+  if(q.fig) h += `<img class="qfig" src="${q.fig}" alt="문제 그림" loading="lazy">`;
+  h += '<div class="opts">';
+  q.o.forEach((t,k)=>{
+    let cls = "opt";
+    if(r){ if(k===q.a) cls+=" right"; else if(k===r.a) cls+=" wrong"; }
+    h += `<button type="button" class="${cls}" data-k="${k}"${r?" disabled":""}><b>${L[k]}</b><span>${esc(t)}</span></button>`;
+  });
+  h += '</div>';
+  if(r){
+    h += `<div class="mexp"><b style="color:var(--${r.ok?"ok":"bad"})">${r.ok?"정답!":"오답"}</b> 정답은 <b>${L[q.a]}</b>예요. ${esc(q.e)}${q.low?'<span class="low">※ 이 문제는 제가 푼 답에 확신이 낮아요. 선생님 답과 꼭 확인해 보세요.</span>':""}</div>`;
+    h += '<div class="row"><button class="btn ghost sm" id="mRetry">다시 풀기</button></div>';
+  }
+  card.innerHTML = h;
+  card.querySelectorAll(".opt").forEach(b=>b.onclick = ()=>{
+    mstore[q.id] = {a:+b.dataset.k, ok:+b.dataset.k===q.a}; save(); mRender();
+  });
+  const rt = $("mRetry"); if(rt) rt.onclick = ()=>{ delete mstore[q.id]; save(); mRender(); };
+}
+$("mPrev").onclick = ()=>{ if(mPos>0){mPos--; mRender();} };
+$("mNext").onclick = ()=>{ if(mPos<mOrder.length-1){mPos++; mRender();} };
+$("mShuffle").onclick = ()=>mRebuild(2);
+$("mWrongOnly").onclick = ()=>{ mOnlyWrong=!mOnlyWrong; mRebuild(); };
+$("mReset").onclick = ()=>{
+  const t = mChap==="전체" ? "전체" : mChap+"장";
+  if(!confirm(t+" 객관식 풀이 기록을 지울까요?")) return;
+  MCQ.forEach(q=>{ if(mChap==="전체"||q.ch===mChap) delete mstore[q.id]; });
+  save(); mRebuild();
+};
+function setMode(m){
+  mMode = m;
+  $("essayPane").hidden = m!=="essay"; $("mcqPane").hidden = m!=="mcq";
+  document.querySelectorAll("#modeTabs button").forEach(b=>b.classList.toggle("on", b.dataset.m===m));
+  try{ localStorage.setItem("quizMode", m); }catch(e){}
+  if(m==="mcq") mRebuild(true);
+}
+document.querySelectorAll("#modeTabs button").forEach(b=>b.onclick=()=>setMode(b.dataset.m));
+mRebuild();
+try{ if(localStorage.getItem("quizMode")==="mcq") setMode("mcq"); }catch(e){}
+
 (function(){
   const btn=document.getElementById("themeBtn"); if(!btn) return;
   const isDark=()=>document.documentElement.dataset.theme==="dark";
@@ -765,9 +2377,9 @@ if (firebaseConfig.apiKey !== "YOUR_API_KEY") {
     const ref = doc(db, "users", user.uid);
     bar.innerHTML = '<span>' + (user.displayName || "로그인됨").replace(/[<>&]/g,"") + ' · 기록 자동 저장 중</span><button class="btn ghost" id="logout">로그아웃</button>';
     document.getElementById("logout").onclick = () => signOut(auth);
-    let progress = null;
-    try { const snap = await getDoc(ref); if (snap.exists()) progress = snap.data().progress; } catch(e) {}
-    connectRemote(progress, obj => setDoc(ref, obj, { merge: true }));
+    let progress = null, mcq = null;
+    try { const snap = await getDoc(ref); if (snap.exists()) { progress = snap.data().progress; mcq = snap.data().mcq; } } catch(e) {}
+    connectRemote(progress, obj => setDoc(ref, obj, { merge: true }), mcq);
   });
 }
 </script>
