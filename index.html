@@ -142,6 +142,9 @@
   :root[data-theme="dark"] .nav button.mid{background:var(--card)}
   :root[data-theme="dark"] .g-ok,:root[data-theme="dark"] .g-mid{color:#17181C!important}
   :root[data-theme="dark"] .card{border-top-color:var(--ink)}
+  .navtoggle{display:inline-flex;align-items:center;gap:6px;margin:0 0 10px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:5px 14px;font:inherit;font-size:13px;font-weight:600;cursor:pointer}
+  .navtoggle i{font-style:normal;font-size:11px;color:var(--sub)}
+  .nav.fold{display:none}
   .tabs{display:flex;gap:0;margin:0 0 16px;border-bottom:2px solid var(--line)}
   .tabs button{border:0;background:transparent;color:var(--sub);font:inherit;font-size:15px;font-weight:700;padding:10px 20px;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px}
   .tabs button.on{color:var(--ink);border-bottom-color:var(--accent)}
@@ -178,7 +181,7 @@
           <span class="label l1">STUDY ONLY</span>
         </div>
         <div class="pw pw2">
-          <a class="polar" href="#bio22"><span class="polar-in"><span class="polar-main"><span class="polar-tag">2-2</span><b>생명 퀴즈 대비</b><small>서술형 30문항 · 5단원, 6단원 · 한국어/English</small></span><span class="polar-go">→</span></span></a>
+          <a class="polar" href="#bio22"><span class="polar-in"><span class="polar-main"><span class="polar-tag">2-2</span><b>생명 퀴즈 대비</b><small>서술형 30문항(신성현T) · 객관식 105문항(김희경T)</small></span><span class="polar-go">→</span></span></a>
           <svg class="smiley" aria-hidden="true" width="66" height="66" viewBox="0 0 100 100"><circle cx="50" cy="50" r="47" fill="#A5271D" stroke="#E9DDD0" stroke-width="5"/><circle cx="50" cy="50" r="38" fill="none" stroke="#7D170F" stroke-width="2" stroke-dasharray="2 5" opacity=".7"/><ellipse cx="36" cy="38" rx="4.5" ry="8" fill="#3A0A07"/><ellipse cx="64" cy="38" rx="4.5" ry="8" fill="#3A0A07"/><path d="M26 58 Q50 84 74 58" fill="none" stroke="#3A0A07" stroke-width="6" stroke-linecap="round"/></svg>
           <span class="label l2">DO NOT SKIP</span>
         </div>
@@ -189,7 +192,7 @@
   <section id="quizView" hidden>
   <div class="crumbrow"><p class="crumb"><a href="#">← 주하연 공부방</a></p><button class="btn ghost sm" id="themeBtn" type="button">어둡게</button></div>
   <h2 class="qtitle">생명 퀴즈 <span>대비</span></h2>
-  <div class="tabs" id="modeTabs"><button type="button" data-m="essay" class="on">서술형</button><button type="button" data-m="mcq">객관식 <small>105</small></button></div>
+  <div class="tabs" id="modeTabs"><button type="button" data-m="essay" class="on">서술형 <small>신성현T</small></button><button type="button" data-m="mcq">객관식 <small>김희경T · 105</small></button></div>
   <div id="essayPane">
   <p class="lead">답을 먼저 직접 써 보고, 핵심 키워드와 모범답안으로 스스로 채점하세요.</p>
   <div class="bar" id="langbar"></div>
@@ -207,7 +210,7 @@
   </div>
   </div>
   <div id="mcqPane" hidden>
-    <p class="lead">희경T 퀴즈 준비 파일의 객관식 문제예요. 선택지를 고르면 바로 채점돼요. 정답은 직접 풀어서 넣은 것이라 틀릴 수 있어요.</p>
+    <p class="lead">김희경T 퀴즈 준비 파일의 객관식 문제예요. 선택지를 고르면 바로 채점돼요. 정답은 직접 풀어서 넣은 것이라 틀릴 수 있어요.</p>
     <div class="bar" id="mChapters"></div>
     <div class="stats" id="mStats"></div>
     <div class="nav" id="mNav"></div>
@@ -2331,6 +2334,22 @@ document.querySelectorAll("#modeTabs button").forEach(b=>b.onclick=()=>setMode(b
 mRebuild();
 try{ if(localStorage.getItem("quizMode")==="mcq") setMode("mcq"); }catch(e){}
 
+
+(function(){
+  let open = false; try{ open = localStorage.getItem("navOpen")==="1"; }catch(e){}
+  const navs = ["nav","mNav"].map(id=>$(id));
+  const btns = navs.map(n=>{
+    const b = document.createElement("button"); b.type="button"; b.className="navtoggle";
+    n.parentNode.insertBefore(b, n); return b;
+  });
+  const apply = ()=>{
+    navs.forEach(n=>n.classList.toggle("fold", !open));
+    btns.forEach(b=>b.innerHTML = "문제 번호 <i>"+(open?"▲ 접기":"▼ 펼치기")+"</i>");
+    try{ localStorage.setItem("navOpen", open?"1":"0"); }catch(e){}
+  };
+  btns.forEach(b=>b.onclick = ()=>{ open=!open; apply(); });
+  apply();
+})();
 (function(){
   const btn=document.getElementById("themeBtn"); if(!btn) return;
   const isDark=()=>document.documentElement.dataset.theme==="dark";
