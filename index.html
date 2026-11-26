@@ -120,6 +120,9 @@
   .pw3{margin-left:8px}
   .pw3 .polar{transform:rotate(1.5deg)} .pw3 .polar:hover{transform:rotate(1.5deg) translateY(-3px)}
   .l3{right:20px;bottom:-14px;transform:rotate(-3deg)}
+  .pw4{margin-left:22px}
+  .pw4 .polar{transform:rotate(-1.8deg)} .pw4 .polar:hover{transform:rotate(-1.8deg) translateY(-3px)}
+  .l4{right:26px;bottom:-14px;transform:rotate(2.5deg)}
   .polar{display:block;background:var(--accent);padding:14px;border-radius:3px;box-shadow:0 16px 26px rgba(0,0,30,.5);position:relative;z-index:1;text-decoration:none;color:var(--ink);transition:transform .15s}
   .pw1 .polar{transform:rotate(2.5deg)} .pw2 .polar{transform:rotate(-3deg)}
   .pw1 .polar:hover{transform:rotate(2.5deg) translateY(-3px)} .pw2 .polar:hover{transform:rotate(-3deg) translateY(-3px)}
@@ -192,6 +195,10 @@
           <a class="polar" href="final.html"><span class="polar-in"><span class="polar-main"><span class="polar-tag">2-2</span><b>기말고사 대비</b><small>10장 세포 호흡 · 11장 광합성 23문항 · 모범답안 준비 중</small></span><span class="polar-go">→</span></span></a>
           <span class="label l3">FINAL</span>
         </div>
+        <div class="pw pw4">
+          <a class="polar" href="history.html"><span class="polar-in"><span class="polar-main"><span class="polar-tag">한국사</span><b>한국사 정리본</b><small>5·18 ~ 임시 정부 7단원 · 서술형 연습 64문항</small></span><span class="polar-go">→</span></span></a>
+          <span class="label l4">HISTORY</span>
+        </div>
       </div>
     </div>
   </section>
@@ -263,7 +270,7 @@ const QUESTIONS = [
    "키틴"
   ],
   "model": "탄수화물은 에너지 저장과 구조 형성에 관여한다. 에너지 저장의 예로 녹말 또는 글리코젠이 있고, 구조 형성의 예로 셀룰로오스 또는 키틴이 있다.",
-  "qe": "4. State two major functions of carbohydrates, and give one example of a polysaccharide for each."
+  "qe": "4. State two major functions of carbohydrates, and give one example of a polysaccharide for each function."
  },
  {
   "ch": "5단원",
@@ -275,7 +282,7 @@ const QUESTIONS = [
    "단당류"
   ],
   "model": "두 단당류가 탈수반응을 통해 글리코시드결합을 형성하여 이당류가 만들어지며, 에너지원으로 이용되기 위해서는 가수분해되어 단당류로 분해되어야 한다.",
-  "qe": "7. Describe how a disaccharide is formed, and what process is needed before it can be used as an energy source."
+  "qe": "7. Explain how a disaccharide is formed, and describe the process required for it to be used as an energy source."
  },
  {
   "ch": "5단원",
@@ -289,7 +296,7 @@ const QUESTIONS = [
    "소화 효소"
   ],
   "model": "아밀로오스는 주로 포도당이 1-4 글리코시드 결합으로 연결된 가지가 없는 구조이고, 아밀로펙틴은 1-4 결합을 기본으로 하면서 1-6 결합에 의해 가지가 형성된 구조이다. 이러한 가지 구조의 차이로 소화 효소가 접근하고 작용할 수 있는 부위의 수가 달라져 소화 효율과 에너지 공급 속도가 달라진다.",
-  "qe": "11. Describe the structural differences between amylose and amylopectin in starch, and explain why these differences affect digestive efficiency."
+  "qe": "11. Explain the structural differences between amylose and amylopectin in starch, and explain why these differences affect digestive efficiency."
  },
  {
   "ch": "5단원",
@@ -316,7 +323,7 @@ const QUESTIONS = [
    "카르복실기"
   ],
   "model": "지방은 1개의 글리세롤과 3개의 지방산으로 구성되며, 글리세롤의 수산기와 지방산의 카르복실기가 에스터 결합을 형성한다.",
-  "qe": "21. Describe the basic components of a fat and how they are joined together."
+  "qe": "21. Describe the basic components of a fat and how they are joined."
  },
  {
   "ch": "5단원",
@@ -328,7 +335,7 @@ const QUESTIONS = [
    "고체"
   ],
   "model": "포화 지방산은 탄소 사이에 이중 결합이 없어 사슬이 곧게 뻗어 있으며, 분자들이 서로 빽빽하게 배열될 수 있기 때문에 실온에서 고체로 존재한다.",
-  "qe": "23. Explain, in terms of structure, why saturated fatty acids are solid at room temperature."
+  "qe": "23. Explain why saturated fatty acids are solid at room temperature, in relation to their structural features."
  },
  {
   "ch": "5단원",
@@ -340,7 +347,7 @@ const QUESTIONS = [
    "이중층"
   ],
   "model": "인지질은 친수성 머리와 소수성 지방산 꼬리를 함께 가지는 양친매성 분자이다. 이 때문에 물속에서 인지질 이중층을 형성하여 세포막의 기본 구조를 이룬다.",
-  "qe": "27. Describe the structural features of phospholipids and explain why they can form cell membranes."
+  "qe": "27. Describe the structural features of phospholipids, and explain why they can form cell membranes."
  },
  {
   "ch": "5단원",
@@ -353,7 +360,7 @@ const QUESTIONS = [
    "제한"
   ],
   "model": "친수성머리는 세포 안팎의 수용성 환경을 향하고 소수성 꼬리는 막 내부에서 서로 마주 보아 소수성 내부층을 형성한다. 이 내부층이 친수성 물질이나 이온의 자유로운 통과를 제한하여 세포막에 선택적 투과성을 부여한다.",
-  "qe": "28. Explain how the arrangement of the hydrophilic heads and hydrophobic tails of phospholipids contributes to the selective permeability of the cell membrane."
+  "qe": "28. Explain why the arrangement of the hydrophilic heads and hydrophobic tails of phospholipids contributes to the selective permeability of the cell membrane."
  },
  {
   "ch": "5단원",
@@ -367,7 +374,7 @@ const QUESTIONS = [
    "C-말단"
   ],
   "model": "한 아미노산의 카르복실기와 다른 아미노산의 아미노기 사이에 탈수반응으로 펩타이드 결합이 형성되어 폴리펩타이드가 만들어진다. 폴리펩타이드는 N-말단에서 C-말단으로 이어지는 방향성을 가진다.",
-  "qe": "35. Describe how a polypeptide is formed and its directionality."
+  "qe": "35. Describe the process by which a polypeptide is formed and its directionality."
  },
  {
   "ch": "5단원",
@@ -379,7 +386,7 @@ const QUESTIONS = [
    "β-병풍"
   ],
   "model": "단백질의 2차 구조는 폴리펩타이드 골격 사이의 수소결합에 의해 형성된다. 대표적으로 α-나선 구조와 β-병풍 구조가 있다.",
-  "qe": "39. Describe the principle by which the secondary structure of a protein forms, and its two representative forms."
+  "qe": "39. Explain the principle by which the secondary structure of a protein is formed, and describe its two representative forms."
  },
  {
   "ch": "5단원",
@@ -406,7 +413,7 @@ const QUESTIONS = [
    "뭉"
   ],
   "model": "친수성인 글루탐산이 소수성인 발린으로 바뀌면서 헤모글로빈 표면에 소수성 부위가 생기고, 이 부위가 다른 헤모글로빈의 소수성 부위와 상호작용하여 서로 뭉치기 쉬워지기 때문이다.",
-  "qe": "42. In sickle-cell anemia, explain why replacing glutamic acid with valine makes hemoglobin molecules more likely to clump together."
+  "qe": "42. In sickle-cell anemia, glutamic acid is replaced by valine. Explain why this makes hemoglobin molecules more likely to clump together."
  },
  {
   "ch": "5단원",
@@ -419,7 +426,7 @@ const QUESTIONS = [
    "오각"
   ],
   "model": "피리미딘은 하나의 육각 고리로 이루어지며 C, T, U가 속하고, 퓨린은 육각 고리와 오각 고리가 결합된 이중 고리로 이루어지며 A, G가 속한다.",
-  "qe": "47. Describe the structural difference between pyrimidine and purine nitrogenous bases, and name the bases that belong to each."
+  "qe": "47. Explain the structural difference between pyrimidine and purine nitrogenous bases, and name the bases belonging to each."
  },
  {
   "ch": "5단원",
@@ -432,7 +439,7 @@ const QUESTIONS = [
    "정보 저장"
   ],
   "model": "DNA는 디옥시리보스, RNA는 리보오스를 가지며, RNA의 리보오스에는 2번 탄소에 –OH가 있어 DNA보다 상대적으로 불안정하다. 따라서 DNA는 장기적인 유전정보 저장에 더 적합하다.",
-  "qe": "48. Describe the difference in the sugars of DNA and RNA, and how this difference affects their stability."
+  "qe": "48. Describe the difference between the sugars of DNA and RNA, and explain how this difference affects their stability."
  },
  {
   "ch": "6단원",
@@ -460,7 +467,7 @@ const QUESTIONS = [
    "공급"
   ],
   "model": "에너지 변환 과정에서 일부 에너지가 열로 방출되고 전체적인 엔트로피가 증가하므로, 생명체가 질서를 유지하기 위해서는 외부로부터 지속적으로 에너지를 공급받아야 하기 때문이다.",
-  "qe": "6. From the viewpoint of the second law of thermodynamics, explain why living organisms must continuously receive energy."
+  "qe": "6. Explain why living organisms must continuously receive energy, in terms of the second law of thermodynamics."
  },
  {
   "ch": "6단원",
@@ -472,7 +479,7 @@ const QUESTIONS = [
    "에너지 변화"
   ],
   "model": "세포가 평형에 도달하면 자유에너지가 가장 낮은 상태가 되어 더 이상 일을 할 수 있는 에너지 변화가 일어나지 않기 때문이다.",
-  "qe": "8. Explain, in terms of free energy, why it is difficult for a cell to sustain life activities once it reaches equilibrium."
+  "qe": "8. Explain why it is difficult for a cell to sustain life activities once it reaches equilibrium, in relation to free energy."
  },
  {
   "ch": "6단원",
@@ -501,7 +508,7 @@ const QUESTIONS = [
    "중간산물"
   ],
   "model": "글루타민 합성 반응은 ΔG가 +3.4 kcal/mol로 비자발적이지만, ATP 가수분해의 ΔG –7.3 kcal/mol과 짝물림되면 전체 ΔG가 –3.9 kcal/mol이 된다. 또한 ATP의 인산기가 글루탐산에 전달되어 반응성이 높은 중간산물이 형성되므로 글루타민 합성이 진행될 수 있다.",
-  "qe": "13. Explain how ATP makes chemical work possible, using the synthesis of glutamine as an example."
+  "qe": "13. Explain the principle by which ATP makes chemical work possible, using the synthesis of glutamine as an example."
  },
  {
   "ch": "6단원",
@@ -512,7 +519,7 @@ const QUESTIONS = [
    "속도"
   ],
   "model": "효소는 반응물이 생성물로 전환될 때 필요한 활성화 에너지를 낮추어 반응이 더 쉽게 일어나도록 하므로 화학 반응의 속도를 증가시킨다.",
-  "qe": "14. Explain how an enzyme speeds up a chemical reaction, in terms of activation energy."
+  "qe": "14. Explain the principle by which an enzyme speeds up a chemical reaction, in relation to activation energy."
  },
  {
   "ch": "6단원",
@@ -535,7 +542,7 @@ const QUESTIONS = [
    "결합"
   ],
   "model": "모든 효소의 활성 부위가 기질로 채워져 포화 상태가 되면 추가된 기질이 더 이상 효소와 결합할 수 없기 때문이다.",
-  "qe": "26. Explain why the rate of an enzyme reaction stops increasing beyond a certain level even when the substrate concentration keeps rising."
+  "qe": "26. Explain why the rate of an enzyme reaction does not increase beyond a certain level even when the substrate concentration keeps increasing."
  },
  {
   "ch": "6단원",
@@ -559,7 +566,7 @@ const QUESTIONS = [
    "저해제"
   ],
   "model": "기질 농도가 증가하면 기질이 저해제보다 활성 부위에 결합할 가능성이 커지기 때문이다.",
-  "qe": "33. Explain why raising the substrate concentration reduces the effect of a competitive inhibitor."
+  "qe": "33. Explain why the inhibitory effect decreases when the substrate concentration is increased in competitive inhibition."
  },
  {
   "ch": "6단원",
@@ -571,7 +578,7 @@ const QUESTIONS = [
    "회복"
   ],
   "model": "비경쟁적 저해제는 활성 부위가 아닌 다른 부위에 결합하여 효소의 구조와 촉매 기능을 변화시키므로, 기질 농도를 높여도 효소의 기능 저하가 회복되지 않기 때문이다.",
-  "qe": "34. Explain why the effect of a noncompetitive inhibitor does not disappear even when the substrate concentration is raised."
+  "qe": "34. Explain why the inhibitory effect does not disappear even when the substrate concentration is increased in noncompetitive inhibition."
  },
  {
   "ch": "6단원",
@@ -582,7 +589,7 @@ const QUESTIONS = [
    "결합"
   ],
   "model": "무경쟁적 저해제는 효소-기질 복합체에만 결합하므로, 기질 농도가 증가하여 효소-기질 복합체가 많아져도 저해제가 결합할 대상이 함께 증가하기 때문이다.",
-  "qe": "35. Explain why the effect of an uncompetitive inhibitor is hard to overcome even when the substrate concentration is increased."
+  "qe": "35. Explain why it is difficult to overcome the inhibitory effect even when the substrate concentration is increased in uncompetitive inhibition."
  },
  {
   "ch": "6단원",
@@ -594,7 +601,7 @@ const QUESTIONS = [
    "방출"
   ],
   "model": "한 결합 부위에 산소가 결합하거나 해리되면 소단위의 구조 변화가 다른 소단위로 전달되어 다른 결합 부위의 산소 친화도가 함께 변한다. 그 결과 산소가 많은 곳에서는 산소를 잘 결합하고, 산소가 적은 조직에서는 산소를 쉽게 방출할 수 있다.",
-  "qe": "39. Explain the principle of cooperativity in oxygen binding by hemoglobin, and its advantage."
+  "qe": "39. Explain the principle by which cooperativity appears in oxygen binding by hemoglobin, and describe its advantage."
  },
  {
   "ch": "6단원",
@@ -607,7 +614,7 @@ const QUESTIONS = [
    "첫 단계"
   ],
   "model": "최종 생성물인 아이소류신이 일정량 이상 축적되면 효소 1의 조절 부위에 결합하여 효소 1의 활성을 억제하고, 트레오닌이 중간산물 A로 전환되는 첫 단계를 차단하여 아이소류신의 추가 합성을 감소시키는 과정이다.",
-  "qe": "41. Explain the principle of feedback inhibition in the synthesis of isoleucine."
+  "qe": "41. Explain the principle by which feedback inhibition occurs in the synthesis of isoleucine."
  },
  {
   "ch": "6단원",
